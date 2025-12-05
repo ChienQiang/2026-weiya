@@ -12,10 +12,10 @@
 
     <style>
         :root {
-            /* --- 🎨 2026 Design Edition 配色 --- */
+            /* --- 🎨 配色 --- */
             --primary-blue: #5286A8;
             --primary-orange: #E07A5F;
-            --primary-dark: #2C3E50; /* 深色主題基調 */
+            --primary-dark: #2C3E50; /* 公告頁統一深色底 */
             
             --bg: #FAFAFA;
             --line: #E0E0E0;
@@ -26,7 +26,7 @@
             --shadow-md: 0 4px 6px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.06);
             --shadow-lg: 0 10px 20px rgba(0,0,0,0.15), 0 3px 6px rgba(0,0,0,0.10);
             
-            /* ACID Theme Colors */
+            /* ACID Theme Colors (用於 Modal) */
             --acid-bg: #0a0a0a;
             --acid-text: #e0e0e0;
             --acid-accent: #ccff00;
@@ -65,10 +65,13 @@
             background: radial-gradient(circle at 50% 10%, rgba(200, 200, 200, 0.2) 0%, transparent 60%),
                         radial-gradient(circle at 50% 90%, rgba(44, 62, 80, 0.1) 0%, transparent 60%);
         }
+        
+        /* Day 1: 藍色調更淡雅 */
         .diffuse-light.mode-day1 {
-            background: radial-gradient(circle at 20% 30%, rgba(82, 134, 168, 0.4) 0%, transparent 50%),
-                        radial-gradient(circle at 80% 80%, rgba(130, 177, 255, 0.3) 0%, transparent 50%);
+            background: radial-gradient(circle at 20% 30%, rgba(33, 107, 156, 0.2) 0%, transparent 60%),
+                        radial-gradient(circle at 80% 80%, rgba(82, 134, 168, 0.15) 0%, transparent 60%);
         }
+        
         .diffuse-light.mode-day2 {
             background: radial-gradient(circle at 80% 20%, rgba(224, 122, 95, 0.4) 0%, transparent 50%),
                         radial-gradient(circle at 20% 90%, rgba(255, 209, 128, 0.3) 0%, transparent 50%);
@@ -82,22 +85,21 @@
             position: relative;
         }
         
-        /* 品牌文字 Logo 樣式 */
         .brand-section h1 {
             font-family: 'Noto Serif TC', serif;
-            font-size: 2rem;
+            font-size: 1.5rem; /* 字體改小 */
             margin: 0 0 8px;
-            letter-spacing: 2px;
+            letter-spacing: 1.5px;
             color: var(--text-main);
             font-weight: 900;
             line-height: 1.2;
         }
         .brand-section p {
-            font-size: 0.95rem;
+            font-size: 0.85rem;
             color: var(--text-sub);
             margin: 0;
             font-weight: 500;
-            letter-spacing: 2px;
+            letter-spacing: 1px;
         }
         
         .warning-text {
@@ -180,111 +182,117 @@
         .timeline-group.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* 公告頁面樣式 (Dark Theme) */
-        .letter-box {
-            background: var(--primary-dark); /* 使用主題深色 */
-            padding: 40px 30px;
-            border-radius: 20px; 
+        /* --- 公告頁樣式 (Unified Dark Theme) --- */
+        /* 定義統一的深色卡片樣式 */
+        .dark-theme-card {
+            background: var(--primary-dark);
+            border-radius: 20px;
+            padding: 30px;
+            color: #ffffff;
             box-shadow: var(--shadow-md);
-            text-align: center; 
-            border: 1px solid rgba(255,255,255,0.1); /* 微亮邊框 */
             margin-bottom: 25px;
-            color: white; /* 文字改為白色 */
+            border: 1px solid rgba(255, 255, 255, 0.1); /* 統一的微亮邊框 */
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Letter Box Specifics */
+        .letter-box {
+            text-align: center; 
+            padding: 40px 30px;
         }
         .letter-title {
             font-family: 'Noto Serif TC', serif; 
             font-size: 1.4rem; font-weight: 900;
-            color: white; /* 標題白色 */
+            color: white; 
             margin-bottom: 25px; position: relative; display: inline-block;
         }
         .letter-title::after {
             content: ''; display: block; width: 40px; height: 3px; 
-            background: rgba(255,255,255,0.3); /* 分隔線變淡 */
+            background: rgba(255,255,255,0.3);
             margin: 10px auto 0;
         }
         .letter-content {
             font-family: 'Noto Serif TC', serif; font-size: 1.05rem; line-height: 1.9; 
-            color: rgba(255,255,255,0.9); /* 內容微調透明度 */
+            color: rgba(255,255,255,0.9);
             text-align: justify; text-align-last: center;
         }
         .letter-content p { margin-bottom: 20px; }
         
         .highlight-date {
             display: inline-block; 
-            background: rgba(255,255,255,0.1); /* 半透明白底 */
+            background: rgba(255,255,255,0.1);
             color: #fff;
             padding: 10px 20px; border-radius: 8px; font-weight: 700;
             font-family: 'Space Mono', monospace; margin: 20px 0; font-size: 0.95rem; letter-spacing: 1px;
             border: 1px solid rgba(255,255,255,0.2);
         }
+        
+        .location-info {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            font-size: 0.95rem;
+            color: #FFD54F; /* 金黃色點綴，適合深藍底 */
+            font-weight: 700;
+        }
 
-        /* --- Acid Style Weather Box --- */
+        /* Weather Box Specifics (Unified) */
         .weather-box {
-            background: #111;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: var(--shadow-md);
-            position: relative;
-            margin-bottom: 30px;
-            padding: 25px;
-            color: var(--acid-text);
+            /* 繼承 .dark-theme-card 的樣式，不再有獨特的黑色背景 */
             font-family: 'Space Mono', monospace;
-            border: 1px solid rgba(255,255,255,0.1);
         }
         .weather-box::before {
             content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%;
-            background: var(--acid-accent); z-index: 10;
+            background: rgba(255,255,255,0.2); z-index: 10;
         }
         .weather-title {
             font-weight: 700; font-size: 0.85rem;
             margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px;
-            display: flex; align-items: center; color: var(--acid-accent);
+            display: flex; align-items: center; color: rgba(255,255,255,0.7); /* 統一配色 */
         }
         .weather-title svg { width: 16px; height: 16px; margin-right: 8px; fill: currentColor; }
 
         .weather-content {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
+            display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;
         }
         
-        .weather-temp {
-            font-size: 3.5rem;
-            font-weight: 700;
-            line-height: 1;
-            color: #fff;
-        }
-        .weather-temp span { font-size: 1.2rem; vertical-align: top; color: #888; }
-        
+        .weather-temp { font-size: 3.5rem; font-weight: 700; line-height: 1; color: #fff; }
+        .weather-temp span { font-size: 1.2rem; vertical-align: top; color: rgba(255,255,255,0.6); }
         .weather-info { text-align: right; }
         
         .weather-condition { 
             font-size: 1.2rem; font-weight: 700; margin-bottom: 5px; color: #fff;
             font-family: 'Noto Sans TC', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
         }
-        .weather-loc { font-size: 0.8rem; color: #888; }
+        .weather-loc { font-size: 0.8rem; color: rgba(255,255,255,0.6); }
         
-        /* Forecast Section */
         .weather-forecast {
-            border-top: 1px dashed rgba(255,255,255,0.2);
-            padding-top: 15px;
-            display: flex;
-            justify-content: space-between;
+            border-top: 1px dashed rgba(255,255,255,0.2); padding-top: 15px;
+            display: flex; justify-content: space-between;
         }
-        .forecast-item {
-            text-align: center;
-            flex: 1;
-        }
-        .forecast-day { color: var(--acid-accent); font-size: 0.75rem; font-weight: 700; margin-bottom: 5px; text-transform: uppercase; }
-        
+        .forecast-item { text-align: center; flex: 1; }
+        .forecast-day { color: rgba(255,255,255,0.8); font-size: 0.75rem; font-weight: 700; margin-bottom: 5px; text-transform: uppercase; }
         .forecast-icon { 
             font-size: 1.5rem; margin-bottom: 5px; display: block; 
             font-family: 'Noto Sans TC', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
         }
-        .forecast-temp { color: #aaa; font-size: 0.75rem; }
+        .forecast-temp { color: rgba(255,255,255,0.6); font-size: 0.75rem; }
         
-        .weather-loading { font-size: 0.9rem; color: #666; animation: blink 1s infinite; }
+        .weather-advice {
+            margin-top: 15px;
+            font-size: 0.85rem;
+            color: #fff;
+            background: rgba(255,255,255,0.1);
+            padding: 12px;
+            border-radius: 8px;
+            font-family: 'Noto Sans TC', sans-serif;
+            line-height: 1.6;
+            border-left: 3px solid #FFD54F; /* 金黃色提示線 */
+        }
+        .weather-advice strong { color: #FFD54F; margin-right: 5px; }
+        
+        .weather-loading { font-size: 0.9rem; color: rgba(255,255,255,0.5); animation: blink 1s infinite; }
         @keyframes blink { 50% { opacity: 0.5; } }
 
 
@@ -325,9 +333,8 @@
         
         @media (min-width: 768px) {
             .container { max-width: 900px; padding: 0 40px; }
-            .logo-img { max-width: 180px; }
-            .brand-section h1 { font-size: 3rem; margin-bottom: 12px; } /* Desktop Logo Size */
-            .brand-section p { font-size: 1.1rem; }
+            .brand-section h1 { font-size: 2rem; margin-bottom: 12px; }
+            .brand-section p { font-size: 1rem; }
             .list-item { padding: 40px 0; }
             .item-time { font-size: 1.5rem; min-width: 130px; margin-right: 40px; }
             .item-title { font-size: 1.6rem; margin-bottom: 12px; }
@@ -387,7 +394,7 @@
     <!-- 1. 品牌區塊 -->
     <div class="brand-section">
         <h1>宇傑系統</h1>
-        <p>誠 信 穩 健 • 共 創 未 來</p>
+        <p>Jan 31 - Feb 1｜福容大飯店與深澳之旅</p>
         <span class="warning-text">(無法下載行事曆時請使用 Safari 或 Chrome)</span>
     </div>
 
@@ -414,7 +421,7 @@
         
         <!-- Tab 0: 公告 (Intro) -->
         <div class="timeline-group active" id="day0">
-            <div class="letter-box">
+            <div class="letter-box dark-theme-card">
                 <div class="letter-title">尾牙活動公告</div>
                 <div class="letter-content">
                     <p>親愛的同仁們：</p>
@@ -426,11 +433,15 @@
                     </div>
                     
                     <p>請各位先把時間記起來，讓我們一起共度這兩天一夜的美好時光！</p>
+                    
+                    <div class="location-info">
+                        📍 活動地點：福容大飯店 (福隆)
+                    </div>
                 </div>
             </div>
 
             <!-- 即時天氣與預報卡片 -->
-            <div class="weather-box">
+            <div class="weather-box dark-theme-card">
                 <div class="weather-title">
                     <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM12 18c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z"/></svg>
                     Live Intel / 瑞芳區氣候
@@ -450,7 +461,7 @@
             <div class="list-item">
                 <div class="item-time">07:50</div>
                 <div class="item-content">
-                    <h3 class="item-title">宇傑系統 準時開車</h3>
+                    <h3 class="item-title">🚩 宇傑系統 準時開車</h3>
                     <p class="item-desc">早安！請提前集合，車子準時出發，逾時不候。<br>集合：竹北市新工六路9號</p>
                     <div class="action-area">
                         <a href="https://www.google.com/maps/search/?api=1&query=竹北市新工六路9號" target="_blank" class="btn-pill primary">
@@ -463,51 +474,57 @@
             <div class="list-item">
                 <div class="item-time">10:00</div>
                 <div class="item-content">
-                    <h3 class="item-title">深澳鐵道自行車</h3>
+                    <h3 class="item-title">🚴‍♂️ 深澳鐵道自行車</h3>
                     <p class="item-desc">深澳站 (10:30 梯次) → 八斗子站。海景騎行體驗。</p>
                     <div class="action-area">
-                        <a href="https://www.google.com/maps/search/?api=1&query=深澳鐵道自行車深澳站" target="_blank" class="btn-pill outline">Map</a>
-                        <button class="btn-pill outline" onclick="openModal('railbike')">Info</button>
+                        <a href="https://www.google.com/maps/search/?api=1&query=深澳鐵道自行車深澳站" target="_blank" class="btn-pill outline">
+                            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                            地圖
+                        </a>
+                        <button class="btn-pill outline" onclick="openModal('railbike')">
+                            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                            介紹
+                        </button>
                     </div>
                 </div>
             </div>
             <div class="list-item">
                 <div class="item-time">12:00</div>
                 <div class="item-content">
-                    <h3 class="item-title">午餐 - 友信海鮮餐廳</h3>
+                    <h3 class="item-title">🍱 午餐 - 友信海鮮餐廳</h3>
                     <p class="item-desc">深澳漁港口碑名店，享用新鮮海產。</p>
                     <div class="action-area">
-                        <a href="https://www.google.com/maps/search/?api=1&query=友信海鮮餐廳" target="_blank" class="btn-pill outline">Map</a>
-                        <button class="btn-pill outline" onclick="openModal('restaurant')">Info</button>
+                        <a href="https://www.google.com/maps/search/?api=1&query=友信海鮮餐廳" target="_blank" class="btn-pill outline">地圖</a>
+                        <button class="btn-pill outline" onclick="openModal('restaurant')">介紹</button>
                     </div>
                 </div>
             </div>
             <div class="list-item">
                 <div class="item-time">13:30</div>
                 <div class="item-content">
-                    <h3 class="item-title">深澳岬角 (象鼻岩)</h3>
+                    <h3 class="item-title">🐘 深澳岬角 (象鼻岩)</h3>
                     <p class="item-desc">觀賞奇岩怪石與酋長岩公園散步。</p>
                     <div class="action-area">
-                        <a href="https://www.google.com/maps/search/?api=1&query=深澳岬角" target="_blank" class="btn-pill outline">Map</a>
-                        <button class="btn-pill outline" onclick="openModal('cape')">Info</button>
+                        <a href="https://www.google.com/maps/search/?api=1&query=深澳岬角" target="_blank" class="btn-pill outline">地圖</a>
+                        <button class="btn-pill outline" onclick="openModal('cape')">介紹</button>
                     </div>
                 </div>
             </div>
             <div class="list-item">
                 <div class="item-time">15:00</div>
                 <div class="item-content">
-                    <h3 class="item-title">福容大飯店 CHECK IN</h3>
+                    <h3 class="item-title">🏨 福容大飯店 CHECK IN</h3>
                     <p class="item-desc">自由活動時間，享受海洋溫泉與沙灘。</p>
                     <div class="action-area">
                         <a href="https://www.google.com/maps/search/?api=1&query=福容大飯店福隆" target="_blank" class="btn-pill primary">導航</a>
-                        <button class="btn-pill outline" onclick="openModal('hotel')">Info</button>
+                        <button class="btn-pill outline" onclick="openModal('hotel')">介紹</button>
                     </div>
                 </div>
             </div>
             <div class="list-item">
                 <div class="item-time">18:30</div>
                 <div class="item-content">
-                    <h3 class="item-title">尾牙晚宴 (宴會廳)</h3>
+                    <h3 class="item-title">🍽️ 尾牙晚宴 (宴會廳)</h3>
                     <p class="item-desc">準時開席，請勿遲到！抽獎活動準備開始。</p>
                 </div>
             </div>
@@ -518,25 +535,25 @@
             <div class="list-item">
                 <div class="item-time">11:00</div>
                 <div class="item-content">
-                    <h3 class="item-title">飯店 CHECK OUT</h3>
+                    <h3 class="item-title">👋 飯店 CHECK OUT</h3>
                     <p class="item-desc">整理行李，準備退房前往基隆。</p>
                 </div>
             </div>
             <div class="list-item">
                 <div class="item-time">12:00</div>
                 <div class="item-content">
-                    <h3 class="item-title">基隆廟口夜市</h3>
+                    <h3 class="item-title">🍜 基隆廟口夜市</h3>
                     <p class="item-desc">午餐自由覓食，品嚐在地小吃。</p>
                     <div class="action-area">
                         <a href="https://www.google.com/maps/search/?api=1&query=基隆廟口夜市" target="_blank" class="btn-pill primary">導航</a>
-                        <button class="btn-pill outline" onclick="openModal('nightmarket')">Info</button>
+                        <button class="btn-pill outline" onclick="openModal('nightmarket')">介紹</button>
                     </div>
                 </div>
             </div>
             <div class="list-item">
                 <div class="item-time">16:00</div>
                 <div class="item-content">
-                    <h3 class="item-title">返抵宇傑系統</h3>
+                    <h3 class="item-title">🚌 返抵宇傑系統</h3>
                     <p class="item-desc">平安返家，活動圓滿結束。</p>
                     <div class="action-area">
                         <a href="https://www.google.com/maps/search/?api=1&query=竹北市新工六路9號" target="_blank" class="btn-pill outline">回公司</a>
@@ -549,7 +566,7 @@
 
     <div class="footer">
         <img src="./logo.png" alt="YUJAY Logo" class="footer-logo">
-        <div>v3.9.3 Emoji Fix • YUJAY SYSTEMS</div>
+        <div>v4.0 Unified Polish • YUJAY SYSTEMS</div>
     </div>
 
     <!-- Modal Popout -->
@@ -748,6 +765,18 @@ END:VCALENDAR`;
                 const temp = Math.round(data.current.temperature_2m);
                 const code = data.current.weather_code;
                 const { text, icon } = getWeatherStatus(code);
+                
+                // Get Outfit Advice
+                let advice = "";
+                if (code >= 51 || code === 80 || code === 81 || code === 82 || code === 95) {
+                    advice = "<strong>☔ 雨備提醒：</strong>降雨機率高，請務必攜帶雨具，或穿著防水鞋。";
+                } else if (temp < 18) {
+                    advice = "<strong>🧥 穿搭建議：</strong>氣溫偏低，建議洋蔥式穿搭，並攜帶防風外套。";
+                } else if (code <= 3) {
+                    advice = "<strong>🕶️ 穿搭建議：</strong>天氣不錯，適合戶外活動，記得防曬補水喔！";
+                } else {
+                    advice = "<strong>🌤️ 出行提醒：</strong>天氣變化多端，建議隨身攜帶薄外套備用。";
+                }
 
                 let forecastHTML = '<div class="weather-forecast">';
                 const days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
@@ -779,6 +808,7 @@ END:VCALENDAR`;
                         </div>
                     </div>
                     ${forecastHTML}
+                    <div class="weather-advice">${advice}</div>
                 `;
             } catch (error) {
                 display.innerHTML = '<div class="weather-loading" style="color:red">OFFLINE_ //</div>';
@@ -799,3 +829,4 @@ END:VCALENDAR`;
     </script>
 </body>
 </html>
+```
