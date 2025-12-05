@@ -4,362 +4,490 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>🎉 2026 YUJAY 尾牙兩天一夜</title>
+    
+    <!-- 引入 Google Fonts: Noto Serif TC (標題) & Noto Sans TC (內文) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@700;900&display=swap" rel="stylesheet">
+
     <style>
         :root {
-            /* --- 🎨 2026 季節限定配色 --- */
-            --day1-color: #5286A8; /* 宇傑藍 */
-            --day1-bg: #F0F6FA;
-            --day2-color: #E07A5F; /* 暖陽橘 */
-            --day2-bg: #FFF5F2;
-
-            /* 介面基底 */
-            --bg: #F8F9FA;
-            --card: #FFFFFF;
-            --text: #2C3E50;
-            --subtext: #546E7A;
+            /* --- 🎨 2026 Design Edition 配色 --- */
+            --primary-blue: #5286A8;
+            --primary-orange: #E07A5F;
+            
+            --bg: #FAFAFA;
+            --line: #E0E0E0;
+            --text-main: #1A1A1A;
+            --text-sub: #666666;
         }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            /* 預設使用內文字體 */
+            font-family: 'Noto Sans TC', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background: var(--bg);
             margin: 0;
             padding: 0;
-            color: var(--text);
-            -webkit-tap-highlight-color: transparent;
-            padding-bottom: 50px;
-        }
-        
-        /* 1. 品牌靜態區 (Brand Section) - 滑動時會消失 */
-        .brand-section {
-            background: white;
-            text-align: center;
-            padding: 20px 15px 10px;
-        }
-        
-        /* Logo 樣式 */
-        .logo-img {
-            max-width: 160px;
-            height: auto;
-            margin-bottom: 8px;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
+            color: var(--text-main);
+            padding-bottom: 60px;
+            overflow-x: hidden; /* 防止橫向卷軸 */
         }
 
-        .brand-section h1 { 
-            margin: 5px 0; 
-            font-size: 1.1rem; 
-            letter-spacing: 1px; 
-            color: var(--day1-color); 
-            font-weight: 600; 
-        }
-        .brand-section p { 
-            margin: 5px 0 10px; 
-            font-size: 0.85rem; 
-            color: #999; 
-        }
-
-        /* 2. 黏性動作條 (Sticky Action Bar) - 滑動時固定在頂部 */
-        .sticky-bar {
-            position: sticky;
+        /* --- ✨ 0. 全域噪點特效 (Grainy Noise Overlay) --- */
+        .noise-overlay {
+            position: fixed;
             top: 0;
-            z-index: 100;
-            background: rgba(255, 255, 255, 0.95); /* 微透明白底 */
-            backdrop-filter: blur(10px); /* 毛玻璃特效 */
-            padding: 10px 15px;
-            text-align: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-            border-bottom: 1px solid rgba(0,0,0,0.05);
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* 讓點擊穿透，不影響操作 */
+            z-index: 9999;
+            opacity: 0.06; /* 調整雜訊明顯度 */
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
         }
 
-        /* Calendar Import Button (更緊湊的設計) */
+        /* --- 1. 品牌區塊 --- */
+        .brand-section {
+            background: var(--bg);
+            text-align: center;
+            padding: 40px 20px 20px;
+            position: relative;
+        }
+        .logo-img {
+            max-width: 150px;
+            height: auto;
+            display: block;
+            margin: 0 auto 15px;
+        }
+        .brand-section h1 {
+            /* 字體設定：粗體襯線字 */
+            font-family: 'Noto Serif TC', serif;
+            font-size: 1.6rem;
+            margin: 0 0 8px;
+            letter-spacing: -0.5px;
+            color: var(--text-main);
+            font-weight: 900;
+        }
+        .brand-section p {
+            font-size: 0.95rem;
+            color: var(--text-sub);
+            margin: 0;
+            font-weight: 500;
+            letter-spacing: 2px; /* 增加字距讓標語更有氣勢 */
+        }
+
+        /* --- 2. 黏性按鈕 (Floating Pill) --- */
+        .sticky-action {
+            position: sticky;
+            top: 15px;
+            z-index: 90;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 30px;
+        }
         .btn-calendar {
-            background: var(--day1-color);
-            color: white;
-            padding: 8px 20px;
-            border-radius: 50px;
-            font-size: 0.9rem;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0,0,0,0.08);
+            color: var(--text-main);
+            padding: 12px 28px;
+            border-radius: 100px;
+            font-size: 0.95rem;
+            font-weight: 700;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
-            box-shadow: 0 2px 8px rgba(82, 134, 168, 0.25);
-            transition: transform 0.2s;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
             cursor: pointer;
-            border: none;
-            outline: none;
-            font-weight: 500;
-            width: auto; /* 不強制滿版 */
+            /* Interaction Design: Transition */
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
         }
-        .btn-calendar:active { transform: scale(0.96); }
-        .btn-calendar svg { width: 16px; height: 16px; margin-right: 6px; fill: currentColor; }
+        
+        /* Interaction Design: Hover Effect (浮起來) */
+        .btn-calendar:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+        }
+        .btn-calendar:active {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .btn-calendar svg { width: 18px; height: 18px; margin-right: 8px; }
 
         .warning-text {
             display: block;
-            font-size: 0.7rem;
-            color: #90A4AE;
-            margin-top: 5px;
+            font-size: 0.75rem;
+            color: #999;
+            margin-top: 8px;
+            font-weight: 400;
+            background: rgba(255,255,255,0.8);
+            padding: 2px 8px;
+            border-radius: 4px;
         }
 
-        /* Tabs */
+        /* --- 3. 頁籤切換 (Pill Tabs) --- */
         .tabs-container {
-            background: var(--bg);
-            padding: 15px 15px 0;
-            /* 移除 sticky，避免跟按鈕條打架，或者設得比按鈕條更低 */
-            position: relative; 
-            z-index: 90;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            padding: 0 20px;
         }
         .tabs {
-            background: white;
-            border-radius: 50px;
-            padding: 5px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            background: #EEEEEE;
+            padding: 4px;
+            border-radius: 100px;
             display: flex;
-            max-width: 400px;
-            margin: 0 auto;
+            position: relative;
         }
         .tab {
-            flex: 1; text-align: center; padding: 10px; border-radius: 40px;
-            font-weight: bold; color: #B0BEC5; cursor: pointer; transition: all 0.3s ease; font-size: 0.95rem;
+            padding: 10px 28px;
+            border-radius: 100px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #999;
+            cursor: pointer;
+            position: relative;
+            z-index: 2;
+            transition: color 0.3s;
+            font-family: 'Noto Sans TC', sans-serif; /* 確保 Tab 數字清晰 */
         }
-        .tab.active[data-day="1"] { 
-            background: var(--day1-color); color: white; box-shadow: 0 4px 12px rgba(82, 134, 168, 0.3); 
+        .tab.active { color: white; }
+        
+        .tab-bg {
+            position: absolute;
+            top: 4px; left: 4px; bottom: 4px;
+            width: calc(50% - 4px);
+            border-radius: 100px;
+            transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1), background-color 0.3s;
+            z-index: 1;
         }
-        .tab.active[data-day="2"] { 
-            background: var(--day2-color); color: white; box-shadow: 0 4px 12px rgba(224, 122, 95, 0.3); 
+
+        /* --- 4. 清單式行程 --- */
+        .container { max-width: 600px; margin: 0 auto; padding: 0 20px; }
+        
+        .timeline-group { display: none; animation: fadeIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .timeline-group.active { display: block; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .list-item {
+            display: flex;
+            flex-direction: column;
+            padding: 25px 0;
+            border-bottom: 1px solid var(--line);
+            position: relative;
+        }
+        .timeline-group .list-item:last-child { border-bottom: none; }
+
+        .item-header {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .time-display {
+            font-family: 'Noto Serif TC', serif; /* 時間用襯線體，更有質感 */
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+        
+        .item-title {
+            font-family: 'Noto Serif TC', serif; /* 標題用襯線體 */
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-main);
+            flex-grow: 1;
+            margin-left: 20px;
         }
 
-        /* Timeline */
-        .container { padding: 20px; max-width: 600px; margin: 0 auto; }
-        .timeline-item {
-            background: var(--card); border-radius: 16px; padding: 20px; margin-bottom: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03); position: relative; border-left: 5px solid #ddd;
-            display: none; opacity: 0; transform: translateY(15px); transition: opacity 0.4s, transform 0.4s;
+        .item-desc {
+            font-size: 1rem;
+            color: var(--text-sub);
+            line-height: 1.7;
+            margin-left: calc(1.1rem + 20px);
+            margin-bottom: 15px;
+            font-weight: 400;
         }
-        .timeline-item.show { display: block; opacity: 1; transform: translateY(0); }
 
-        /* Colors Logic */
-        .day1 .timeline-item { border-left-color: var(--day1-color); }
-        .day1 .time-badge { background: var(--day1-bg); color: var(--day1-color); }
-        .day1 .btn-map { color: var(--day1-color); background: var(--day1-bg); }
-        .day1 .btn-info { color: var(--day1-color); border: 1px solid var(--day1-color); opacity: 0.8; }
-
-        .day2 .timeline-item { border-left-color: var(--day2-color); }
-        .day2 .time-badge { background: var(--day2-bg); color: var(--day2-color); }
-        .day2 .btn-map { color: var(--day2-color); background: var(--day2-bg); }
-        .day2 .btn-info { color: var(--day2-color); border: 1px solid var(--day2-color); opacity: 0.8; }
-
-        .time-badge { font-weight: 800; padding: 4px 12px; border-radius: 8px; font-size: 0.9rem; display: inline-block; margin-bottom: 10px; }
-        .title { font-size: 1.1rem; font-weight: bold; margin-bottom: 6px; color: var(--text); }
-        .desc { color: var(--subtext); font-size: 0.95rem; margin-bottom: 15px; line-height: 1.6; }
-
-        /* Button Group */
-        .btn-group { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 5px; }
-
-        .btn-map { display: inline-flex; align-items: center; padding: 8px 14px; border-radius: 10px; text-decoration: none; font-size: 0.85rem; font-weight: 600; transition: opacity 0.2s; border: none; outline: none; }
-        .btn-map:active { opacity: 0.7; }
-        .btn-map svg { width: 16px; height: 16px; margin-right: 5px; fill: currentColor; }
-
-        .btn-info {
-            display: inline-flex; align-items: center; padding: 8px 14px; border-radius: 10px;
-            font-size: 0.85rem; font-weight: 600; background: transparent;
-            cursor: pointer; transition: background 0.2s;
+        /* 按鈕群組 */
+        .action-area {
+            margin-left: calc(1.1rem + 20px);
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
         }
-        .btn-info:active { background: rgba(0,0,0,0.05); }
-        .btn-info svg { width: 16px; height: 16px; margin-right: 5px; fill: currentColor; }
+        
+        .btn-pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        /* Interaction: Button Hover */
+        .btn-pill:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .btn-pill:active { transform: translateY(0); }
+        .btn-pill svg { width: 14px; height: 14px; margin-right: 6px; fill: currentColor; }
 
-        .footer { text-align: center; padding: 40px 20px; color: #CFD8DC; font-size: 0.8rem; line-height: 1.6; }
-        .version { display: inline-block; margin-top: 8px; background: #ECEFF1; color: #90A4AE; padding: 2px 8px; border-radius: 10px; font-size: 0.7rem; }
+        /* 顏色邏輯 */
+        .day-theme-1 .time-display { color: var(--primary-blue); }
+        .day-theme-1 .btn-pill.primary { background: var(--primary-blue); color: white; }
+        .day-theme-1 .btn-pill.primary:hover { background: #427596; } /* Darken hover */
+        .day-theme-1 .btn-pill.outline { border-color: var(--primary-blue); color: var(--primary-blue); background: transparent; }
+        .day-theme-1 .btn-pill.outline:hover { background: #F0F6FA; }
+        
+        .day-theme-2 .time-display { color: var(--primary-orange); }
+        .day-theme-2 .btn-pill.primary { background: var(--primary-orange); color: white; }
+        .day-theme-2 .btn-pill.primary:hover { background: #D6694E; } /* Darken hover */
+        .day-theme-2 .btn-pill.outline { border-color: var(--primary-orange); color: var(--primary-orange); background: transparent; }
+        .day-theme-2 .btn-pill.outline:hover { background: #FFF5F2; }
 
-        /* Modal Styles */
+
+        /* Footer */
+        .footer { 
+            text-align: center; 
+            padding: 60px 0 40px; 
+            color: #BBB; 
+            font-size: 0.8rem; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        .footer-logo {
+            width: 100px;
+            opacity: 0.5;
+            filter: grayscale(100%);
+        }
+
+        /* --- Modal (彈出視窗) --- */
         .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(44, 62, 80, 0.4); z-index: 1000; display: none;
-            justify-content: center; align-items: flex-end;
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(255,255,255,0.6); /* 淺色毛玻璃背景 */
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: none;
             opacity: 0; transition: opacity 0.3s;
-            backdrop-filter: blur(4px);
+            align-items: center; justify-content: center;
         }
         .modal-overlay.active { display: flex; opacity: 1; }
         
-        .modal-content {
-            background: white; width: 100%; max-width: 500px;
-            border-top-left-radius: 24px; border-top-right-radius: 24px;
-            padding: 30px; box-shadow: 0 -10px 40px rgba(0,0,0,0.15);
-            transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-            max-height: 85vh; overflow-y: auto;
+        .modal-card {
+            background: white;
+            width: 85%; max-width: 450px;
+            border-radius: 24px;
+            padding: 35px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15); /* 更有深度的陰影 */
+            transform: scale(0.95) translateY(20px);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            max-height: 80vh; overflow-y: auto;
+            border: 1px solid rgba(0,0,0,0.05);
         }
-        .modal-overlay.active .modal-content { transform: translateY(0); }
+        .modal-overlay.active .modal-card { transform: scale(1) translateY(0); }
+
+        .modal-header { display: flex; justify-content: space-between; margin-bottom: 25px; align-items: flex-start; }
+        .modal-title { font-family: 'Noto Serif TC', serif; font-size: 1.4rem; font-weight: 900; color: var(--text-main); line-height: 1.3; }
+        .modal-close { background: #F5F5F5; border: none; border-radius: 50%; width: 36px; height: 36px; font-size: 1.5rem; cursor: pointer; color: #666; display: flex; align-items: center; justify-content: center; transition: background 0.2s;}
+        .modal-close:hover { background: #E0E0E0; }
         
-        @media (min-width: 600px) {
-            .modal-overlay { align-items: center; }
-            .modal-content { border-radius: 24px; transform: scale(0.95); box-shadow: 0 10px 40px rgba(0,0,0,0.15); }
-            .modal-overlay.active .modal-content { transform: scale(1); }
+        .insight-tag { 
+            display: inline-block; background: #333; color: white; 
+            padding: 5px 10px; border-radius: 6px; font-size: 0.7rem; font-weight: 700; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px;
         }
-
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 0; }
-        .modal-title { font-size: 1.3rem; font-weight: 700; color: var(--text); }
-        .modal-close { background: #F0F2F5; border: none; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #78909C; font-size: 1.2rem; transition: background 0.2s; }
-        
-        .modal-body { font-size: 0.95rem; line-height: 1.7; color: #455A64; }
-        .modal-body p { margin-top: 0; margin-bottom: 1.2em; }
-        .modal-tag { display: inline-block; background: var(--day1-bg); color: var(--day1-color); padding: 4px 10px; border-radius: 6px; font-size: 0.8rem; margin-bottom: 15px; font-weight: 600; letter-spacing: 0.5px; }
-
+        .insight-tip {
+            margin-top: 25px;
+            padding: 20px;
+            background: #FFFBF0;
+            border-left: 4px solid #FFC107;
+            font-size: 0.95rem;
+            color: #5D4037;
+            border-radius: 8px;
+            line-height: 1.6;
+        }
     </style>
 </head>
 <body>
 
-    <!-- 1. 品牌靜態區 (Brand Section) - 滑動時會消失 -->
+    <!-- ✨ 全域噪點特效 (Noise Layer) -->
+    <div class="noise-overlay"></div>
+
+    <!-- 1. 品牌區塊 -->
     <div class="brand-section">
         <img src="./logo.png" alt="YUJAY Logo" class="logo-img" onerror="this.style.display='none'; document.querySelector('.brand-section h1').style.display='block'">
         <h1 style="display:none">宇傑系統</h1>
-        <p>Jan 31 - Feb 1｜福容大飯店與深澳之旅</p>
+        <p>誠 信 穩 健 • 共 創 未 來</p>
     </div>
 
-    <!-- 2. 黏性動作條 (Sticky Action Bar) - 滑動時固定在頂部，更窄更不佔空間 -->
-    <div class="sticky-bar">
+    <!-- 2. 黏性按鈕 -->
+    <div class="sticky-action">
         <button class="btn-calendar" onclick="downloadICS()">
             <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2zm-7 5h5v5h-5z"/></svg>
-            一鍵匯入行事曆
+            Add to Calendar
         </button>
-        <span class="warning-text">(無法下載時請使用 Safari/Chrome)</span>
+        <span class="warning-text">(無法下載時請使用 Safari 或 Chrome)</span>
     </div>
 
+    <!-- 3. 切換頁籤 -->
     <div class="tabs-container">
         <div class="tabs">
-            <div class="tab active" data-day="1" onclick="switchTab(1)">Day 1 (1/31)</div>
-            <div class="tab" data-day="2" onclick="switchTab(2)">Day 2 (2/1)</div>
+            <div class="tab-bg" id="tabBg" style="background-color: var(--primary-blue);"></div>
+            <div class="tab active" onclick="switchTab(1)">Day 01</div>
+            <div class="tab" onclick="switchTab(2)">Day 02</div>
         </div>
     </div>
 
+    <!-- 4. 清單內容 -->
     <div class="container">
-        <!-- Day 1 Items -->
-        <div class="timeline-group day1">
-            <div class="timeline-item show">
-                <span class="time-badge">07:50</span>
-                <div class="title">🚩 宇傑系統 準時開車</div>
-                <div class="desc">早安！請提前集合，車子準時出發，逾時不候。<br>📍 集合地點：竹北市新工六路9號</div>
-                <div class="btn-group">
-                    <a href="https://www.google.com/maps/search/?api=1&query=竹北市新工六路9號" target="_blank" class="btn-map">
+        
+        <!-- Day 1 List -->
+        <div class="timeline-group day-theme-1 active" id="day1">
+            
+            <div class="list-item">
+                <div class="item-header">
+                    <span class="time-display">07:50</span>
+                    <span class="item-title">宇傑系統 準時開車</span>
+                </div>
+                <div class="item-desc">早安！請提前集合，車子準時出發，逾時不候。<br>集合：竹北市新工六路9號</div>
+                <div class="action-area">
+                    <a href="https://www.google.com/maps/search/?api=1&query=竹北市新工六路9號" target="_blank" class="btn-pill primary">
                         <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
                         導航
                     </a>
                 </div>
             </div>
 
-            <div class="timeline-item show">
-                <span class="time-badge">10:00</span>
-                <div class="title">🚴‍♂️ 深澳鐵道自行車</div>
-                <div class="desc">深澳站 (10:30 梯次) → 八斗子站 (11:01)。<br>來場海景自行車之旅！</div>
-                <div class="btn-group">
-                    <a href="https://www.google.com/maps/search/?api=1&query=深澳鐵道自行車深澳站" target="_blank" class="btn-map">
+            <div class="list-item">
+                <div class="item-header">
+                    <span class="time-display">10:00</span>
+                    <span class="item-title">深澳鐵道自行車</span>
+                </div>
+                <div class="item-desc">深澳站 (10:30 梯次) → 八斗子站。海景騎行體驗。</div>
+                <div class="action-area">
+                    <a href="https://www.google.com/maps/search/?api=1&query=深澳鐵道自行車深澳站" target="_blank" class="btn-pill outline">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                        Map
+                    </a>
+                    <button class="btn-pill outline" onclick="openModal('railbike')">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                        Info
+                    </button>
+                </div>
+            </div>
+
+            <div class="list-item">
+                <div class="item-header">
+                    <span class="time-display">12:00</span>
+                    <span class="item-title">午餐 - 友信海鮮餐廳</span>
+                </div>
+                <div class="item-desc">深澳漁港口碑名店，享用新鮮海產。</div>
+                <div class="action-area">
+                    <a href="https://www.google.com/maps/search/?api=1&query=友信海鮮餐廳" target="_blank" class="btn-pill outline">Map</a>
+                    <button class="btn-pill outline" onclick="openModal('restaurant')">Info</button>
+                </div>
+            </div>
+
+            <div class="list-item">
+                <div class="item-header">
+                    <span class="time-display">13:30</span>
+                    <span class="item-title">深澳岬角 (象鼻岩)</span>
+                </div>
+                <div class="item-desc">觀賞奇岩怪石與酋長岩公園散步。</div>
+                <div class="action-area">
+                    <a href="https://www.google.com/maps/search/?api=1&query=深澳岬角" target="_blank" class="btn-pill outline">Map</a>
+                    <button class="btn-pill outline" onclick="openModal('cape')">Info</button>
+                </div>
+            </div>
+
+            <div class="list-item">
+                <div class="item-header">
+                    <span class="time-display">15:00</span>
+                    <span class="item-title">福容大飯店 CHECK IN</span>
+                </div>
+                <div class="item-desc">自由活動時間，享受海洋溫泉與沙灘。</div>
+                <div class="action-area">
+                    <a href="https://www.google.com/maps/search/?api=1&query=福容大飯店福隆" target="_blank" class="btn-pill primary">
                         <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
                         導航
                     </a>
-                    <button class="btn-info" onclick="openModal('railbike')">
-                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-                        介紹
-                    </button>
+                    <button class="btn-pill outline" onclick="openModal('hotel')">Info</button>
                 </div>
             </div>
 
-            <div class="timeline-item show">
-                <span class="time-badge">12:00</span>
-                <div class="title">🍱 午餐-友信海鮮餐廳</div>
-                <div class="desc">享用美味海鮮料理。</div>
-                <div class="btn-group">
-                    <a href="https://www.google.com/maps/search/?api=1&query=友信海鮮餐廳" target="_blank" class="btn-map">
-                        <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-                        地圖
-                    </a>
-                    <button class="btn-info" onclick="openModal('restaurant')">
-                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-                        介紹
-                    </button>
+            <div class="list-item">
+                <div class="item-header">
+                    <span class="time-display">18:30</span>
+                    <span class="item-title">尾牙晚宴 (宴會廳)</span>
                 </div>
+                <div class="item-desc">準時開席，請勿遲到！抽獎活動準備開始。</div>
             </div>
-
-            <div class="timeline-item show">
-                <span class="time-badge">13:30</span>
-                <div class="title">🐘 深澳岬角 象鼻岩</div>
-                <div class="desc">著名的象鼻岩景觀與番仔澳酋長岩公園 (14:00)。</div>
-                <div class="btn-group">
-                    <a href="https://www.google.com/maps/search/?api=1&query=深澳岬角" target="_blank" class="btn-map">
-                        <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-                        地圖
-                    </a>
-                    <button class="btn-info" onclick="openModal('cape')">
-                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-                        介紹
-                    </button>
-                </div>
-            </div>
-
-            <div class="timeline-item show">
-                <span class="time-badge">15:00</span>
-                <div class="title">🏨 福容大飯店 福隆</div>
-                <div class="desc">Check-in 後自由活動，享受海洋溫泉！<br>📍 地址：新北市貢寮區福隆街41號</div>
-                <div class="btn-group">
-                    <a href="https://www.google.com/maps/search/?api=1&query=福容大飯店福隆" target="_blank" class="btn-map">
-                        <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-                        導航
-                    </a>
-                    <button class="btn-info" onclick="openModal('hotel')">
-                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-                        介紹
-                    </button>
-                </div>
-            </div>
-
-            <div class="timeline-item show">
-                <span class="time-badge">18:30</span>
-                <div class="title">🍽️ 🎉 尾牙晚宴</div>
-                <div class="desc">福容大飯店宴會廳，準時開席！</div>
-            </div>
+            
         </div>
 
-        <!-- Day 2 Items -->
-        <div class="timeline-group day2" style="display:none;">
-            <div class="timeline-item">
-                <span class="time-badge">11:00</span>
-                <div class="title">👋 飯店 Check-out</div>
-                <div class="desc">整理行李，準備退房前往基隆。</div>
+        <!-- Day 2 List -->
+        <div class="timeline-group day-theme-2" id="day2">
+            
+            <div class="list-item">
+                <div class="item-header">
+                    <span class="time-display">11:00</span>
+                    <span class="item-title">飯店 CHECK OUT</span>
+                </div>
+                <div class="item-desc">整理行李，準備退房前往基隆。</div>
             </div>
-            <div class="timeline-item">
-                <span class="time-badge">12:00</span>
-                <div class="title">🍜 基隆廟口夜市</div>
-                <div class="desc">自由覓食午餐時間。</div>
-                <div class="btn-group">
-                    <a href="https://www.google.com/maps/search/?api=1&query=基隆廟口夜市" target="_blank" class="btn-map">
+
+            <div class="list-item">
+                <div class="item-header">
+                    <span class="time-display">12:00</span>
+                    <span class="item-title">基隆廟口夜市</span>
+                </div>
+                <div class="item-desc">午餐自由覓食，品嚐在地小吃。</div>
+                <div class="action-area">
+                    <a href="https://www.google.com/maps/search/?api=1&query=基隆廟口夜市" target="_blank" class="btn-pill primary">
                         <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
                         導航
                     </a>
-                    <button class="btn-info" onclick="openModal('nightmarket')">
-                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-                        介紹
-                    </button>
+                    <button class="btn-pill outline" onclick="openModal('nightmarket')">Info</button>
                 </div>
             </div>
-            <div class="timeline-item">
-                <span class="time-badge">16:00</span>
-                <div class="title">🚌 抵達宇傑系統</div>
-                <div class="desc">平安返抵公司，為兩天一夜畫下完美句點。</div>
-                <div class="btn-group">
-                    <a href="https://www.google.com/maps/search/?api=1&query=竹北市新工六路9號" target="_blank" class="btn-map">
-                        <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-                        導航
-                    </a>
+
+            <div class="list-item">
+                <div class="item-header">
+                    <span class="time-display">16:00</span>
+                    <span class="item-title">返抵宇傑系統</span>
+                </div>
+                <div class="item-desc">平安返家，活動圓滿結束。</div>
+                <div class="action-area">
+                    <a href="https://www.google.com/maps/search/?api=1&query=竹北市新工六路9號" target="_blank" class="btn-pill outline">回公司</a>
                 </div>
             </div>
+
         </div>
+
     </div>
 
+    <!-- 底部 Logo -->
     <div class="footer">
-        如有任何問題，歡迎找名育詢問<br>
-        Built with ❤️ for 2026 Weiya
-        <div class="version">v2.1 Compact Mode</div>
+        <img src="./logo.png" alt="YUJAY Logo" class="footer-logo">
+        <div>v3.1 Design Edition • YUJAY SYSTEMS</div>
     </div>
 
     <!-- Modal Popout -->
     <div id="infoModal" class="modal-overlay" onclick="closeModal(event)">
-        <div class="modal-content">
+        <div class="modal-card">
             <div class="modal-header">
                 <div class="modal-title" id="modalTitle">標題</div>
                 <button class="modal-close" onclick="closeModal(null)">×</button>
@@ -376,44 +504,80 @@
             railbike: {
                 title: "深澳鐵道自行車",
                 content: `
-                    <span class="modal-tag">北海岸最美支線</span>
-                    <p>利用舊深澳線鐵道改建，是全台唯一的海景鐵道自行車。從深澳站出發，沿途可以同時飽覽山景與海景，還會穿過夢幻的光影隧道，終點八斗子站更被譽為「北台灣的多良車站」。</p>
-                    <p>💡 <strong>小提醒：</strong>全程約 1.3 公里，單程約 15-20 分鐘，輕鬆好騎！</p>
+                    <span class="insight-tag">MUST TRY</span>
+                    <p>利用舊深澳線鐵道改建，全台唯一海景鐵道自行車。穿越光影隧道超夢幻！</p>
+                    <div class="insight-tip">
+                        <strong>🌟 獨家小撇步</strong>
+                        進隧道時會變成星空模式，手機記得拿穩拍照！
+                    </div>
                 `
             },
             restaurant: {
                 title: "友信海鮮餐廳",
                 content: `
-                    <span class="modal-tag">深澳漁港口碑名店</span>
-                    <p>位於深澳漁港旁，主打自家漁船捕撈的「現流」海鮮。食材新鮮度極高，價格透明公道。</p>
-                    <p>🍤 <strong>必吃推薦：</strong>招牌小卷米粉、墨魚香腸、現燙透抽。是老饕們來深澳必訪的餐廳！</p>
+                    <span class="insight-tag">FOODIE</span>
+                    <p>自家漁船捕撈「現流」海鮮，價格透明，在地口碑極佳。</p>
+                    <div class="insight-tip">
+                        <strong>🌟 獨家小撇步</strong>
+                        必點「小卷米粉」與店家自製「墨魚香腸」，口感超彈牙。
+                    </div>
                 `
             },
             cape: {
-                title: "深澳岬角 (象鼻岩/酋長岩)",
+                title: "深澳岬角",
                 content: `
-                    <span class="modal-tag">國際級地質景觀</span>
-                    <p>這裡擁有特殊的蕈狀岩地質景觀。雖然象鼻岩的鼻幹已斷，但壯闊的海蝕拱門與海岸線依然迷人。</p>
-                    <p>🗿 <strong>看點：</strong>除了象鼻岩遺址，鄰近的「酋長岩」側面酷似印地安人酋長，是另一個必拍亮點。走在奇岩怪石間聽海浪聲，非常療癒。</p>
+                    <span class="insight-tag">NATURE</span>
+                    <p>雖然象鼻已斷，但周邊蕈狀岩地質與海岸線依然壯觀。</p>
+                    <div class="insight-tip">
+                        <strong>🌟 獨家小撇步</strong>
+                        尋找「酋長岩」，側面看超級像印地安人酋長！
+                    </div>
                 `
             },
             hotel: {
-                title: "福容大飯店 福隆",
+                title: "福容大飯店",
                 content: `
-                    <span class="modal-tag">全台唯一海洋溫泉</span>
-                    <p>飯店內的「福隆海洋溫泉」取自地下1500公尺，屬於稀有的氯化物碳酸氫鹽泉，泡完皮膚會滑滑的喔！</p>
-                    <p>🏖️ <strong>設施：</strong>飯店直通福隆海水浴場，可以去沙灘散步，或是享受飯店內的Villa度假氛圍。</p>
+                    <span class="insight-tag">RELAX</span>
+                    <p>擁有全台唯一「氯化物碳酸氫鹽泉」海洋溫泉，以及黃金沙灘。</p>
+                    <div class="insight-tip">
+                        <strong>🌟 獨家小撇步</strong>
+                        溫泉帶有鹽分，泡完皮膚滑滑的，建議不要馬上沖掉。
+                    </div>
                 `
             },
             nightmarket: {
                 title: "基隆廟口夜市",
                 content: `
-                    <span class="modal-tag">台灣指標性夜市</span>
-                    <p>位於奠濟宮周邊，短短幾百公尺聚集了數百攤全台知名的美食，幾乎無雷！</p>
-                    <p>🍜 <strong>必吃清單：</strong>營養三明治、天婦羅、鼎邊趖、泡泡冰、螃蟹羹、一口吃香腸。建議大家分食，才能吃更多攤喔！</p>
+                    <span class="insight-tag">EAT</span>
+                    <p>聚集全台知名小吃，營養三明治、泡泡冰、一口香腸。</p>
+                    <div class="insight-tip">
+                        <strong>🌟 獨家小撇步</strong>
+                        先抽營養三明治號碼牌，再去吃別的，效率最高！
+                    </div>
                 `
             }
         };
+
+        function switchTab(day) {
+            // 處理內容切換
+            document.querySelectorAll('.timeline-group').forEach(el => el.classList.remove('active'));
+            document.getElementById('day' + day).classList.add('active');
+            
+            // 處理 Tab 樣式
+            document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+            const tabs = document.querySelectorAll('.tab');
+            tabs[day-1].classList.add('active');
+
+            // 處理背景滑動動畫
+            const bg = document.getElementById('tabBg');
+            if (day === 1) {
+                bg.style.transform = 'translateX(0)';
+                bg.style.backgroundColor = 'var(--primary-blue)';
+            } else {
+                bg.style.transform = 'translateX(100%)';
+                bg.style.backgroundColor = 'var(--primary-orange)';
+            }
+        }
 
         function openModal(id) {
             const data = insights[id];
@@ -421,38 +585,15 @@
                 document.getElementById('modalTitle').innerText = data.title;
                 document.getElementById('modalBody').innerHTML = data.content;
                 document.getElementById('infoModal').classList.add('active');
-                // Prevent body scrolling
                 document.body.style.overflow = 'hidden';
             }
         }
 
         function closeModal(event) {
-            // Close if clicked on overlay (background) or close button
             if (!event || event.target.classList.contains('modal-overlay') || event.target.classList.contains('modal-close')) {
                 document.getElementById('infoModal').classList.remove('active');
                 document.body.style.overflow = '';
             }
-        }
-
-        function switchTab(day) {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.querySelector(`.tab[data-day="${day}"]`).classList.add('active');
-            
-            const allGroups = document.querySelectorAll('.timeline-group');
-            allGroups.forEach(g => {
-                g.style.display = 'none';
-                g.querySelectorAll('.timeline-item').forEach(item => { item.classList.remove('show'); });
-            });
-            
-            const targetGroup = document.querySelector('.day' + day);
-            targetGroup.style.display = 'block';
-            
-            const items = targetGroup.querySelectorAll('.timeline-item');
-            items.forEach((item, index) => {
-                void item.offsetWidth;
-                setTimeout(() => { item.classList.add('show'); }, index * 50); 
-            });
-            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function downloadICS() {
