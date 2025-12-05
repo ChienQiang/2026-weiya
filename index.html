@@ -5,54 +5,85 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>🎉 2026 YUJAY 尾牙兩天一夜</title>
     
-    <!-- 引入 Google Fonts: Noto Serif TC (標題) & Noto Sans TC (內文) -->
+    <!-- 引入 Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Noto+Serif+TC:wght@400;700;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 
     <style>
         :root {
             /* --- 🎨 2026 Design Edition 配色 --- */
             --primary-blue: #5286A8;
             --primary-orange: #E07A5F;
+            --primary-dark: #2C3E50; /* 公告頁面的主色：沈穩深灰藍 */
             
             --bg: #FAFAFA;
             --line: #E0E0E0;
             --text-main: #1A1A1A;
             --text-sub: #666666;
+            
+            /* Material Shadows */
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 20px rgba(0,0,0,0.15), 0 3px 6px rgba(0,0,0,0.10);
+            
+            /* ACID Theme Colors */
+            --acid-bg: #0a0a0a;
+            --acid-text: #e0e0e0;
+            --acid-accent: #ccff00;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
-            /* 預設使用內文字體 */
             font-family: 'Noto Sans TC', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background: var(--bg);
             margin: 0;
             padding: 0;
             color: var(--text-main);
             padding-bottom: 60px;
-            overflow-x: hidden; /* 防止橫向卷軸 */
+            overflow-x: hidden;
+            position: relative;
         }
 
-        /* --- ✨ 0. 全域噪點特效 (Grainy Noise Overlay) --- */
+        /* --- ✨ 0. 全域特效層 --- */
         .noise-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none; /* 讓點擊穿透，不影響操作 */
-            z-index: 9999;
-            opacity: 0.06; /* 調整雜訊明顯度 */
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 9998; opacity: 0.05;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+        
+        /* 動態柔光層 */
+        .diffuse-light {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 9997;
+            background-size: 200% 200%;
+            filter: blur(60px);
+            opacity: 0.6;
+            transition: background 1.5s ease-in-out;
+        }
+
+        /* Mode 0: Intro (Neutral/Elegant) */
+        .diffuse-light.mode-intro {
+            background: radial-gradient(circle at 50% 10%, rgba(200, 200, 200, 0.2) 0%, transparent 60%),
+                        radial-gradient(circle at 50% 90%, rgba(44, 62, 80, 0.1) 0%, transparent 60%);
+        }
+        /* Mode 1: Day 1 (Cool) */
+        .diffuse-light.mode-day1 {
+            background: radial-gradient(circle at 20% 30%, rgba(82, 134, 168, 0.4) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(130, 177, 255, 0.3) 0%, transparent 50%);
+        }
+        /* Mode 2: Day 2 (Warm) */
+        .diffuse-light.mode-day2 {
+            background: radial-gradient(circle at 80% 20%, rgba(224, 122, 95, 0.4) 0%, transparent 50%),
+                        radial-gradient(circle at 20% 90%, rgba(255, 209, 128, 0.3) 0%, transparent 50%);
         }
 
         /* --- 1. 品牌區塊 --- */
         .brand-section {
-            background: var(--bg);
+            background: transparent;
             text-align: center;
-            padding: 40px 20px 20px;
+            padding: 50px 20px 20px;
             position: relative;
         }
         .logo-img {
@@ -60,9 +91,9 @@
             height: auto;
             display: block;
             margin: 0 auto 15px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.05));
         }
         .brand-section h1 {
-            /* 字體設定：粗體襯線字 */
             font-family: 'Noto Serif TC', serif;
             font-size: 1.6rem;
             margin: 0 0 8px;
@@ -75,61 +106,53 @@
             color: var(--text-sub);
             margin: 0;
             font-weight: 500;
-            letter-spacing: 2px; /* 增加字距讓標語更有氣勢 */
+            letter-spacing: 2px;
+        }
+        
+        .warning-text {
+            display: inline-block;
+            font-size: 0.75rem;
+            color: #999;
+            margin-top: 15px;
+            font-weight: 400;
+            background: rgba(255,255,255,0.6);
+            padding: 4px 12px;
+            border-radius: 20px;
+            border: 1px solid rgba(0,0,0,0.03);
         }
 
-        /* --- 2. 黏性按鈕 (Floating Pill) --- */
+        /* --- 2. 黏性按鈕 --- */
         .sticky-action {
             position: sticky;
-            top: 15px;
+            top: 20px;
             z-index: 90;
             display: flex;
-            flex-direction: column;
-            align-items: center;
+            justify-content: center;
             margin-bottom: 30px;
+            pointer-events: none;
         }
         .btn-calendar {
+            pointer-events: auto;
             background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(0,0,0,0.08);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.4);
             color: var(--text-main);
-            padding: 12px 28px;
+            padding: 12px 32px;
             border-radius: 100px;
             font-size: 0.95rem;
             font-weight: 700;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             cursor: pointer;
-            /* Interaction Design: Transition */
-            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
         }
-        
-        /* Interaction Design: Hover Effect (浮起來) */
-        .btn-calendar:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.12);
-        }
-        .btn-calendar:active {
-            transform: translateY(-1px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
+        .btn-calendar:hover { transform: translateY(-2px) scale(1.02); box-shadow: var(--shadow-lg); background: white; }
+        .btn-calendar:active { transform: translateY(0) scale(0.98); box-shadow: var(--shadow-sm); }
+        .btn-calendar svg { width: 20px; height: 20px; margin-right: 8px; fill: var(--primary-dark); }
 
-        .btn-calendar svg { width: 18px; height: 18px; margin-right: 8px; }
-
-        .warning-text {
-            display: block;
-            font-size: 0.75rem;
-            color: #999;
-            margin-top: 8px;
-            font-weight: 400;
-            background: rgba(255,255,255,0.8);
-            padding: 2px 8px;
-            border-radius: 4px;
-        }
-
-        /* --- 3. 頁籤切換 (Pill Tabs) --- */
+        /* --- 3. 頁籤切換 (3 Tabs) --- */
         .tabs-container {
             display: flex;
             justify-content: center;
@@ -137,200 +160,243 @@
             padding: 0 20px;
         }
         .tabs {
-            background: #EEEEEE;
-            padding: 4px;
+            background: white;
+            padding: 5px;
             border-radius: 100px;
             display: flex;
             position: relative;
+            box-shadow: var(--shadow-sm);
+            width: 100%;
+            max-width: 450px;
         }
         .tab {
-            padding: 10px 28px;
+            flex: 1; /* 均分寬度 */
+            text-align: center;
+            padding: 10px 0;
             border-radius: 100px;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             font-weight: 700;
             color: #999;
             cursor: pointer;
             position: relative;
             z-index: 2;
             transition: color 0.3s;
-            font-family: 'Noto Sans TC', sans-serif; /* 確保 Tab 數字清晰 */
         }
         .tab.active { color: white; }
-        
         .tab-bg {
             position: absolute;
-            top: 4px; left: 4px; bottom: 4px;
-            width: calc(50% - 4px);
+            top: 5px; left: 5px; bottom: 5px;
+            width: calc(33.33% - 3.33px); /* 三分之一寬度 */
             border-radius: 100px;
             transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1), background-color 0.3s;
             z-index: 1;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
-        /* --- 4. 清單式行程 --- */
-        .container { max-width: 600px; margin: 0 auto; padding: 0 20px; }
-        
-        .timeline-group { display: none; animation: fadeIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        /* --- 4. 內容區塊 --- */
+        .container { max-width: 600px; margin: 0 auto; padding: 0 20px; transition: max-width 0.3s; }
+        .timeline-group { display: none; animation: fadeIn 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); }
         .timeline-group.active { display: block; }
-        
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        .list-item {
-            display: flex;
-            flex-direction: column;
-            padding: 25px 0;
-            border-bottom: 1px solid var(--line);
-            position: relative;
+        /* 公告頁面樣式 (Letter Style) */
+        .letter-box {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-md);
+            text-align: center;
+            border: 1px solid rgba(0,0,0,0.03);
+            margin-bottom: 20px;
         }
+        .letter-title {
+            font-family: 'Noto Serif TC', serif;
+            font-size: 1.4rem;
+            font-weight: 900;
+            color: var(--primary-dark);
+            margin-bottom: 25px;
+            position: relative;
+            display: inline-block;
+        }
+        .letter-title::after {
+            content: '';
+            display: block;
+            width: 40px;
+            height: 3px;
+            background: #ddd;
+            margin: 10px auto 0;
+        }
+        .letter-content {
+            font-family: 'Noto Serif TC', serif;
+            font-size: 1.05rem;
+            line-height: 1.9;
+            color: #444;
+            text-align: justify; /* 左右對齊 */
+            text-align-last: center; /* 最後一行置中 */
+        }
+        .letter-content p { margin-bottom: 20px; }
+        
+        .highlight-date {
+            display: inline-block;
+            background: #F5F7FA;
+            color: var(--primary-dark);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-family: 'Space Mono', monospace;
+            margin: 20px 0;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+        
+        .letter-footer {
+            margin-top: 30px;
+            font-size: 0.9rem;
+            color: #888;
+            font-style: italic;
+        }
+
+        /* 行程列表樣式 */
+        .list-item { display: flex; flex-direction: row; padding: 25px 0; border-bottom: 1px solid var(--line); align-items: flex-start; }
         .timeline-group .list-item:last-child { border-bottom: none; }
 
-        .item-header {
-            display: flex;
-            align-items: baseline;
-            justify-content: space-between;
-            margin-bottom: 10px;
-        }
-        
-        .time-display {
-            font-family: 'Noto Serif TC', serif; /* 時間用襯線體，更有質感 */
-            font-size: 1.1rem;
-            font-weight: 700;
-        }
-        
-        .item-title {
-            font-family: 'Noto Serif TC', serif; /* 標題用襯線體 */
+        .item-time {
+            font-family: 'Noto Serif TC', serif;
             font-size: 1.2rem;
             font-weight: 700;
-            color: var(--text-main);
-            flex-grow: 1;
-            margin-left: 20px;
+            min-width: 70px;
+            margin-right: 20px;
+            padding-top: 2px;
+            line-height: 1.2;
+            opacity: 0.9;
         }
-
-        .item-desc {
-            font-size: 1rem;
-            color: var(--text-sub);
-            line-height: 1.7;
-            margin-left: calc(1.1rem + 20px);
-            margin-bottom: 15px;
-            font-weight: 400;
-        }
+        .item-content { flex: 1; display: flex; flex-direction: column; }
+        .item-title { font-family: 'Noto Serif TC', serif; font-size: 1.25rem; font-weight: 700; color: var(--text-main); margin: 0 0 8px 0; line-height: 1.3; }
+        .item-desc { font-size: 1rem; color: var(--text-sub); line-height: 1.7; margin: 0 0 16px 0; font-weight: 400; }
 
         /* 按鈕群組 */
-        .action-area {
-            margin-left: calc(1.1rem + 20px);
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-        
+        .action-area { display: flex; gap: 12px; flex-wrap: wrap; }
         .btn-pill {
-            display: inline-flex;
-            align-items: center;
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            border: 1px solid transparent;
-            cursor: pointer;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            display: inline-flex; align-items: center; padding: 8px 18px; border-radius: 8px;
+            font-size: 0.85rem; font-weight: 600; text-decoration: none;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid transparent; cursor: pointer;
         }
-        
-        /* Interaction: Button Hover */
-        .btn-pill:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-        .btn-pill:active { transform: translateY(0); }
-        .btn-pill svg { width: 14px; height: 14px; margin-right: 6px; fill: currentColor; }
+        .btn-pill:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+        .btn-pill:active { transform: translateY(0); box-shadow: var(--shadow-sm); }
+        .btn-pill svg { width: 15px; height: 15px; margin-right: 6px; fill: currentColor; }
 
-        /* 顏色邏輯 */
-        .day-theme-1 .time-display { color: var(--primary-blue); }
+        /* Themes */
+        .day-theme-1 .item-time { color: var(--primary-blue); }
         .day-theme-1 .btn-pill.primary { background: var(--primary-blue); color: white; }
-        .day-theme-1 .btn-pill.primary:hover { background: #427596; } /* Darken hover */
-        .day-theme-1 .btn-pill.outline { border-color: var(--primary-blue); color: var(--primary-blue); background: transparent; }
+        .day-theme-1 .btn-pill.primary:hover { background: #427596; }
+        .day-theme-1 .btn-pill.outline { border-color: var(--primary-blue); color: var(--primary-blue); background: white; }
         .day-theme-1 .btn-pill.outline:hover { background: #F0F6FA; }
         
-        .day-theme-2 .time-display { color: var(--primary-orange); }
+        .day-theme-2 .item-time { color: var(--primary-orange); }
         .day-theme-2 .btn-pill.primary { background: var(--primary-orange); color: white; }
-        .day-theme-2 .btn-pill.primary:hover { background: #D6694E; } /* Darken hover */
-        .day-theme-2 .btn-pill.outline { border-color: var(--primary-orange); color: var(--primary-orange); background: transparent; }
+        .day-theme-2 .btn-pill.primary:hover { background: #D6694E; }
+        .day-theme-2 .btn-pill.outline { border-color: var(--primary-orange); color: var(--primary-orange); background: white; }
         .day-theme-2 .btn-pill.outline:hover { background: #FFF5F2; }
 
+        .footer { text-align: center; padding: 60px 0 40px; color: #BBB; font-size: 0.8rem; display: flex; flex-direction: column; align-items: center; gap: 15px; }
+        .footer-logo { width: 100px; opacity: 0.5; filter: grayscale(100%); }
 
-        /* Footer */
-        .footer { 
-            text-align: center; 
-            padding: 60px 0 40px; 
-            color: #BBB; 
-            font-size: 0.8rem; 
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
+        @media (min-width: 768px) {
+            .container { max-width: 900px; padding: 0 40px; }
+            .logo-img { max-width: 180px; }
+            .brand-section h1 { font-size: 2.2rem; margin-bottom: 12px; }
+            .brand-section p { font-size: 1.1rem; }
+            .list-item { padding: 40px 0; }
+            .item-time { font-size: 1.5rem; min-width: 130px; margin-right: 40px; }
+            .item-title { font-size: 1.6rem; margin-bottom: 12px; }
+            .item-desc { font-size: 1.1rem; }
+            .btn-pill { padding: 10px 24px; font-size: 0.95rem; }
+            .btn-calendar { padding: 16px 40px; font-size: 1.1rem; }
+            .letter-box { padding: 60px 80px; }
+            .letter-content { font-size: 1.2rem; }
         }
-        .footer-logo {
-            width: 100px;
-            opacity: 0.5;
-            filter: grayscale(100%);
+        @media (min-width: 1024px) {
+            .container { max-width: 1000px; }
+            .list-item { display: grid; grid-template-columns: 160px 1fr auto; gap: 30px; }
         }
 
-        /* --- Modal (彈出視窗) --- */
+        /* --- 💥 ACID AESTHETICS MODAL 💥 --- */
         .modal-overlay {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(255,255,255,0.6); /* 淺色毛玻璃背景 */
-            backdrop-filter: blur(8px);
-            z-index: 1000;
-            display: none;
-            opacity: 0; transition: opacity 0.3s;
+            background: rgba(0, 0, 0, 0.4); 
+            backdrop-filter: blur(15px);
+            z-index: 1000; display: none; opacity: 0; transition: opacity 0.3s;
             align-items: center; justify-content: center;
         }
         .modal-overlay.active { display: flex; opacity: 1; }
         
         .modal-card {
-            background: white;
-            width: 85%; max-width: 450px;
-            border-radius: 24px;
-            padding: 35px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.15); /* 更有深度的陰影 */
-            transform: scale(0.95) translateY(20px);
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            max-height: 80vh; overflow-y: auto;
-            border: 1px solid rgba(0,0,0,0.05);
+            background: #111; 
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+            width: 85%; max-width: 500px; padding: 40px;
+            position: relative;
+            box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1), 0 20px 50px rgba(0,0,0,0.5);
+            transform: scale(0.9) translateY(20px);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+            max-height: 85vh; overflow-y: auto; color: #eee;
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%);
+        }
+        .modal-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, #FF00CC, #3333FF, #00FFCC); z-index: 10;
         }
         .modal-overlay.active .modal-card { transform: scale(1) translateY(0); }
 
-        .modal-header { display: flex; justify-content: space-between; margin-bottom: 25px; align-items: flex-start; }
-        .modal-title { font-family: 'Noto Serif TC', serif; font-size: 1.4rem; font-weight: 900; color: var(--text-main); line-height: 1.3; }
-        .modal-close { background: #F5F5F5; border: none; border-radius: 50%; width: 36px; height: 36px; font-size: 1.5rem; cursor: pointer; color: #666; display: flex; align-items: center; justify-content: center; transition: background 0.2s;}
-        .modal-close:hover { background: #E0E0E0; }
-        
+        .modal-header { display: flex; justify-content: space-between; margin-bottom: 30px; align-items: flex-start; }
+        .modal-title { font-family: 'Noto Serif TC', serif; font-size: 1.8rem; font-weight: 900; color: #fff; line-height: 1.2; text-shadow: 0 0 20px rgba(255,255,255,0.2); }
+        .modal-close { 
+            background: transparent; border: 1px solid rgba(255,255,255,0.3); 
+            width: 40px; height: 40px; border-radius: 50%;
+            font-size: 1.5rem; cursor: pointer; color: #fff; 
+            display: flex; align-items: center; justify-content: center; 
+            transition: all 0.2s;
+        }
+        .modal-close:hover { background: #fff; color: #000; transform: rotate(90deg); }
+        .modal-body { font-family: 'Noto Sans TC', sans-serif; }
+
         .insight-tag { 
-            display: inline-block; background: #333; color: white; 
-            padding: 5px 10px; border-radius: 6px; font-size: 0.7rem; font-weight: 700; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px;
+            display: inline-block; background: linear-gradient(135deg, #e0e0e0 0%, #ffffff 50%, #a0a0a0 100%);
+            color: #000; padding: 6px 12px; font-size: 0.75rem; 
+            font-family: 'Space Mono', monospace; font-weight: 700; margin-bottom: 20px; 
+            text-transform: uppercase; letter-spacing: 2px;
+            box-shadow: 0 2px 10px rgba(255,255,255,0.2);
         }
-        .insight-tip {
-            margin-top: 25px;
-            padding: 20px;
-            background: #FFFBF0;
-            border-left: 4px solid #FFC107;
-            font-size: 0.95rem;
-            color: #5D4037;
-            border-radius: 8px;
-            line-height: 1.6;
+        .insight-tip { 
+            margin-top: 30px; padding: 20px; 
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+            font-size: 0.95rem; color: #ccc; line-height: 1.8; position: relative;
         }
+        .insight-tip::after {
+            content: 'TIPS_//'; position: absolute; top: -10px; left: 10px;
+            background: #111; padding: 0 5px;
+            font-family: 'Space Mono', monospace; font-size: 0.7rem; color: var(--acid-accent);
+        }
+        .insight-tip strong { display: none; }
+        .modal-content-text p { margin-top: 0; line-height: 1.8; opacity: 0.9; font-weight: 300; }
+
     </style>
 </head>
 <body>
 
-    <!-- ✨ 全域噪點特效 (Noise Layer) -->
+    <!-- ✨ 全域特效層 -->
     <div class="noise-overlay"></div>
+    <div class="diffuse-light mode-intro" id="diffuseLight"></div>
 
     <!-- 1. 品牌區塊 -->
     <div class="brand-section">
         <img src="./logo.png" alt="YUJAY Logo" class="logo-img" onerror="this.style.display='none'; document.querySelector('.brand-section h1').style.display='block'">
         <h1 style="display:none">宇傑系統</h1>
         <p>誠 信 穩 健 • 共 創 未 來</p>
+        <span class="warning-text">(無法下載時請使用 Safari 或 Chrome)</span>
     </div>
 
     <!-- 2. 黏性按鈕 -->
@@ -339,14 +405,14 @@
             <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2zm-7 5h5v5h-5z"/></svg>
             Add to Calendar
         </button>
-        <span class="warning-text">(無法下載時請使用 Safari 或 Chrome)</span>
     </div>
 
-    <!-- 3. 切換頁籤 -->
+    <!-- 3. 切換頁籤 (新增公告 Tab) -->
     <div class="tabs-container">
         <div class="tabs">
-            <div class="tab-bg" id="tabBg" style="background-color: var(--primary-blue);"></div>
-            <div class="tab active" onclick="switchTab(1)">Day 01</div>
+            <div class="tab-bg" id="tabBg" style="background-color: var(--primary-dark);"></div>
+            <div class="tab active" onclick="switchTab(0)">公告</div>
+            <div class="tab" onclick="switchTab(1)">Day 01</div>
             <div class="tab" onclick="switchTab(2)">Day 02</div>
         </div>
     </div>
@@ -354,135 +420,130 @@
     <!-- 4. 清單內容 -->
     <div class="container">
         
+        <!-- Tab 0: 公告 (Intro) -->
+        <div class="timeline-group active" id="day0">
+            <div class="letter-box">
+                <div class="letter-title">尾牙活動公告</div>
+                <div class="letter-content">
+                    <p>親愛的同仁們：</p>
+                    <p>大家久等了！一年一度的尾牙即將登場。</p>
+                    <p>為了感謝大家這一年來的辛勤付出與努力，這次我們特地安排了一趟能夠親近自然、放鬆身心的戶外之旅。希望能藉此機會讓大家好好休息、享用美食，為新的一年補充滿滿的能量。</p>
+                    
+                    <div class="highlight-date">
+                        2026/1/31(六) － 2/1(日)
+                    </div>
+                    
+                    <p>請各位先把時間記起來，讓我們一起共度這兩天一夜的美好時光！</p>
+                </div>
+                <div class="letter-footer">如有任何問題，歡迎找名育詢問</div>
+            </div>
+        </div>
+
         <!-- Day 1 List -->
-        <div class="timeline-group day-theme-1 active" id="day1">
-            
+        <div class="timeline-group day-theme-1" id="day1">
             <div class="list-item">
-                <div class="item-header">
-                    <span class="time-display">07:50</span>
-                    <span class="item-title">宇傑系統 準時開車</span>
-                </div>
-                <div class="item-desc">早安！請提前集合，車子準時出發，逾時不候。<br>集合：竹北市新工六路9號</div>
-                <div class="action-area">
-                    <a href="https://www.google.com/maps/search/?api=1&query=竹北市新工六路9號" target="_blank" class="btn-pill primary">
-                        <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-                        導航
-                    </a>
+                <div class="item-time">07:50</div>
+                <div class="item-content">
+                    <h3 class="item-title">宇傑系統 準時開車</h3>
+                    <p class="item-desc">早安！請提前集合，車子準時出發，逾時不候。<br>集合：竹北市新工六路9號</p>
+                    <div class="action-area">
+                        <a href="https://www.google.com/maps/search/?api=1&query=竹北市新工六路9號" target="_blank" class="btn-pill primary">
+                            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                            導航
+                        </a>
+                    </div>
                 </div>
             </div>
-
             <div class="list-item">
-                <div class="item-header">
-                    <span class="time-display">10:00</span>
-                    <span class="item-title">深澳鐵道自行車</span>
-                </div>
-                <div class="item-desc">深澳站 (10:30 梯次) → 八斗子站。海景騎行體驗。</div>
-                <div class="action-area">
-                    <a href="https://www.google.com/maps/search/?api=1&query=深澳鐵道自行車深澳站" target="_blank" class="btn-pill outline">
-                        <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-                        Map
-                    </a>
-                    <button class="btn-pill outline" onclick="openModal('railbike')">
-                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-                        Info
-                    </button>
+                <div class="item-time">10:00</div>
+                <div class="item-content">
+                    <h3 class="item-title">深澳鐵道自行車</h3>
+                    <p class="item-desc">深澳站 (10:30 梯次) → 八斗子站。海景騎行體驗。</p>
+                    <div class="action-area">
+                        <a href="https://www.google.com/maps/search/?api=1&query=深澳鐵道自行車深澳站" target="_blank" class="btn-pill outline">Map</a>
+                        <button class="btn-pill outline" onclick="openModal('railbike')">Info</button>
+                    </div>
                 </div>
             </div>
-
             <div class="list-item">
-                <div class="item-header">
-                    <span class="time-display">12:00</span>
-                    <span class="item-title">午餐 - 友信海鮮餐廳</span>
-                </div>
-                <div class="item-desc">深澳漁港口碑名店，享用新鮮海產。</div>
-                <div class="action-area">
-                    <a href="https://www.google.com/maps/search/?api=1&query=友信海鮮餐廳" target="_blank" class="btn-pill outline">Map</a>
-                    <button class="btn-pill outline" onclick="openModal('restaurant')">Info</button>
+                <div class="item-time">12:00</div>
+                <div class="item-content">
+                    <h3 class="item-title">午餐 - 友信海鮮餐廳</h3>
+                    <p class="item-desc">深澳漁港口碑名店，享用新鮮海產。</p>
+                    <div class="action-area">
+                        <a href="https://www.google.com/maps/search/?api=1&query=友信海鮮餐廳" target="_blank" class="btn-pill outline">Map</a>
+                        <button class="btn-pill outline" onclick="openModal('restaurant')">Info</button>
+                    </div>
                 </div>
             </div>
-
             <div class="list-item">
-                <div class="item-header">
-                    <span class="time-display">13:30</span>
-                    <span class="item-title">深澳岬角 (象鼻岩)</span>
-                </div>
-                <div class="item-desc">觀賞奇岩怪石與酋長岩公園散步。</div>
-                <div class="action-area">
-                    <a href="https://www.google.com/maps/search/?api=1&query=深澳岬角" target="_blank" class="btn-pill outline">Map</a>
-                    <button class="btn-pill outline" onclick="openModal('cape')">Info</button>
+                <div class="item-time">13:30</div>
+                <div class="item-content">
+                    <h3 class="item-title">深澳岬角 (象鼻岩)</h3>
+                    <p class="item-desc">觀賞奇岩怪石與酋長岩公園散步。</p>
+                    <div class="action-area">
+                        <a href="https://www.google.com/maps/search/?api=1&query=深澳岬角" target="_blank" class="btn-pill outline">Map</a>
+                        <button class="btn-pill outline" onclick="openModal('cape')">Info</button>
+                    </div>
                 </div>
             </div>
-
             <div class="list-item">
-                <div class="item-header">
-                    <span class="time-display">15:00</span>
-                    <span class="item-title">福容大飯店 CHECK IN</span>
-                </div>
-                <div class="item-desc">自由活動時間，享受海洋溫泉與沙灘。</div>
-                <div class="action-area">
-                    <a href="https://www.google.com/maps/search/?api=1&query=福容大飯店福隆" target="_blank" class="btn-pill primary">
-                        <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-                        導航
-                    </a>
-                    <button class="btn-pill outline" onclick="openModal('hotel')">Info</button>
+                <div class="item-time">15:00</div>
+                <div class="item-content">
+                    <h3 class="item-title">福容大飯店 CHECK IN</h3>
+                    <p class="item-desc">自由活動時間，享受海洋溫泉與沙灘。</p>
+                    <div class="action-area">
+                        <a href="https://www.google.com/maps/search/?api=1&query=福容大飯店福隆" target="_blank" class="btn-pill primary">導航</a>
+                        <button class="btn-pill outline" onclick="openModal('hotel')">Info</button>
+                    </div>
                 </div>
             </div>
-
             <div class="list-item">
-                <div class="item-header">
-                    <span class="time-display">18:30</span>
-                    <span class="item-title">尾牙晚宴 (宴會廳)</span>
+                <div class="item-time">18:30</div>
+                <div class="item-content">
+                    <h3 class="item-title">尾牙晚宴 (宴會廳)</h3>
+                    <p class="item-desc">準時開席，請勿遲到！抽獎活動準備開始。</p>
                 </div>
-                <div class="item-desc">準時開席，請勿遲到！抽獎活動準備開始。</div>
             </div>
-            
         </div>
 
         <!-- Day 2 List -->
         <div class="timeline-group day-theme-2" id="day2">
-            
             <div class="list-item">
-                <div class="item-header">
-                    <span class="time-display">11:00</span>
-                    <span class="item-title">飯店 CHECK OUT</span>
-                </div>
-                <div class="item-desc">整理行李，準備退房前往基隆。</div>
-            </div>
-
-            <div class="list-item">
-                <div class="item-header">
-                    <span class="time-display">12:00</span>
-                    <span class="item-title">基隆廟口夜市</span>
-                </div>
-                <div class="item-desc">午餐自由覓食，品嚐在地小吃。</div>
-                <div class="action-area">
-                    <a href="https://www.google.com/maps/search/?api=1&query=基隆廟口夜市" target="_blank" class="btn-pill primary">
-                        <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-                        導航
-                    </a>
-                    <button class="btn-pill outline" onclick="openModal('nightmarket')">Info</button>
+                <div class="item-time">11:00</div>
+                <div class="item-content">
+                    <h3 class="item-title">飯店 CHECK OUT</h3>
+                    <p class="item-desc">整理行李，準備退房前往基隆。</p>
                 </div>
             </div>
-
             <div class="list-item">
-                <div class="item-header">
-                    <span class="time-display">16:00</span>
-                    <span class="item-title">返抵宇傑系統</span>
-                </div>
-                <div class="item-desc">平安返家，活動圓滿結束。</div>
-                <div class="action-area">
-                    <a href="https://www.google.com/maps/search/?api=1&query=竹北市新工六路9號" target="_blank" class="btn-pill outline">回公司</a>
+                <div class="item-time">12:00</div>
+                <div class="item-content">
+                    <h3 class="item-title">基隆廟口夜市</h3>
+                    <p class="item-desc">午餐自由覓食，品嚐在地小吃。</p>
+                    <div class="action-area">
+                        <a href="https://www.google.com/maps/search/?api=1&query=基隆廟口夜市" target="_blank" class="btn-pill primary">導航</a>
+                        <button class="btn-pill outline" onclick="openModal('nightmarket')">Info</button>
+                    </div>
                 </div>
             </div>
-
+            <div class="list-item">
+                <div class="item-time">16:00</div>
+                <div class="item-content">
+                    <h3 class="item-title">返抵宇傑系統</h3>
+                    <p class="item-desc">平安返家，活動圓滿結束。</p>
+                    <div class="action-area">
+                        <a href="https://www.google.com/maps/search/?api=1&query=竹北市新工六路9號" target="_blank" class="btn-pill outline">回公司</a>
+                    </div>
+                </div>
+            </div>
         </div>
 
     </div>
 
-    <!-- 底部 Logo -->
     <div class="footer">
         <img src="./logo.png" alt="YUJAY Logo" class="footer-logo">
-        <div>v3.1 Design Edition • YUJAY SYSTEMS</div>
+        <div>v3.4 Design Edition • YUJAY SYSTEMS</div>
     </div>
 
     <!-- Modal Popout -->
@@ -492,9 +553,7 @@
                 <div class="modal-title" id="modalTitle">標題</div>
                 <button class="modal-close" onclick="closeModal(null)">×</button>
             </div>
-            <div class="modal-body" id="modalBody">
-                <!-- Content injected via JS -->
-            </div>
+            <div class="modal-body" id="modalBody"></div>
         </div>
     </div>
 
@@ -505,77 +564,72 @@
                 title: "深澳鐵道自行車",
                 content: `
                     <span class="insight-tag">MUST TRY</span>
-                    <p>利用舊深澳線鐵道改建，全台唯一海景鐵道自行車。穿越光影隧道超夢幻！</p>
-                    <div class="insight-tip">
-                        <strong>🌟 獨家小撇步</strong>
-                        進隧道時會變成星空模式，手機記得拿穩拍照！
-                    </div>
+                    <div class="modal-content-text"><p>利用舊深澳線鐵道改建，全台唯一海景鐵道自行車。穿越光影隧道超夢幻！</p></div>
+                    <div class="insight-tip">進隧道時會變成星空模式，手機記得拿穩拍照！</div>
                 `
             },
             restaurant: {
                 title: "友信海鮮餐廳",
                 content: `
                     <span class="insight-tag">FOODIE</span>
-                    <p>自家漁船捕撈「現流」海鮮，價格透明，在地口碑極佳。</p>
-                    <div class="insight-tip">
-                        <strong>🌟 獨家小撇步</strong>
-                        必點「小卷米粉」與店家自製「墨魚香腸」，口感超彈牙。
-                    </div>
+                    <div class="modal-content-text"><p>自家漁船捕撈「現流」海鮮，價格透明，在地口碑極佳。</p></div>
+                    <div class="insight-tip">必點「小卷米粉」與店家自製「墨魚香腸」，口感超彈牙。</div>
                 `
             },
             cape: {
                 title: "深澳岬角",
                 content: `
                     <span class="insight-tag">NATURE</span>
-                    <p>雖然象鼻已斷，但周邊蕈狀岩地質與海岸線依然壯觀。</p>
-                    <div class="insight-tip">
-                        <strong>🌟 獨家小撇步</strong>
-                        尋找「酋長岩」，側面看超級像印地安人酋長！
-                    </div>
+                    <div class="modal-content-text"><p>雖然象鼻已斷，但周邊蕈狀岩地質與海岸線依然壯觀。</p></div>
+                    <div class="insight-tip">尋找「酋長岩」，側面看超級像印地安人酋長！</div>
                 `
             },
             hotel: {
                 title: "福容大飯店",
                 content: `
                     <span class="insight-tag">RELAX</span>
-                    <p>擁有全台唯一「氯化物碳酸氫鹽泉」海洋溫泉，以及黃金沙灘。</p>
-                    <div class="insight-tip">
-                        <strong>🌟 獨家小撇步</strong>
-                        溫泉帶有鹽分，泡完皮膚滑滑的，建議不要馬上沖掉。
-                    </div>
+                    <div class="modal-content-text"><p>擁有全台唯一「氯化物碳酸氫鹽泉」海洋溫泉，以及黃金沙灘。</p></div>
+                    <div class="insight-tip">溫泉帶有鹽分，泡完皮膚滑滑的，建議不要馬上沖掉。</div>
                 `
             },
             nightmarket: {
                 title: "基隆廟口夜市",
                 content: `
                     <span class="insight-tag">EAT</span>
-                    <p>聚集全台知名小吃，營養三明治、泡泡冰、一口香腸。</p>
-                    <div class="insight-tip">
-                        <strong>🌟 獨家小撇步</strong>
-                        先抽營養三明治號碼牌，再去吃別的，效率最高！
-                    </div>
+                    <div class="modal-content-text"><p>聚集全台知名小吃，營養三明治、泡泡冰、一口香腸。</p></div>
+                    <div class="insight-tip">先抽營養三明治號碼牌，再去吃別的，效率最高！</div>
                 `
             }
         };
 
         function switchTab(day) {
-            // 處理內容切換
+            // 隱藏所有 Group
             document.querySelectorAll('.timeline-group').forEach(el => el.classList.remove('active'));
             document.getElementById('day' + day).classList.add('active');
             
             // 處理 Tab 樣式
             document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
             const tabs = document.querySelectorAll('.tab');
-            tabs[day-1].classList.add('active');
+            // day 0=index0, day1=index1, day2=index2 (剛好對應)
+            if(tabs[day]) tabs[day].classList.add('active');
 
             // 處理背景滑動動畫
             const bg = document.getElementById('tabBg');
-            if (day === 1) {
+            const light = document.getElementById('diffuseLight');
+            light.className = 'diffuse-light';
+
+            if (day === 0) { // 公告
                 bg.style.transform = 'translateX(0)';
-                bg.style.backgroundColor = 'var(--primary-blue)';
-            } else {
+                bg.style.backgroundColor = 'var(--primary-dark)';
+                light.classList.add('mode-intro');
+            } else if (day === 1) { // Day 1
                 bg.style.transform = 'translateX(100%)';
+                bg.style.backgroundColor = 'var(--primary-blue)';
+                light.classList.add('mode-day1');
+            } else { // Day 2
+                bg.style.transform = 'translateX(200%)';
                 bg.style.backgroundColor = 'var(--primary-orange)';
+                light.classList.add('mode-day2');
             }
         }
 
@@ -597,6 +651,7 @@
         }
 
         function downloadICS() {
+            // ICS 內容保持不變
             const events = `BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//Gemini//YUJAY Weiya App//ZH
