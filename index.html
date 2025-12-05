@@ -6,12 +6,10 @@
     <title>🎉 2026 公司尾牙兩天一夜</title>
     <style>
         :root {
-            /* 定義雙色系 */
-            --day1-color: #D81B60; /* 參考圖片 Day 1 桃紅 */
+            --day1-color: #D81B60;
             --day1-bg: #fce4ec;
-            --day2-color: #00ACC1; /* 參考圖片 Day 2 青綠 */
+            --day2-color: #00ACC1;
             --day2-bg: #e0f7fa;
-            
             --bg: #f5f7fa;
             --card: #ffffff;
             --text: #333;
@@ -38,19 +36,10 @@
             z-index: 100;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
-        .header h1 { 
-            margin: 0; 
-            font-size: 1.3rem; 
-            letter-spacing: 1px; 
-            color: #2c3e50;
-        }
-        .header p { 
-            margin: 8px 0 15px; 
-            font-size: 0.9rem; 
-            color: #7f8c8d;
-        }
+        .header h1 { margin: 0; font-size: 1.3rem; letter-spacing: 1px; color: #2c3e50; }
+        .header p { margin: 8px 0 15px; font-size: 0.9rem; color: #7f8c8d; }
 
-        /* Calendar Import Button - 獨立樣式 */
+        /* Calendar Import Button (改為連結樣式) */
         .btn-calendar {
             background: #2c3e50;
             color: white;
@@ -64,6 +53,7 @@
             transition: transform 0.2s;
             cursor: pointer;
             margin-bottom: 5px;
+            border: none; /* Reset if previously button */
         }
         .btn-calendar:active { transform: scale(0.95); }
         .btn-calendar svg { width: 18px; height: 18px; margin-right: 8px; fill: currentColor; }
@@ -73,7 +63,7 @@
             background: var(--bg);
             padding: 15px 20px 0;
             position: sticky;
-            top: 135px; /* 根據 Header 高度調整，避免遮擋 */
+            top: 135px;
             z-index: 90;
         }
         .tabs {
@@ -86,106 +76,38 @@
             margin: 0 auto;
         }
         .tab {
-            flex: 1;
-            text-align: center;
-            padding: 10px;
-            border-radius: 40px;
-            font-weight: bold;
-            color: #999;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 0.95rem;
+            flex: 1; text-align: center; padding: 10px; border-radius: 40px;
+            font-weight: bold; color: #999; cursor: pointer; transition: all 0.3s ease; font-size: 0.95rem;
         }
-        
-        /* Day 1 Active Style */
-        .tab.active[data-day="1"] {
-            background: var(--day1-color);
-            color: white;
-            box-shadow: 0 4px 10px rgba(216, 27, 96, 0.3);
-        }
-        /* Day 2 Active Style */
-        .tab.active[data-day="2"] {
-            background: var(--day2-color);
-            color: white;
-            box-shadow: 0 4px 10px rgba(0, 172, 193, 0.3);
-        }
+        .tab.active[data-day="1"] { background: var(--day1-color); color: white; box-shadow: 0 4px 10px rgba(216, 27, 96, 0.3); }
+        .tab.active[data-day="2"] { background: var(--day2-color); color: white; box-shadow: 0 4px 10px rgba(0, 172, 193, 0.3); }
 
         /* Timeline */
         .container { padding: 20px; max-width: 600px; margin: 0 auto; }
-        
         .timeline-item {
-            background: var(--card);
-            border-radius: 16px;
-            padding: 18px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-            position: relative;
-            border-left: 5px solid #ddd; /* Default */
-            display: none;
-            opacity: 0;
-            transform: translateY(15px);
-            transition: opacity 0.4s, transform 0.4s;
+            background: var(--card); border-radius: 16px; padding: 18px; margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03); position: relative; border-left: 5px solid #ddd;
+            display: none; opacity: 0; transform: translateY(15px); transition: opacity 0.4s, transform 0.4s;
         }
-        .timeline-item.show {
-            display: block;
-            opacity: 1;
-            transform: translateY(0);
-        }
+        .timeline-item.show { display: block; opacity: 1; transform: translateY(0); }
 
-        /* Day 1 Specific Colors */
+        /* Colors */
         .day1 .timeline-item { border-left-color: var(--day1-color); }
         .day1 .time-badge { background: var(--day1-bg); color: var(--day1-color); }
         .day1 .btn-map { color: var(--day1-color); background: var(--day1-bg); }
-
-        /* Day 2 Specific Colors */
         .day2 .timeline-item { border-left-color: var(--day2-color); }
         .day2 .time-badge { background: var(--day2-bg); color: var(--day2-color); }
         .day2 .btn-map { color: var(--day2-color); background: var(--day2-bg); }
 
-        .time-badge {
-            font-weight: 800;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 0.9rem;
-            display: inline-block;
-            margin-bottom: 8px;
-        }
+        .time-badge { font-weight: 800; padding: 4px 10px; border-radius: 6px; font-size: 0.9rem; display: inline-block; margin-bottom: 8px; }
+        .title { font-size: 1.1rem; font-weight: bold; margin-bottom: 6px; color: #2d3436; }
+        .desc { color: var(--subtext); font-size: 0.9rem; margin-bottom: 12px; line-height: 1.5; }
 
-        .title {
-            font-size: 1.1rem;
-            font-weight: bold;
-            margin-bottom: 6px;
-            color: #2d3436;
-        }
-
-        .desc {
-            color: var(--subtext);
-            font-size: 0.9rem;
-            margin-bottom: 12px;
-            line-height: 1.5;
-        }
-
-        /* Map Button */
-        .btn-map {
-            display: inline-flex;
-            align-items: center;
-            padding: 8px 14px;
-            border-radius: 10px;
-            text-decoration: none;
-            font-size: 0.85rem;
-            font-weight: 600;
-            transition: opacity 0.2s;
-            margin-top: 5px;
-        }
+        .btn-map { display: inline-flex; align-items: center; padding: 8px 14px; border-radius: 10px; text-decoration: none; font-size: 0.85rem; font-weight: 600; transition: opacity 0.2s; margin-top: 5px; }
         .btn-map:active { opacity: 0.7; }
         .btn-map svg { width: 16px; height: 16px; margin-right: 5px; fill: currentColor; }
 
-        .footer {
-            text-align: center;
-            padding: 30px 20px;
-            color: #b2bec3;
-            font-size: 0.8rem;
-        }
+        .footer { text-align: center; padding: 30px 20px; color: #b2bec3; font-size: 0.8rem; }
     </style>
 </head>
 <body>
@@ -194,10 +116,11 @@
         <h1>🎉 2026 公司尾牙之旅</h1>
         <p>Jan 31 - Feb 1｜福容大飯店與深澳之旅</p>
         
-        <div class="btn-calendar" onclick="downloadICS()">
+        <!-- 這裡改為直接連結到 ics 檔案，手機支援度最高 -->
+        <a href="./weiya_schedule.ics" class="btn-calendar" download>
             <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2zm-7 5h5v5h-5z"/></svg>
             一鍵匯入行事曆
-        </div>
+        </a>
     </div>
 
     <div class="tabs-container">
@@ -208,7 +131,7 @@
     </div>
 
     <div class="container">
-        <!-- Day 1 Items (桃紅系) -->
+        <!-- Day 1 Items -->
         <div class="timeline-group day1">
             <div class="timeline-item show">
                 <span class="time-badge">07:50</span>
@@ -219,7 +142,6 @@
                     導航至公司
                 </a>
             </div>
-
             <div class="timeline-item show">
                 <span class="time-badge">10:00</span>
                 <div class="title">🚴‍♂️ 深澳鐵道自行車</div>
@@ -229,7 +151,6 @@
                     導航至深澳站
                 </a>
             </div>
-
             <div class="timeline-item show">
                 <span class="time-badge">12:00</span>
                 <div class="title">🍱 午餐-友信海鮮餐廳</div>
@@ -239,7 +160,6 @@
                     開啟地圖
                 </a>
             </div>
-
             <div class="timeline-item show">
                 <span class="time-badge">13:30</span>
                 <div class="title">🐘 深澳岬角 象鼻岩</div>
@@ -249,7 +169,6 @@
                     開啟地圖
                 </a>
             </div>
-
             <div class="timeline-item show">
                 <span class="time-badge">15:00</span>
                 <div class="title">🏨 福容大飯店 福隆</div>
@@ -259,7 +178,6 @@
                     導航至飯店
                 </a>
             </div>
-
             <div class="timeline-item show">
                 <span class="time-badge">18:30</span>
                 <div class="title">🍽️ 🎉 尾牙晚宴</div>
@@ -267,14 +185,13 @@
             </div>
         </div>
 
-        <!-- Day 2 Items (青綠系) -->
+        <!-- Day 2 Items -->
         <div class="timeline-group day2" style="display:none;">
             <div class="timeline-item">
                 <span class="time-badge">11:00</span>
                 <div class="title">👋 飯店 Check-out</div>
                 <div class="desc">整理行李，準備退房前往基隆。</div>
             </div>
-
             <div class="timeline-item">
                 <span class="time-badge">12:00</span>
                 <div class="title">🍜 基隆廟口夜市</div>
@@ -284,7 +201,6 @@
                     導航至夜市
                 </a>
             </div>
-            
             <div class="timeline-item">
                 <span class="time-badge">16:00</span>
                 <div class="title">🚌 抵達宇傑系統</div>
@@ -297,125 +213,29 @@
         </div>
     </div>
 
-    <div class="footer">
-        如有任何問題，歡迎找名育詢問<br>
-        2026 Weiya App
-    </div>
+    <div class="footer">如有任何問題，歡迎找名育詢問<br>2026 Weiya App</div>
 
     <script>
-        // 頁籤切換邏輯
         function switchTab(day) {
-            // 切換 Active 狀態
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            // 透過 data-day 屬性來精確選取按鈕，確保顏色對應正確
             document.querySelector(`.tab[data-day="${day}"]`).classList.add('active');
             
-            // 隱藏所有行程
             const allGroups = document.querySelectorAll('.timeline-group');
             allGroups.forEach(g => {
                 g.style.display = 'none';
-                g.querySelectorAll('.timeline-item').forEach(item => {
-                    item.classList.remove('show');
-                });
+                g.querySelectorAll('.timeline-item').forEach(item => { item.classList.remove('show'); });
             });
             
-            // 顯示目標行程
             const targetGroup = document.querySelector('.day' + day);
             targetGroup.style.display = 'block';
             
-            // 執行動畫
             const items = targetGroup.querySelectorAll('.timeline-item');
             items.forEach((item, index) => {
-                void item.offsetWidth; // Force Reflow
-                setTimeout(() => {
-                    item.classList.add('show');
-                }, index * 50); 
+                void item.offsetWidth;
+                setTimeout(() => { item.classList.add('show'); }, index * 50); 
             });
-            
-            // 平滑捲動回頂部
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-
-        // ICS 檔案生成與下載
-        function downloadICS() {
-            const events = `BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//Gemini//Weiya App//ZH
-CALSCALE:GREGORIAN
-METHOD:PUBLISH
-BEGIN:VEVENT
-SUMMARY:🚩 宇傑系統集合 (07:50 準時發車)
-DTSTART;TZID=Asia/Taipei:20260131T075000
-DTEND;TZID=Asia/Taipei:20260131T080000
-DESCRIPTION:早安！請提前集合，車子準時出發。
-LOCATION:竹北市新工六路9號
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:🚴‍♂️ 深澳鐵道自行車 (深澳站)
-DTSTART;TZID=Asia/Taipei:20260131T100000
-DTEND;TZID=Asia/Taipei:20260131T113000
-DESCRIPTION:10:30 梯次。深澳站 -> 八斗子站。
-LOCATION:深澳鐵道自行車深澳站
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:🍱 午餐-友信海鮮餐廳
-DTSTART;TZID=Asia/Taipei:20260131T120000
-DTEND;TZID=Asia/Taipei:20260131T133000
-DESCRIPTION:享用海鮮大餐。
-LOCATION:友信海鮮餐廳
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:🐘 深澳岬角 象鼻岩 & 酋長岩
-DTSTART;TZID=Asia/Taipei:20260131T133000
-DTEND;TZID=Asia/Taipei:20260131T150000
-DESCRIPTION:參觀象鼻岩與番仔澳酋長岩公園。
-LOCATION:深澳岬角
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:🏨 福容大飯店 福隆 CHECK IN
-DTSTART;TZID=Asia/Taipei:20260131T150000
-DTEND;TZID=Asia/Taipei:20260131T180000
-DESCRIPTION:Check-in 後自由活動，享受海洋溫泉。
-LOCATION:福容大飯店 福隆
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:🍽️ 尾牙晚宴
-DTSTART;TZID=Asia/Taipei:20260131T183000
-DTEND;TZID=Asia/Taipei:20260131T210000
-DESCRIPTION:準時開席。
-LOCATION:福容大飯店 福隆
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:👋 飯店 CHECK OUT
-DTSTART;TZID=Asia/Taipei:20260201T110000
-DTEND;TZID=Asia/Taipei:20260201T113000
-DESCRIPTION:退房。
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:🍜 基隆廟口夜市
-DTSTART;TZID=Asia/Taipei:20260201T120000
-DTEND;TZID=Asia/Taipei:20260201T140000
-DESCRIPTION:午餐自由覓食。
-LOCATION:基隆廟口夜市
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:🚌 返抵宇傑系統
-DTSTART;TZID=Asia/Taipei:20260201T160000
-DTEND;TZID=Asia/Taipei:20260201T161000
-DESCRIPTION:平安回家。
-LOCATION:竹北市新工六路9號
-END:VEVENT
-END:VCALENDAR`;
-
-            const blob = new Blob([events], { type: 'text/calendar;charset=utf-8' });
-            const link = document.createElement('a');
-            link.href = window.URL.createObjectURL(blob);
-            link.setAttribute('download', 'Weiya2026_Schedule.ics');
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
     </script>
-
 </body>
 </html>
