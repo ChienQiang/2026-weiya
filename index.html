@@ -6,14 +6,17 @@
     <title>🎉 2026 YUJAY 尾牙兩天一夜</title>
     <style>
         :root {
-            --day1-color: #D81B60;
-            --day1-bg: #fce4ec;
-            --day2-color: #00ACC1;
-            --day2-bg: #e0f7fa;
-            --bg: #f5f7fa;
-            --card: #ffffff;
-            --text: #333;
-            --subtext: #666;
+            /* --- 🎨 2026 季節限定配色 --- */
+            --day1-color: #5286A8; /* 宇傑藍 */
+            --day1-bg: #F0F6FA;
+            --day2-color: #E07A5F; /* 暖陽橘 */
+            --day2-bg: #FFF5F2;
+
+            /* 介面基底 */
+            --bg: #F8F9FA;
+            --card: #FFFFFF;
+            --text: #2C3E50;
+            --subtext: #546E7A;
         }
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -25,96 +28,136 @@
             padding-bottom: 50px;
         }
         
-        /* App Header */
-        .header {
+        /* 1. 品牌靜態區 (Brand Section) - 滑動時會消失 */
+        .brand-section {
             background: white;
-            color: #333;
-            padding: 20px 15px 15px;
             text-align: center;
+            padding: 20px 15px 10px;
+        }
+        
+        /* Logo 樣式 */
+        .logo-img {
+            max-width: 160px;
+            height: auto;
+            margin-bottom: 8px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .brand-section h1 { 
+            margin: 5px 0; 
+            font-size: 1.1rem; 
+            letter-spacing: 1px; 
+            color: var(--day1-color); 
+            font-weight: 600; 
+        }
+        .brand-section p { 
+            margin: 5px 0 10px; 
+            font-size: 0.85rem; 
+            color: #999; 
+        }
+
+        /* 2. 黏性動作條 (Sticky Action Bar) - 滑動時固定在頂部 */
+        .sticky-bar {
             position: sticky;
             top: 0;
             z-index: 100;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            background: rgba(255, 255, 255, 0.95); /* 微透明白底 */
+            backdrop-filter: blur(10px); /* 毛玻璃特效 */
+            padding: 10px 15px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
         }
-        .header h1 { margin: 0; font-size: 1.3rem; letter-spacing: 1px; color: #2c3e50; }
-        .header p { margin: 8px 0 15px; font-size: 0.9rem; color: #7f8c8d; }
 
-        /* Calendar Import Button */
+        /* Calendar Import Button (更緊湊的設計) */
         .btn-calendar {
-            background: #2c3e50;
+            background: var(--day1-color);
             color: white;
-            padding: 10px 20px;
+            padding: 8px 20px;
             border-radius: 50px;
             font-size: 0.9rem;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
-            box-shadow: 0 4px 10px rgba(44, 62, 80, 0.2);
+            box-shadow: 0 2px 8px rgba(82, 134, 168, 0.25);
             transition: transform 0.2s;
             cursor: pointer;
-            margin-bottom: 5px;
             border: none;
             outline: none;
+            font-weight: 500;
+            width: auto; /* 不強制滿版 */
         }
-        .btn-calendar:active { transform: scale(0.95); }
-        .btn-calendar svg { width: 18px; height: 18px; margin-right: 8px; fill: currentColor; }
+        .btn-calendar:active { transform: scale(0.96); }
+        .btn-calendar svg { width: 16px; height: 16px; margin-right: 6px; fill: currentColor; }
+
+        .warning-text {
+            display: block;
+            font-size: 0.7rem;
+            color: #90A4AE;
+            margin-top: 5px;
+        }
 
         /* Tabs */
         .tabs-container {
             background: var(--bg);
-            padding: 15px 20px 0;
-            position: sticky;
-            top: 135px;
+            padding: 15px 15px 0;
+            /* 移除 sticky，避免跟按鈕條打架，或者設得比按鈕條更低 */
+            position: relative; 
             z-index: 90;
         }
         .tabs {
             background: white;
             border-radius: 50px;
             padding: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
             display: flex;
             max-width: 400px;
             margin: 0 auto;
         }
         .tab {
             flex: 1; text-align: center; padding: 10px; border-radius: 40px;
-            font-weight: bold; color: #999; cursor: pointer; transition: all 0.3s ease; font-size: 0.95rem;
+            font-weight: bold; color: #B0BEC5; cursor: pointer; transition: all 0.3s ease; font-size: 0.95rem;
         }
-        .tab.active[data-day="1"] { background: var(--day1-color); color: white; box-shadow: 0 4px 10px rgba(216, 27, 96, 0.3); }
-        .tab.active[data-day="2"] { background: var(--day2-color); color: white; box-shadow: 0 4px 10px rgba(0, 172, 193, 0.3); }
+        .tab.active[data-day="1"] { 
+            background: var(--day1-color); color: white; box-shadow: 0 4px 12px rgba(82, 134, 168, 0.3); 
+        }
+        .tab.active[data-day="2"] { 
+            background: var(--day2-color); color: white; box-shadow: 0 4px 12px rgba(224, 122, 95, 0.3); 
+        }
 
         /* Timeline */
         .container { padding: 20px; max-width: 600px; margin: 0 auto; }
         .timeline-item {
-            background: var(--card); border-radius: 16px; padding: 18px; margin-bottom: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.03); position: relative; border-left: 5px solid #ddd;
+            background: var(--card); border-radius: 16px; padding: 20px; margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03); position: relative; border-left: 5px solid #ddd;
             display: none; opacity: 0; transform: translateY(15px); transition: opacity 0.4s, transform 0.4s;
         }
         .timeline-item.show { display: block; opacity: 1; transform: translateY(0); }
 
-        /* Colors */
+        /* Colors Logic */
         .day1 .timeline-item { border-left-color: var(--day1-color); }
         .day1 .time-badge { background: var(--day1-bg); color: var(--day1-color); }
         .day1 .btn-map { color: var(--day1-color); background: var(--day1-bg); }
-        .day1 .btn-info { color: var(--day1-color); border: 1px solid var(--day1-bg); }
+        .day1 .btn-info { color: var(--day1-color); border: 1px solid var(--day1-color); opacity: 0.8; }
 
         .day2 .timeline-item { border-left-color: var(--day2-color); }
         .day2 .time-badge { background: var(--day2-bg); color: var(--day2-color); }
         .day2 .btn-map { color: var(--day2-color); background: var(--day2-bg); }
-        .day2 .btn-info { color: var(--day2-color); border: 1px solid var(--day2-bg); }
+        .day2 .btn-info { color: var(--day2-color); border: 1px solid var(--day2-color); opacity: 0.8; }
 
-        .time-badge { font-weight: 800; padding: 4px 10px; border-radius: 6px; font-size: 0.9rem; display: inline-block; margin-bottom: 8px; }
-        .title { font-size: 1.1rem; font-weight: bold; margin-bottom: 6px; color: #2d3436; }
-        .desc { color: var(--subtext); font-size: 0.9rem; margin-bottom: 12px; line-height: 1.5; }
+        .time-badge { font-weight: 800; padding: 4px 12px; border-radius: 8px; font-size: 0.9rem; display: inline-block; margin-bottom: 10px; }
+        .title { font-size: 1.1rem; font-weight: bold; margin-bottom: 6px; color: var(--text); }
+        .desc { color: var(--subtext); font-size: 0.95rem; margin-bottom: 15px; line-height: 1.6; }
 
         /* Button Group */
-        .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
+        .btn-group { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 5px; }
 
         .btn-map { display: inline-flex; align-items: center; padding: 8px 14px; border-radius: 10px; text-decoration: none; font-size: 0.85rem; font-weight: 600; transition: opacity 0.2s; border: none; outline: none; }
         .btn-map:active { opacity: 0.7; }
         .btn-map svg { width: 16px; height: 16px; margin-right: 5px; fill: currentColor; }
 
-        /* Info Button Style */
         .btn-info {
             display: inline-flex; align-items: center; padding: 8px 14px; border-radius: 10px;
             font-size: 0.85rem; font-weight: 600; background: transparent;
@@ -123,56 +166,60 @@
         .btn-info:active { background: rgba(0,0,0,0.05); }
         .btn-info svg { width: 16px; height: 16px; margin-right: 5px; fill: currentColor; }
 
-
-        .footer { text-align: center; padding: 30px 20px; color: #b2bec3; font-size: 0.8rem; line-height: 1.6; }
-        .version { display: inline-block; margin-top: 5px; background: #eee; padding: 2px 8px; border-radius: 10px; font-size: 0.7rem; }
-        .warning { color: #e74c3c; font-size: 0.75rem; margin-top: 5px; display: block; }
+        .footer { text-align: center; padding: 40px 20px; color: #CFD8DC; font-size: 0.8rem; line-height: 1.6; }
+        .version { display: inline-block; margin-top: 8px; background: #ECEFF1; color: #90A4AE; padding: 2px 8px; border-radius: 10px; font-size: 0.7rem; }
 
         /* Modal Styles */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6); z-index: 1000; display: none;
-            justify-content: center; align-items: flex-end; /* Bottom sheet on mobile */
+            background: rgba(44, 62, 80, 0.4); z-index: 1000; display: none;
+            justify-content: center; align-items: flex-end;
             opacity: 0; transition: opacity 0.3s;
-            backdrop-filter: blur(3px);
+            backdrop-filter: blur(4px);
         }
         .modal-overlay.active { display: flex; opacity: 1; }
         
         .modal-content {
             background: white; width: 100%; max-width: 500px;
-            border-top-left-radius: 20px; border-top-right-radius: 20px;
-            padding: 25px; box-shadow: 0 -5px 25px rgba(0,0,0,0.1);
-            transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            max-height: 80vh; overflow-y: auto;
+            border-top-left-radius: 24px; border-top-right-radius: 24px;
+            padding: 30px; box-shadow: 0 -10px 40px rgba(0,0,0,0.15);
+            transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+            max-height: 85vh; overflow-y: auto;
         }
         .modal-overlay.active .modal-content { transform: translateY(0); }
         
         @media (min-width: 600px) {
             .modal-overlay { align-items: center; }
-            .modal-content { border-radius: 20px; transform: scale(0.9); }
+            .modal-content { border-radius: 24px; transform: scale(0.95); box-shadow: 0 10px 40px rgba(0,0,0,0.15); }
             .modal-overlay.active .modal-content { transform: scale(1); }
         }
 
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
-        .modal-title { font-size: 1.25rem; font-weight: bold; color: #2c3e50; }
-        .modal-close { background: #f1f2f6; border: none; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #666; font-size: 1.2rem; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 0; }
+        .modal-title { font-size: 1.3rem; font-weight: 700; color: var(--text); }
+        .modal-close { background: #F0F2F5; border: none; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #78909C; font-size: 1.2rem; transition: background 0.2s; }
         
-        .modal-body { font-size: 0.95rem; line-height: 1.6; color: #555; }
-        .modal-tag { display: inline-block; background: #e8f0fe; color: #1a73e8; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; margin-bottom: 10px; font-weight: 600; }
+        .modal-body { font-size: 0.95rem; line-height: 1.7; color: #455A64; }
+        .modal-body p { margin-top: 0; margin-bottom: 1.2em; }
+        .modal-tag { display: inline-block; background: var(--day1-bg); color: var(--day1-color); padding: 4px 10px; border-radius: 6px; font-size: 0.8rem; margin-bottom: 15px; font-weight: 600; letter-spacing: 0.5px; }
 
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <h1>🎉 2026 YUJAY 尾牙之旅</h1>
+    <!-- 1. 品牌靜態區 (Brand Section) - 滑動時會消失 -->
+    <div class="brand-section">
+        <img src="./logo.png" alt="YUJAY Logo" class="logo-img" onerror="this.style.display='none'; document.querySelector('.brand-section h1').style.display='block'">
+        <h1 style="display:none">宇傑系統</h1>
         <p>Jan 31 - Feb 1｜福容大飯店與深澳之旅</p>
-        
+    </div>
+
+    <!-- 2. 黏性動作條 (Sticky Action Bar) - 滑動時固定在頂部，更窄更不佔空間 -->
+    <div class="sticky-bar">
         <button class="btn-calendar" onclick="downloadICS()">
             <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2zm-7 5h5v5h-5z"/></svg>
             一鍵匯入行事曆
         </button>
-        <span class="warning">(如無法下載，請使用 Safari 或 Chrome 開啟)</span>
+        <span class="warning-text">(無法下載時請使用 Safari/Chrome)</span>
     </div>
 
     <div class="tabs-container">
@@ -307,7 +354,7 @@
     <div class="footer">
         如有任何問題，歡迎找名育詢問<br>
         Built with ❤️ for 2026 Weiya
-        <div class="version">v1.3</div>
+        <div class="version">v2.1 Compact Mode</div>
     </div>
 
     <!-- Modal Popout -->
