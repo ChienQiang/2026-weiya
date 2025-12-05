@@ -15,14 +15,13 @@
             /* --- 🎨 2026 Design Edition 配色 --- */
             --primary-blue: #5286A8;
             --primary-orange: #E07A5F;
-            --primary-dark: #2C3E50; /* 公告頁面的主色：沈穩深灰藍 */
+            --primary-dark: #2C3E50;
             
             --bg: #FAFAFA;
             --line: #E0E0E0;
             --text-main: #1A1A1A;
             --text-sub: #666666;
             
-            /* Material Shadows */
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
             --shadow-md: 0 4px 6px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.06);
             --shadow-lg: 0 10px 20px rgba(0,0,0,0.15), 0 3px 6px rgba(0,0,0,0.10);
@@ -53,7 +52,6 @@
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
         }
         
-        /* 動態柔光層 */
         .diffuse-light {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none; z-index: 9997;
@@ -63,17 +61,14 @@
             transition: background 1.5s ease-in-out;
         }
 
-        /* Mode 0: Intro (Neutral/Elegant) */
         .diffuse-light.mode-intro {
             background: radial-gradient(circle at 50% 10%, rgba(200, 200, 200, 0.2) 0%, transparent 60%),
                         radial-gradient(circle at 50% 90%, rgba(44, 62, 80, 0.1) 0%, transparent 60%);
         }
-        /* Mode 1: Day 1 (Cool) */
         .diffuse-light.mode-day1 {
             background: radial-gradient(circle at 20% 30%, rgba(82, 134, 168, 0.4) 0%, transparent 50%),
                         radial-gradient(circle at 80% 80%, rgba(130, 177, 255, 0.3) 0%, transparent 50%);
         }
-        /* Mode 2: Day 2 (Warm) */
         .diffuse-light.mode-day2 {
             background: radial-gradient(circle at 80% 20%, rgba(224, 122, 95, 0.4) 0%, transparent 50%),
                         radial-gradient(circle at 20% 90%, rgba(255, 209, 128, 0.3) 0%, transparent 50%);
@@ -86,20 +81,16 @@
             padding: 50px 20px 20px;
             position: relative;
         }
-        .logo-img {
-            max-width: 150px;
-            height: auto;
-            display: block;
-            margin: 0 auto 15px;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.05));
-        }
+        
+        /* 品牌文字 Logo 樣式 */
         .brand-section h1 {
             font-family: 'Noto Serif TC', serif;
-            font-size: 1.6rem;
+            font-size: 2rem; /* 加大字體作為 Logo */
             margin: 0 0 8px;
-            letter-spacing: -0.5px;
+            letter-spacing: 2px;
             color: var(--text-main);
             font-weight: 900;
+            line-height: 1.2;
         }
         .brand-section p {
             font-size: 0.95rem;
@@ -111,12 +102,12 @@
         
         .warning-text {
             display: inline-block;
-            font-size: 0.75rem;
+            font-size: 0.7rem; /* 縮小字體 */
             color: #999;
             margin-top: 15px;
             font-weight: 400;
             background: rgba(255,255,255,0.6);
-            padding: 4px 12px;
+            padding: 4px 10px;
             border-radius: 20px;
             border: 1px solid rgba(0,0,0,0.03);
         }
@@ -152,7 +143,7 @@
         .btn-calendar:active { transform: translateY(0) scale(0.98); box-shadow: var(--shadow-sm); }
         .btn-calendar svg { width: 20px; height: 20px; margin-right: 8px; fill: var(--primary-dark); }
 
-        /* --- 3. 頁籤切換 (3 Tabs) --- */
+        /* --- 3. 頁籤切換 --- */
         .tabs-container {
             display: flex;
             justify-content: center;
@@ -170,27 +161,17 @@
             max-width: 450px;
         }
         .tab {
-            flex: 1; /* 均分寬度 */
-            text-align: center;
-            padding: 10px 0;
-            border-radius: 100px;
-            font-size: 0.9rem;
-            font-weight: 700;
-            color: #999;
-            cursor: pointer;
-            position: relative;
-            z-index: 2;
-            transition: color 0.3s;
+            flex: 1; text-align: center; padding: 10px 0;
+            border-radius: 100px; font-size: 0.9rem; font-weight: 700; color: #999;
+            cursor: pointer; position: relative; z-index: 2; transition: color 0.3s;
         }
         .tab.active { color: white; }
         .tab-bg {
-            position: absolute;
-            top: 5px; left: 5px; bottom: 5px;
-            width: calc(33.33% - 3.33px); /* 三分之一寬度 */
+            position: absolute; top: 5px; left: 5px; bottom: 5px;
+            width: calc(33.33% - 3.33px);
             border-radius: 100px;
             transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1), background-color 0.3s;
-            z-index: 1;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            z-index: 1; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
         /* --- 4. 內容區塊 --- */
@@ -199,83 +180,110 @@
         .timeline-group.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* 公告頁面樣式 (Letter Style) */
+        /* 公告頁面樣式 */
         .letter-box {
-            background: white;
-            padding: 40px 30px;
-            border-radius: 20px;
-            box-shadow: var(--shadow-md);
-            text-align: center;
-            border: 1px solid rgba(0,0,0,0.03);
-            margin-bottom: 20px;
+            background: white; padding: 40px 30px;
+            border-radius: 20px; box-shadow: var(--shadow-md);
+            text-align: center; border: 1px solid rgba(0,0,0,0.03); margin-bottom: 25px;
         }
         .letter-title {
-            font-family: 'Noto Serif TC', serif;
-            font-size: 1.4rem;
-            font-weight: 900;
-            color: var(--primary-dark);
-            margin-bottom: 25px;
-            position: relative;
-            display: inline-block;
+            font-family: 'Noto Serif TC', serif; font-size: 1.4rem; font-weight: 900;
+            color: var(--primary-dark); margin-bottom: 25px; position: relative; display: inline-block;
         }
         .letter-title::after {
-            content: '';
-            display: block;
-            width: 40px;
-            height: 3px;
-            background: #ddd;
-            margin: 10px auto 0;
+            content: ''; display: block; width: 40px; height: 3px; background: #ddd; margin: 10px auto 0;
         }
         .letter-content {
-            font-family: 'Noto Serif TC', serif;
-            font-size: 1.05rem;
-            line-height: 1.9;
-            color: #444;
-            text-align: justify; /* 左右對齊 */
-            text-align-last: center; /* 最後一行置中 */
+            font-family: 'Noto Serif TC', serif; font-size: 1.05rem; line-height: 1.9; color: #444;
+            text-align: justify; text-align-last: center;
         }
         .letter-content p { margin-bottom: 20px; }
         
         .highlight-date {
-            display: inline-block;
-            background: #F5F7FA;
-            color: var(--primary-dark);
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-weight: 700;
+            display: inline-block; background: #F5F7FA; color: var(--primary-dark);
+            padding: 10px 20px; border-radius: 8px; font-weight: 700;
+            font-family: 'Space Mono', monospace; margin: 20px 0; font-size: 0.9rem; letter-spacing: 1px;
+        }
+
+        /* --- Acid Style Weather Box --- */
+        .weather-box {
+            background: #111; /* 深色底 */
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            margin-bottom: 30px;
+            padding: 25px;
+            color: var(--acid-text);
             font-family: 'Space Mono', monospace;
-            margin: 20px 0;
-            font-size: 0.9rem;
-            letter-spacing: 1px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .weather-box::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%;
+            background: var(--acid-accent); z-index: 10;
+        }
+        .weather-title {
+            font-weight: 700; font-size: 0.85rem;
+            margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px;
+            display: flex; align-items: center; color: var(--acid-accent);
+        }
+        .weather-title svg { width: 16px; height: 16px; margin-right: 8px; fill: currentColor; }
+
+        .weather-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
         }
         
-        .letter-footer {
-            margin-top: 30px;
-            font-size: 0.9rem;
-            color: #888;
-            font-style: italic;
+        .weather-temp {
+            font-size: 3.5rem;
+            font-weight: 700;
+            line-height: 1;
+            color: #fff;
         }
+        .weather-temp span { font-size: 1.2rem; vertical-align: top; color: #888; }
+        
+        .weather-info { text-align: right; }
+        
+        .weather-condition { 
+            font-size: 1.2rem; font-weight: 700; margin-bottom: 5px; color: #fff;
+            font-family: 'Noto Sans TC', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+        }
+        .weather-loc { font-size: 0.8rem; color: #888; }
+        
+        /* Forecast Section */
+        .weather-forecast {
+            border-top: 1px dashed rgba(255,255,255,0.2);
+            padding-top: 15px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .forecast-item {
+            text-align: center;
+            flex: 1;
+        }
+        .forecast-day { color: var(--acid-accent); font-size: 0.75rem; font-weight: 700; margin-bottom: 5px; text-transform: uppercase; }
+        
+        .forecast-icon { 
+            font-size: 1.5rem; margin-bottom: 5px; display: block; 
+            font-family: 'Noto Sans TC', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+        }
+        .forecast-temp { color: #aaa; font-size: 0.75rem; }
+        
+        .weather-loading { font-size: 0.9rem; color: #666; animation: blink 1s infinite; }
+        @keyframes blink { 50% { opacity: 0.5; } }
+
 
         /* 行程列表樣式 */
         .list-item { display: flex; flex-direction: row; padding: 25px 0; border-bottom: 1px solid var(--line); align-items: flex-start; }
         .timeline-group .list-item:last-child { border-bottom: none; }
-
-        .item-time {
-            font-family: 'Noto Serif TC', serif;
-            font-size: 1.2rem;
-            font-weight: 700;
-            min-width: 70px;
-            margin-right: 20px;
-            padding-top: 2px;
-            line-height: 1.2;
-            opacity: 0.9;
-        }
+        .item-time { font-family: 'Noto Serif TC', serif; font-size: 1.2rem; font-weight: 700; min-width: 70px; margin-right: 20px; padding-top: 2px; line-height: 1.2; opacity: 0.9; }
         .item-content { flex: 1; display: flex; flex-direction: column; }
         .item-title { font-family: 'Noto Serif TC', serif; font-size: 1.25rem; font-weight: 700; color: var(--text-main); margin: 0 0 8px 0; line-height: 1.3; }
         .item-desc { font-size: 1rem; color: var(--text-sub); line-height: 1.7; margin: 0 0 16px 0; font-weight: 400; }
-
-        /* 按鈕群組 */
         .action-area { display: flex; gap: 12px; flex-wrap: wrap; }
+        
         .btn-pill {
             display: inline-flex; align-items: center; padding: 8px 18px; border-radius: 8px;
             font-size: 0.85rem; font-weight: 600; text-decoration: none;
@@ -299,13 +307,13 @@
         .day-theme-2 .btn-pill.outline { border-color: var(--primary-orange); color: var(--primary-orange); background: white; }
         .day-theme-2 .btn-pill.outline:hover { background: #FFF5F2; }
 
-        .footer { text-align: center; padding: 60px 0 40px; color: #BBB; font-size: 0.8rem; display: flex; flex-direction: column; align-items: center; gap: 15px; }
+        .footer { text-align: center; padding: 40px 0; color: #BBB; font-size: 0.8rem; display: flex; flex-direction: column; align-items: center; gap: 15px; }
         .footer-logo { width: 100px; opacity: 0.5; filter: grayscale(100%); }
-
+        
         @media (min-width: 768px) {
             .container { max-width: 900px; padding: 0 40px; }
             .logo-img { max-width: 180px; }
-            .brand-section h1 { font-size: 2.2rem; margin-bottom: 12px; }
+            .brand-section h1 { font-size: 3rem; margin-bottom: 12px; } /* Desktop Logo Size */
             .brand-section p { font-size: 1.1rem; }
             .list-item { padding: 40px 0; }
             .item-time { font-size: 1.5rem; min-width: 130px; margin-right: 40px; }
@@ -321,11 +329,10 @@
             .list-item { display: grid; grid-template-columns: 160px 1fr auto; gap: 30px; }
         }
 
-        /* --- 💥 ACID AESTHETICS MODAL 💥 --- */
+        /* --- MODAL --- */
         .modal-overlay {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.4); 
-            backdrop-filter: blur(15px);
+            background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(15px);
             z-index: 1000; display: none; opacity: 0; transition: opacity 0.3s;
             align-items: center; justify-content: center;
         }
@@ -333,53 +340,26 @@
         
         .modal-card {
             background: #111; 
-            background-image: 
-                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
             background-size: 20px 20px;
-            width: 85%; max-width: 500px; padding: 40px;
-            position: relative;
+            width: 85%; max-width: 500px; padding: 40px; position: relative;
             box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1), 0 20px 50px rgba(0,0,0,0.5);
-            transform: scale(0.9) translateY(20px);
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+            transform: scale(0.9) translateY(20px); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
             max-height: 85vh; overflow-y: auto; color: #eee;
             clip-path: polygon(0 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%);
         }
-        .modal-card::before {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-            background: linear-gradient(90deg, #FF00CC, #3333FF, #00FFCC); z-index: 10;
-        }
+        .modal-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #FF00CC, #3333FF, #00FFCC); z-index: 10; }
         .modal-overlay.active .modal-card { transform: scale(1) translateY(0); }
 
         .modal-header { display: flex; justify-content: space-between; margin-bottom: 30px; align-items: flex-start; }
         .modal-title { font-family: 'Noto Serif TC', serif; font-size: 1.8rem; font-weight: 900; color: #fff; line-height: 1.2; text-shadow: 0 0 20px rgba(255,255,255,0.2); }
-        .modal-close { 
-            background: transparent; border: 1px solid rgba(255,255,255,0.3); 
-            width: 40px; height: 40px; border-radius: 50%;
-            font-size: 1.5rem; cursor: pointer; color: #fff; 
-            display: flex; align-items: center; justify-content: center; 
-            transition: all 0.2s;
-        }
+        .modal-close { background: transparent; border: 1px solid rgba(255,255,255,0.3); width: 40px; height: 40px; border-radius: 50%; font-size: 1.5rem; cursor: pointer; color: #fff; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
         .modal-close:hover { background: #fff; color: #000; transform: rotate(90deg); }
         .modal-body { font-family: 'Noto Sans TC', sans-serif; }
 
-        .insight-tag { 
-            display: inline-block; background: linear-gradient(135deg, #e0e0e0 0%, #ffffff 50%, #a0a0a0 100%);
-            color: #000; padding: 6px 12px; font-size: 0.75rem; 
-            font-family: 'Space Mono', monospace; font-weight: 700; margin-bottom: 20px; 
-            text-transform: uppercase; letter-spacing: 2px;
-            box-shadow: 0 2px 10px rgba(255,255,255,0.2);
-        }
-        .insight-tip { 
-            margin-top: 30px; padding: 20px; 
-            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
-            font-size: 0.95rem; color: #ccc; line-height: 1.8; position: relative;
-        }
-        .insight-tip::after {
-            content: 'TIPS_//'; position: absolute; top: -10px; left: 10px;
-            background: #111; padding: 0 5px;
-            font-family: 'Space Mono', monospace; font-size: 0.7rem; color: var(--acid-accent);
-        }
+        .insight-tag { display: inline-block; background: linear-gradient(135deg, #e0e0e0 0%, #ffffff 50%, #a0a0a0 100%); color: #000; padding: 6px 12px; font-size: 0.75rem; font-family: 'Space Mono', monospace; font-weight: 700; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px; box-shadow: 0 2px 10px rgba(255,255,255,0.2); }
+        .insight-tip { margin-top: 30px; padding: 20px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); font-size: 0.95rem; color: #ccc; line-height: 1.8; position: relative; }
+        .insight-tip::after { content: 'TIPS_//'; position: absolute; top: -10px; left: 10px; background: #111; padding: 0 5px; font-family: 'Space Mono', monospace; font-size: 0.7rem; color: var(--acid-accent); }
         .insight-tip strong { display: none; }
         .modal-content-text p { margin-top: 0; line-height: 1.8; opacity: 0.9; font-weight: 300; }
 
@@ -393,17 +373,16 @@
 
     <!-- 1. 品牌區塊 -->
     <div class="brand-section">
-        <img src="./logo.png" alt="YUJAY Logo" class="logo-img" onerror="this.style.display='none'; document.querySelector('.brand-section h1').style.display='block'">
-        <h1 style="display:none">宇傑系統</h1>
+        <h1>宇傑系統</h1>
         <p>誠 信 穩 健 • 共 創 未 來</p>
-        <span class="warning-text">(無法下載時請使用 Safari 或 Chrome)</span>
+        <span class="warning-text">(無法下載行事曆時請使用 Safari 或 Chrome)</span>
     </div>
 
     <!-- 2. 黏性按鈕 -->
     <div class="sticky-action">
         <button class="btn-calendar" onclick="downloadICS()">
             <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2zm-7 5h5v5h-5z"/></svg>
-            Add to Calendar
+            一鍵匯入行事曆
         </button>
     </div>
 
@@ -435,8 +414,22 @@
                     
                     <p>請各位先把時間記起來，讓我們一起共度這兩天一夜的美好時光！</p>
                 </div>
-                <div class="letter-footer">如有任何問題，歡迎找名育詢問</div>
             </div>
+
+            <!-- 即時天氣與預報卡片 -->
+            <div class="weather-box">
+                <div class="weather-title">
+                    <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM12 18c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z"/></svg>
+                    Live Intel / 瑞芳區氣候
+                </div>
+                
+                <div id="weather-display">
+                    <div class="weather-loading">
+                        LOADING DATA_ // 
+                    </div>
+                </div>
+            </div>
+
         </div>
 
         <!-- Day 1 List -->
@@ -543,7 +536,7 @@
 
     <div class="footer">
         <img src="./logo.png" alt="YUJAY Logo" class="footer-logo">
-        <div>v3.4 Design Edition • YUJAY SYSTEMS</div>
+        <div>v3.9.2 Emoji Fix • YUJAY SYSTEMS</div>
     </div>
 
     <!-- Modal Popout -->
@@ -603,17 +596,13 @@
         };
 
         function switchTab(day) {
-            // 隱藏所有 Group
             document.querySelectorAll('.timeline-group').forEach(el => el.classList.remove('active'));
             document.getElementById('day' + day).classList.add('active');
             
-            // 處理 Tab 樣式
             document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
             const tabs = document.querySelectorAll('.tab');
-            // day 0=index0, day1=index1, day2=index2 (剛好對應)
             if(tabs[day]) tabs[day].classList.add('active');
 
-            // 處理背景滑動動畫
             const bg = document.getElementById('tabBg');
             const light = document.getElementById('diffuseLight');
             light.className = 'diffuse-light';
@@ -731,6 +720,69 @@ END:VCALENDAR`;
             link.click();
             document.body.removeChild(link);
         }
+
+        // --- Weather Logic (Open-Meteo) ---
+        async function fetchWeather() {
+            const display = document.getElementById('weather-display');
+            const lat = 25.11;
+            const lon = 121.84;
+            const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=Asia%2FTaipei`;
+
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                const temp = Math.round(data.current.temperature_2m);
+                const code = data.current.weather_code;
+                const { text, icon } = getWeatherStatus(code);
+
+                let forecastHTML = '<div class="weather-forecast">';
+                const days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+                const today = new Date().getDay();
+
+                for (let i = 1; i <= 3; i++) {
+                    const dayName = days[(today + i) % 7];
+                    const dailyCode = data.daily.weather_code[i];
+                    const maxT = Math.round(data.daily.temperature_2m_max[i]);
+                    const minT = Math.round(data.daily.temperature_2m_min[i]);
+                    const dailyStatus = getWeatherStatus(dailyCode);
+
+                    forecastHTML += `
+                        <div class="forecast-item">
+                            <div class="forecast-day">${dayName}</div>
+                            <span class="forecast-icon">${dailyStatus.icon}</span>
+                            <div class="forecast-temp">${minT}°-${maxT}°</div>
+                        </div>
+                    `;
+                }
+                forecastHTML += '</div>';
+
+                display.innerHTML = `
+                    <div class="weather-content">
+                        <div class="weather-temp">${temp}<span>°C</span></div>
+                        <div class="weather-info">
+                            <div class="weather-condition">${icon} ${text}</div>
+                            <div class="weather-loc">RUIFANG DIST.</div>
+                        </div>
+                    </div>
+                    ${forecastHTML}
+                `;
+            } catch (error) {
+                display.innerHTML = '<div class="weather-loading" style="color:red">OFFLINE_ //</div>';
+            }
+        }
+
+        function getWeatherStatus(code) {
+            if (code === 0) return { text: "晴朗", icon: "☀️" };
+            if (code >= 1 && code <= 3) return { text: "多雲", icon: "☁️" };
+            if (code >= 45 && code <= 48) return { text: "有霧", icon: "🌫️" };
+            if (code >= 51 && code <= 67) return { text: "有雨", icon: "🌧️" };
+            if (code >= 80 && code <= 82) return { text: "陣雨", icon: "🌦️" };
+            if (code >= 95) return { text: "雷雨", icon: "⛈️" };
+            return { text: "未知", icon: "🛸" };
+        }
+
+        fetchWeather();
     </script>
 </body>
 </html>
