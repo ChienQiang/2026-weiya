@@ -15,7 +15,7 @@
             /* --- 🎨 2026 Design Edition 配色 --- */
             --primary-blue: #5286A8;
             --primary-orange: #E07A5F;
-            --primary-dark: #2C3E50;
+            --primary-dark: #2C3E50; /* 深色主題基調 */
             
             --bg: #FAFAFA;
             --line: #E0E0E0;
@@ -85,7 +85,7 @@
         /* 品牌文字 Logo 樣式 */
         .brand-section h1 {
             font-family: 'Noto Serif TC', serif;
-            font-size: 2rem; /* 加大字體作為 Logo */
+            font-size: 2rem;
             margin: 0 0 8px;
             letter-spacing: 2px;
             color: var(--text-main);
@@ -102,7 +102,7 @@
         
         .warning-text {
             display: inline-block;
-            font-size: 0.7rem; /* 縮小字體 */
+            font-size: 0.7rem;
             color: #999;
             margin-top: 15px;
             font-weight: 400;
@@ -180,34 +180,47 @@
         .timeline-group.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* 公告頁面樣式 */
+        /* 公告頁面樣式 (Dark Theme) */
         .letter-box {
-            background: white; padding: 40px 30px;
-            border-radius: 20px; box-shadow: var(--shadow-md);
-            text-align: center; border: 1px solid rgba(0,0,0,0.03); margin-bottom: 25px;
+            background: var(--primary-dark); /* 使用主題深色 */
+            padding: 40px 30px;
+            border-radius: 20px; 
+            box-shadow: var(--shadow-md);
+            text-align: center; 
+            border: 1px solid rgba(255,255,255,0.1); /* 微亮邊框 */
+            margin-bottom: 25px;
+            color: white; /* 文字改為白色 */
         }
         .letter-title {
-            font-family: 'Noto Serif TC', serif; font-size: 1.4rem; font-weight: 900;
-            color: var(--primary-dark); margin-bottom: 25px; position: relative; display: inline-block;
+            font-family: 'Noto Serif TC', serif; 
+            font-size: 1.4rem; font-weight: 900;
+            color: white; /* 標題白色 */
+            margin-bottom: 25px; position: relative; display: inline-block;
         }
         .letter-title::after {
-            content: ''; display: block; width: 40px; height: 3px; background: #ddd; margin: 10px auto 0;
+            content: ''; display: block; width: 40px; height: 3px; 
+            background: rgba(255,255,255,0.3); /* 分隔線變淡 */
+            margin: 10px auto 0;
         }
         .letter-content {
-            font-family: 'Noto Serif TC', serif; font-size: 1.05rem; line-height: 1.9; color: #444;
+            font-family: 'Noto Serif TC', serif; font-size: 1.05rem; line-height: 1.9; 
+            color: rgba(255,255,255,0.9); /* 內容微調透明度 */
             text-align: justify; text-align-last: center;
         }
         .letter-content p { margin-bottom: 20px; }
         
         .highlight-date {
-            display: inline-block; background: #F5F7FA; color: var(--primary-dark);
+            display: inline-block; 
+            background: rgba(255,255,255,0.1); /* 半透明白底 */
+            color: #fff;
             padding: 10px 20px; border-radius: 8px; font-weight: 700;
-            font-family: 'Space Mono', monospace; margin: 20px 0; font-size: 0.9rem; letter-spacing: 1px;
+            font-family: 'Space Mono', monospace; margin: 20px 0; font-size: 0.95rem; letter-spacing: 1px;
+            border: 1px solid rgba(255,255,255,0.2);
         }
 
         /* --- Acid Style Weather Box --- */
         .weather-box {
-            background: #111; /* 深色底 */
+            background: #111;
             border-radius: 20px;
             overflow: hidden;
             box-shadow: var(--shadow-md);
@@ -536,7 +549,7 @@
 
     <div class="footer">
         <img src="./logo.png" alt="YUJAY Logo" class="footer-logo">
-        <div>v3.9.2 Emoji Fix • YUJAY SYSTEMS</div>
+        <div>v3.9.3 Emoji Fix • YUJAY SYSTEMS</div>
     </div>
 
     <!-- Modal Popout -->
