@@ -5,21 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>🎉 2026 YUJAY 尾牙兩天一夜</title>
     
-    <!-- 引入 Google Fonts -->
+    <!-- 引入 Google Fonts (精簡為兩種字體) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Noto+Serif+TC:wght@400;700;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Noto+Serif+TC:wght@400;700;900&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            /* --- 🎨 配色 --- */
-            --primary-blue: #5286A8;
-            --primary-orange: #E07A5F;
-            --primary-dark: #2C3E50; /* 公告頁統一深色底 */
+            /* --- 🎨 配色建議 --- */
+            /* Day 0: 宇傑之夜 - 深邃優雅 */
+            --bg-intro: #0F1419; /* 極深藍黑底 (Elegant Dark) */
+            --text-intro: #E0E0E0; /* Day 0 淺色文字 */
+            --brand-gold: #D4AF37; /* 經典香檳金 (用於 Day 0 Logo) */
+
+            --primary-dark: #121820; /* 卡片背景色 */
             
-            --bg: #FAFAFA;
+            /* Day 1: 迷霧藍 */
+            --primary-blue: #5286A8;
+            
+            /* Day 2: 暖陽橘 */
+            --primary-orange: #E07A5F;
+            
+            --bg: #FAFAFA; /* 一般日子的白底 */
             --line: #E0E0E0;
-            --text-main: #1A1A1A;
+            --text-main: #1A1A1A; /* 一般日子的深色字 */
             --text-sub: #666666;
             
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
@@ -35,14 +44,23 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
+            /* 主要字體改為 Noto Sans TC */
             font-family: 'Noto Sans TC', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: var(--bg);
+            background-color: var(--bg); /* 預設背景 */
             margin: 0;
             padding: 0;
-            color: var(--text-main);
+            color: var(--text-main); /* 預設文字顏色 */
             padding-bottom: 60px;
             overflow-x: hidden;
             position: relative;
+            /* 讓背景色和文字顏色切換時有平滑過渡 */
+            transition: background-color 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), color 0.5s ease;
+        }
+
+        /* --- 🌑 Day 0: 深色主題模式 --- */
+        body[data-theme="0"] {
+            background-color: var(--bg-intro); /* 換成深色底 */
+            color: var(--text-intro); /* 換成淺色字 */
         }
 
         /* --- ✨ 0. 全域特效層 --- */
@@ -62,11 +80,11 @@
         }
 
         .diffuse-light.mode-intro {
-            background: radial-gradient(circle at 50% 10%, rgba(200, 200, 200, 0.2) 0%, transparent 60%),
-                        radial-gradient(circle at 50% 90%, rgba(44, 62, 80, 0.1) 0%, transparent 60%);
+            /* Day 0 光暈：微弱的金光與深藍，增加層次感 */
+            background: radial-gradient(circle at 50% 0%, rgba(212, 175, 55, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 50% 100%, rgba(30, 40, 50, 0.8) 0%, transparent 60%);
         }
         
-        /* Day 1: 藍色調更淡雅 */
         .diffuse-light.mode-day1 {
             background: radial-gradient(circle at 20% 30%, rgba(33, 107, 156, 0.2) 0%, transparent 60%),
                         radial-gradient(circle at 80% 80%, rgba(82, 134, 168, 0.15) 0%, transparent 60%);
@@ -77,29 +95,78 @@
                         radial-gradient(circle at 20% 90%, rgba(255, 209, 128, 0.3) 0%, transparent 50%);
         }
 
+        /* --- 🥚 彩蛋樣式 --- */
+        .easter-egg-walker {
+            position: fixed;
+            z-index: 9996;
+            pointer-events: none;
+            font-size: 2.5rem;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+            will-change: transform;
+            animation: walkAcross linear forwards;
+        }
+
+        @keyframes walkAcross {
+            0% { transform: translateX(-15vw) scaleX(1); }
+            100% { transform: translateX(115vw) scaleX(1); }
+        }
+        
+        .easter-egg-walker.reverse {
+            animation: walkAcrossReverse linear forwards;
+        }
+        @keyframes walkAcrossReverse {
+            0% { transform: translateX(115vw) scaleX(-1); }
+            100% { transform: translateX(-15vw) scaleX(-1); }
+        }
+
         /* --- 1. 品牌區塊 --- */
         .brand-section {
             background: transparent;
             text-align: center;
             padding: 50px 20px 20px;
             position: relative;
+            --brand-color: var(--primary-dark);
         }
         
-        .brand-section h1 {
-            font-family: 'Noto Serif TC', serif;
-            font-size: 1.5rem; /* 字體改小 */
-            margin: 0 0 8px;
-            letter-spacing: 1.5px;
-            color: var(--text-main);
-            font-weight: 900;
-            line-height: 1.2;
+        /* 品牌區塊 - 動態主題色 & Logo 顏色邏輯 */
+        /* Day 0: 黑金配色 (優雅高級) */
+        body[data-theme="0"] .brand-section { --brand-color: var(--brand-gold); }
+        body[data-theme="0"] .brand-section p { color: rgba(255, 255, 255, 0.7); } /* Day 0 副標題淺色 */
+
+        /* Day 1: 藍色 */
+        body[data-theme="1"] .brand-section { --brand-color: var(--primary-blue); }
+        body[data-theme="1"] .brand-section p { color: rgba(82, 134, 168, 0.9); }
+        
+        /* Day 2: 橘色 */
+        body[data-theme="2"] .brand-section { --brand-color: var(--primary-orange); }
+        body[data-theme="2"] .brand-section p { color: rgba(224, 122, 95, 0.9); }
+
+        /* Logo 遮罩樣式 */
+        .brand-logo-mask {
+            display: block;
+            width: 200px;
+            height: 100px;
+            margin: 0 auto 10px;
+            background-color: var(--brand-color);
+            -webkit-mask-image: url('./logo_mask.png');
+            mask-image: url('./logo_mask.png');
+            -webkit-mask-size: contain;
+            mask-size: contain;
+            -webkit-mask-repeat: no-repeat;
+            mask-repeat: no-repeat;
+            -webkit-mask-position: center;
+            mask-position: center;
+            transition: background-color 0.5s ease;
         }
+
         .brand-section p {
             font-size: 0.85rem;
             color: var(--text-sub);
             margin: 0;
             font-weight: 500;
             letter-spacing: 1px;
+            transition: color 0.5s ease;
+            font-family: 'Noto Sans TC', sans-serif;
         }
         
         .warning-text {
@@ -112,9 +179,21 @@
             padding: 4px 10px;
             border-radius: 20px;
             border: 1px solid rgba(0,0,0,0.03);
+            transition: opacity 0.3s ease;
+        }
+        
+        /* Day 0 的警告文字要稍微亮一點，不然看不見 */
+        body[data-theme="0"] .warning-text {
+            background: rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.5);
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
-        /* --- 2. 黏性按鈕 --- */
+        .warning-text.hidden {
+            display: none;
+        }
+
+        /* --- 2. 黏性按鈕與狀態列 --- */
         .sticky-action {
             position: sticky;
             top: 20px;
@@ -122,12 +201,16 @@
             display: flex;
             justify-content: center;
             margin-bottom: 30px;
+            padding: 0 20px;
             pointer-events: none;
         }
+
+        /* 2-A. 行事曆按鈕 (Glassmorphism) */
         .btn-calendar {
             pointer-events: auto;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(12px);
+            background: rgba(255, 255, 255, 0.3); 
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
             border: 1px solid rgba(255,255,255,0.4);
             color: var(--text-main);
             padding: 12px 32px;
@@ -137,13 +220,90 @@
             text-decoration: none;
             display: inline-flex;
             align-items: center;
-            box-shadow: var(--shadow-md);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
             transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             cursor: pointer;
         }
-        .btn-calendar:hover { transform: translateY(-2px) scale(1.02); box-shadow: var(--shadow-lg); background: white; }
-        .btn-calendar:active { transform: translateY(0) scale(0.98); box-shadow: var(--shadow-sm); }
+        
+        /* Day 0 行事曆按鈕調整：在深色背景上，按鈕要稍微亮一點 */
+        body[data-theme="0"] .btn-calendar {
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        body[data-theme="0"] .btn-calendar svg {
+            fill: #fff;
+        }
+
+        .btn-calendar:hover { 
+            transform: translateY(-2px) scale(1.02); 
+            background: rgba(255, 255, 255, 0.5); 
+            box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.15); 
+        }
+        .btn-calendar:active { transform: translateY(0) scale(0.98); }
         .btn-calendar svg { width: 20px; height: 20px; margin-right: 8px; fill: var(--primary-dark); }
+        .btn-calendar.hidden { display: none; }
+
+        /* 2-B. 即時狀態跑馬燈 (Glassmorphism) */
+        .status-marquee {
+            pointer-events: auto;
+            display: none;
+            width: 100%;
+            max-width: 450px;
+            height: 48px;
+            background: rgba(44, 62, 80, 0.3); 
+            backdrop-filter: blur(20px) saturate(200%);
+            -webkit-backdrop-filter: blur(20px) saturate(200%);
+            border-radius: 100px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+            color: white;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+            font-family: 'Noto Sans TC', sans-serif;
+            font-size: 0.9rem;
+            border: 1px solid rgba(255,255,255,0.3);
+            transition: background 0.5s ease;
+        }
+        .status-marquee.active { display: flex; }
+        
+        .status-icon {
+            padding: 0 15px;
+            width: 50px;
+            flex-shrink: 0;
+            z-index: 2;
+            background: inherit; 
+            backdrop-filter: blur(20px) saturate(200%);
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-right: 1px solid rgba(255,255,255,0.15);
+        }
+        .status-icon svg { width: 20px; height: 20px; fill: #fff; }
+        
+        .marquee-content { flex: 1; white-space: nowrap; overflow: hidden; position: relative; height: 100%; display: flex; align-items: center; }
+        
+        .marquee-text {
+            display: inline-block;
+            padding-left: 100%;
+            animation: marquee 28s linear infinite; 
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+            filter: grayscale(100%) brightness(1000%);
+        }
+        .marquee-text.static { animation: none; padding-left: 15px; width: 100%; text-align: left; }
+        
+        .section-spacer { display: inline-block; width: 60px; text-align: center; opacity: 0.5; }
+
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
+
+        .status-marquee.theme-day1 { background: rgba(82, 134, 168, 0.35); }
+        .status-marquee.theme-day2 { background: rgba(224, 122, 95, 0.35); }
 
         /* --- 3. 頁籤切換 --- */
         .tabs-container {
@@ -162,6 +322,12 @@
             width: 100%;
             max-width: 450px;
         }
+        /* Day 0 深色模式下的 Tab 外觀微調 */
+        body[data-theme="0"] .tabs {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
         .tab {
             flex: 1; text-align: center; padding: 10px 0;
             border-radius: 100px; font-size: 0.9rem; font-weight: 700; color: #999;
@@ -182,8 +348,7 @@
         .timeline-group.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- 公告頁樣式 (Unified Dark Theme) --- */
-        /* 定義統一的深色卡片樣式 */
+        /* --- 公告頁樣式 --- */
         .dark-theme-card {
             background: var(--primary-dark);
             border-radius: 20px;
@@ -191,110 +356,134 @@
             color: #ffffff;
             box-shadow: var(--shadow-md);
             margin-bottom: 25px;
-            border: 1px solid rgba(255, 255, 255, 0.1); /* 統一的微亮邊框 */
+            border: 1px solid rgba(255, 255, 255, 0.08);
             position: relative;
             overflow: hidden;
         }
+        
+        /* 調整：Day 0 白色高級信紙樣式 */
+        body[data-theme="0"] .dark-theme-card {
+            background-color: #F9F7F1; /* 米白色高級紙張基底 */
+            
+            /* 使用 SVG Noise 模擬紙張紋理 */
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+            
+            color: #2C3E50; /* 深色墨水字，確保在白紙上清晰 */
+            border: 1px solid #D4AF37; /* 細緻金邊，像邀請卡 */
+            box-shadow: 0 20px 60px rgba(0,0,0,0.6); /* 強烈陰影，浮在深色桌面上 */
+        }
 
-        /* Letter Box Specifics */
-        .letter-box {
-            text-align: center; 
-            padding: 40px 30px;
-        }
-        .letter-title {
+        .letter-box { text-align: center; padding: 40px 30px; }
+        
+        /* 標題 */
+        .letter-title { 
             font-family: 'Noto Serif TC', serif; 
-            font-size: 1.4rem; font-weight: 900;
-            color: white; 
-            margin-bottom: 25px; position: relative; display: inline-block;
+            font-size: 1.4rem; font-weight: 900; 
+            color: white; /* 預設白色 (for other themes if needed) */
+            margin-bottom: 25px; 
+            position: relative; display: inline-block; 
         }
-        .letter-title::after {
-            content: ''; display: block; width: 40px; height: 3px; 
-            background: rgba(255,255,255,0.3);
-            margin: 10px auto 0;
+        /* Day 0 標題改深色 */
+        body[data-theme="0"] .letter-title { color: #1A1A1A; }
+
+        .letter-title::after { content: ''; display: block; width: 40px; height: 3px; background: rgba(255,255,255,0.3); margin: 10px auto 0; }
+        /* Day 0 標題裝飾線改金色 */
+        body[data-theme="0"] .letter-title::after { background: #D4AF37; }
+        
+        /* 內文 */
+        .letter-content { 
+            font-family: 'Noto Serif TC', serif; 
+            font-size: 1.05rem; line-height: 1.9; 
+            color: rgba(255,255,255,0.9); 
+            text-align: justify; text-align-last: center; 
         }
-        .letter-content {
-            font-family: 'Noto Serif TC', serif; font-size: 1.05rem; line-height: 1.9; 
-            color: rgba(255,255,255,0.9);
-            text-align: justify; text-align-last: center;
-        }
+        /* Day 0 內文改深灰 */
+        body[data-theme="0"] .letter-content { color: #444444; }
+
         .letter-content p { margin-bottom: 20px; }
         
-        .highlight-date {
+        /* 日期強調框 */
+        .highlight-date { 
             display: inline-block; 
-            background: rgba(255,255,255,0.1);
-            color: #fff;
-            padding: 10px 20px; border-radius: 8px; font-weight: 700;
-            font-family: 'Space Mono', monospace; margin: 20px 0; font-size: 0.95rem; letter-spacing: 1px;
-            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.08); 
+            color: #fff; 
+            padding: 10px 20px; border-radius: 8px; 
+            font-weight: 700; 
+            font-family: 'Noto Serif TC', serif; 
+            margin: 20px 0; 
+            font-size: 1.1rem; 
+            letter-spacing: 1px; 
+            border: 1px solid rgba(255,255,255,0.15); 
         }
+        /* Day 0 日期框調整 */
+        body[data-theme="0"] .highlight-date {
+            background: rgba(0,0,0,0.03);
+            color: #1A1A1A;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .location-info { margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.95rem; color: #FFD54F; font-weight: 700; }
+        /* Day 0 地點資訊調整 */
+        body[data-theme="0"] .location-info {
+            color: #888;
+            border-top: 1px solid rgba(0,0,0,0.1);
+        }
+
+        /* Weather Box */
+        .weather-box { font-family: 'Noto Sans TC', sans-serif; }
+        .weather-box::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: rgba(255,255,255,0.2); z-index: 10; }
         
-        .location-info {
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            font-size: 0.95rem;
-            color: #FFD54F; /* 金黃色點綴，適合深藍底 */
-            font-weight: 700;
-        }
+        /* Day 0 天氣卡左側裝飾線改金色 */
+        body[data-theme="0"] .weather-box::before { background: #D4AF37; }
 
-        /* Weather Box Specifics (Unified) */
-        .weather-box {
-            /* 繼承 .dark-theme-card 的樣式，不再有獨特的黑色背景 */
-            font-family: 'Space Mono', monospace;
-        }
-        .weather-box::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%;
-            background: rgba(255,255,255,0.2); z-index: 10;
-        }
-        .weather-title {
-            font-weight: 700; font-size: 0.85rem;
-            margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px;
-            display: flex; align-items: center; color: rgba(255,255,255,0.7); /* 統一配色 */
-        }
+        .weather-title { font-weight: 700; font-size: 0.85rem; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px; display: flex; align-items: center; color: rgba(255,255,255,0.7); }
+        /* Day 0 天氣標題顏色 */
+        body[data-theme="0"] .weather-title { color: #666; }
+        body[data-theme="0"] .weather-title svg { fill: #666; }
+
         .weather-title svg { width: 16px; height: 16px; margin-right: 8px; fill: currentColor; }
-
-        .weather-content {
-            display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;
-        }
+        .weather-content { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
         
         .weather-temp { font-size: 3.5rem; font-weight: 700; line-height: 1; color: #fff; }
+        /* Day 0 氣溫顏色 */
+        body[data-theme="0"] .weather-temp { color: #2C3E50; }
+
         .weather-temp span { font-size: 1.2rem; vertical-align: top; color: rgba(255,255,255,0.6); }
+        body[data-theme="0"] .weather-temp span { color: #999; }
+
         .weather-info { text-align: right; }
         
-        .weather-condition { 
-            font-size: 1.2rem; font-weight: 700; margin-bottom: 5px; color: #fff;
-            font-family: 'Noto Sans TC', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-        }
+        .weather-condition { font-size: 1.2rem; font-weight: 700; margin-bottom: 5px; color: #fff; font-family: 'Noto Sans TC', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'; }
+        body[data-theme="0"] .weather-condition { color: #2C3E50; }
+
         .weather-loc { font-size: 0.8rem; color: rgba(255,255,255,0.6); }
-        
-        .weather-forecast {
-            border-top: 1px dashed rgba(255,255,255,0.2); padding-top: 15px;
-            display: flex; justify-content: space-between;
-        }
+        body[data-theme="0"] .weather-loc { color: #999; }
+
+        .weather-forecast { border-top: 1px dashed rgba(255,255,255,0.2); padding-top: 15px; display: flex; justify-content: space-between; }
+        body[data-theme="0"] .weather-forecast { border-top: 1px dashed rgba(0,0,0,0.1); }
+
         .forecast-item { text-align: center; flex: 1; }
         .forecast-day { color: rgba(255,255,255,0.8); font-size: 0.75rem; font-weight: 700; margin-bottom: 5px; text-transform: uppercase; }
-        .forecast-icon { 
-            font-size: 1.5rem; margin-bottom: 5px; display: block; 
-            font-family: 'Noto Sans TC', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-        }
-        .forecast-temp { color: rgba(255,255,255,0.6); font-size: 0.75rem; }
-        
-        .weather-advice {
-            margin-top: 15px;
-            font-size: 0.85rem;
-            color: #fff;
-            background: rgba(255,255,255,0.1);
-            padding: 12px;
-            border-radius: 8px;
-            font-family: 'Noto Sans TC', sans-serif;
-            line-height: 1.6;
-            border-left: 3px solid #FFD54F; /* 金黃色提示線 */
-        }
-        .weather-advice strong { color: #FFD54F; margin-right: 5px; }
-        
-        .weather-loading { font-size: 0.9rem; color: rgba(255,255,255,0.5); animation: blink 1s infinite; }
-        @keyframes blink { 50% { opacity: 0.5; } }
+        body[data-theme="0"] .forecast-day { color: #555; }
 
+        .forecast-icon { font-size: 1.5rem; margin-bottom: 5px; display: block; font-family: 'Noto Sans TC', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'; }
+        
+        .forecast-temp { color: rgba(255,255,255,0.6); font-size: 0.75rem; }
+        body[data-theme="0"] .forecast-temp { color: #999; }
+
+        .weather-advice { margin-top: 15px; font-size: 0.85rem; color: #fff; background: rgba(255,255,255,0.1); padding: 12px; border-radius: 8px; font-family: 'Noto Sans TC', sans-serif; line-height: 1.6; border-left: 3px solid #FFD54F; }
+        /* Day 0 天氣建議框樣式 */
+        body[data-theme="0"] .weather-advice {
+            background: rgba(0,0,0,0.03);
+            color: #444;
+            border-left: 3px solid #D4AF37;
+        }
+
+        .weather-advice strong { color: #FFD54F; margin-right: 5px; }
+        body[data-theme="0"] .weather-advice strong { color: #D4AF37; }
+
+        .weather-loading { font-size: 0.9rem; color: rgba(255,255,255,0.5); animation: blink 1s infinite; }
+        body[data-theme="0"] .weather-loading { color: #999; }
 
         /* 行程列表樣式 */
         .list-item { display: flex; flex-direction: row; padding: 25px 0; border-bottom: 1px solid var(--line); align-items: flex-start; }
@@ -304,13 +493,7 @@
         .item-title { font-family: 'Noto Serif TC', serif; font-size: 1.25rem; font-weight: 700; color: var(--text-main); margin: 0 0 8px 0; line-height: 1.3; }
         .item-desc { font-size: 1rem; color: var(--text-sub); line-height: 1.7; margin: 0 0 16px 0; font-weight: 400; }
         .action-area { display: flex; gap: 12px; flex-wrap: wrap; }
-        
-        .btn-pill {
-            display: inline-flex; align-items: center; padding: 8px 18px; border-radius: 8px;
-            font-size: 0.85rem; font-weight: 600; text-decoration: none;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid transparent; cursor: pointer;
-        }
+        .btn-pill { display: inline-flex; align-items: center; padding: 8px 18px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; text-decoration: none; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid transparent; cursor: pointer; }
         .btn-pill:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
         .btn-pill:active { transform: translateY(0); box-shadow: var(--shadow-sm); }
         .btn-pill svg { width: 15px; height: 15px; margin-right: 6px; fill: currentColor; }
@@ -350,42 +533,25 @@
         }
 
         /* --- MODAL --- */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(15px);
-            z-index: 1000; display: none; opacity: 0; transition: opacity 0.3s;
-            align-items: center; justify-content: center;
-        }
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(15px); z-index: 1000; display: none; opacity: 0; transition: opacity 0.3s; align-items: center; justify-content: center; }
         .modal-overlay.active { display: flex; opacity: 1; }
-        
-        .modal-card {
-            background: #111; 
-            background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-            background-size: 20px 20px;
-            width: 85%; max-width: 500px; padding: 40px; position: relative;
-            box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1), 0 20px 50px rgba(0,0,0,0.5);
-            transform: scale(0.9) translateY(20px); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
-            max-height: 85vh; overflow-y: auto; color: #eee;
-            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%);
-        }
+        .modal-card { background: #111; background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px); background-size: 20px 20px; width: 85%; max-width: 500px; padding: 40px; position: relative; box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1), 0 20px 50px rgba(0,0,0,0.5); transform: scale(0.9) translateY(20px); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1); max-height: 85vh; overflow-y: auto; color: #eee; clip-path: polygon(0 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%); }
         .modal-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #FF00CC, #3333FF, #00FFCC); z-index: 10; }
         .modal-overlay.active .modal-card { transform: scale(1) translateY(0); }
-
         .modal-header { display: flex; justify-content: space-between; margin-bottom: 30px; align-items: flex-start; }
         .modal-title { font-family: 'Noto Serif TC', serif; font-size: 1.8rem; font-weight: 900; color: #fff; line-height: 1.2; text-shadow: 0 0 20px rgba(255,255,255,0.2); }
         .modal-close { background: transparent; border: 1px solid rgba(255,255,255,0.3); width: 40px; height: 40px; border-radius: 50%; font-size: 1.5rem; cursor: pointer; color: #fff; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
         .modal-close:hover { background: #fff; color: #000; transform: rotate(90deg); }
         .modal-body { font-family: 'Noto Sans TC', sans-serif; }
-
-        .insight-tag { display: inline-block; background: linear-gradient(135deg, #e0e0e0 0%, #ffffff 50%, #a0a0a0 100%); color: #000; padding: 6px 12px; font-size: 0.75rem; font-family: 'Space Mono', monospace; font-weight: 700; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px; box-shadow: 0 2px 10px rgba(255,255,255,0.2); }
+        .insight-tag { display: inline-block; background: linear-gradient(135deg, #e0e0e0 0%, #ffffff 50%, #a0a0a0 100%); color: #000; padding: 6px 12px; font-size: 0.75rem; font-family: 'Noto Sans TC', sans-serif; font-weight: 700; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px; box-shadow: 0 2px 10px rgba(255,255,255,0.2); }
         .insight-tip { margin-top: 30px; padding: 20px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); font-size: 0.95rem; color: #ccc; line-height: 1.8; position: relative; }
-        .insight-tip::after { content: 'TIPS_//'; position: absolute; top: -10px; left: 10px; background: #111; padding: 0 5px; font-family: 'Space Mono', monospace; font-size: 0.7rem; color: var(--acid-accent); }
+        .insight-tip::after { content: 'TIPS_//'; position: absolute; top: -10px; left: 10px; background: #111; padding: 0 5px; font-family: 'Noto Sans TC', sans-serif; font-size: 0.7rem; color: var(--acid-accent); }
         .insight-tip strong { display: none; }
         .modal-content-text p { margin-top: 0; line-height: 1.8; opacity: 0.9; font-weight: 300; }
-
+        @keyframes blink { 50% { opacity: 0.5; } }
     </style>
 </head>
-<body>
+<body data-theme="0">
 
     <!-- ✨ 全域特效層 -->
     <div class="noise-overlay"></div>
@@ -393,20 +559,34 @@
 
     <!-- 1. 品牌區塊 -->
     <div class="brand-section">
-        <h1>宇傑系統</h1>
+        <!-- 改用 CSS Mask 呈現 Logo -->
+        <div class="brand-logo-mask"></div>
         <p>Jan 31 - Feb 1｜福容大飯店與深澳之旅</p>
-        <span class="warning-text">(無法下載行事曆時請使用 Safari 或 Chrome)</span>
+        <span class="warning-text" id="warningText">(若無法匯入行事曆，請使用 Safari 或 Chrome)</span>
     </div>
 
-    <!-- 2. 黏性按鈕 -->
+    <!-- 2. 黏性按鈕 與 狀態跑馬燈 -->
     <div class="sticky-action">
-        <button class="btn-calendar" onclick="downloadICS()">
+        
+        <!-- A. 行事曆按鈕 (公告頁顯示) -->
+        <button class="btn-calendar" id="btnImport" onclick="downloadICS()">
             <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2zm-7 5h5v5h-5z"/></svg>
             一鍵匯入行事曆
         </button>
+
+        <!-- B. 即時狀態跑馬燈 (Day1/2 顯示) -->
+        <div class="status-marquee" id="statusBar">
+            <div class="status-icon" id="statusIcon">
+                <!-- 預設圖示 (SVG) -->
+                <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+            </div>
+            <div class="marquee-content">
+                <span class="marquee-text" id="statusText">載入即時行程資訊...</span>
+            </div>
+        </div>
     </div>
 
-    <!-- 3. 切換頁籤 (新增公告 Tab) -->
+    <!-- 3. 切換頁籤 -->
     <div class="tabs-container">
         <div class="tabs">
             <div class="tab-bg" id="tabBg" style="background-color: var(--primary-dark);"></div>
@@ -461,7 +641,7 @@
             <div class="list-item">
                 <div class="item-time">07:50</div>
                 <div class="item-content">
-                    <h3 class="item-title">🚩 宇傑系統 準時開車</h3>
+                    <h3 class="item-title">🚩 宇傑 準時開車</h3>
                     <p class="item-desc">早安！請提前集合，車子準時出發，逾時不候。<br>集合：竹北市新工六路9號</p>
                     <div class="action-area">
                         <a href="https://www.google.com/maps/search/?api=1&query=竹北市新工六路9號" target="_blank" class="btn-pill primary">
@@ -494,8 +674,14 @@
                     <h3 class="item-title">🍱 午餐 - 友信海鮮餐廳</h3>
                     <p class="item-desc">深澳漁港口碑名店，享用新鮮海產。</p>
                     <div class="action-area">
-                        <a href="https://www.google.com/maps/search/?api=1&query=友信海鮮餐廳" target="_blank" class="btn-pill outline">地圖</a>
-                        <button class="btn-pill outline" onclick="openModal('restaurant')">介紹</button>
+                        <a href="https://www.google.com/maps/search/?api=1&query=友信海鮮餐廳" target="_blank" class="btn-pill outline">
+                            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                            地圖
+                        </a>
+                        <button class="btn-pill outline" onclick="openModal('restaurant')">
+                            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                            介紹
+                        </button>
                     </div>
                 </div>
             </div>
@@ -505,8 +691,14 @@
                     <h3 class="item-title">🐘 深澳岬角 (象鼻岩)</h3>
                     <p class="item-desc">觀賞奇岩怪石與酋長岩公園散步。</p>
                     <div class="action-area">
-                        <a href="https://www.google.com/maps/search/?api=1&query=深澳岬角" target="_blank" class="btn-pill outline">地圖</a>
-                        <button class="btn-pill outline" onclick="openModal('cape')">介紹</button>
+                        <a href="https://www.google.com/maps/search/?api=1&query=深澳岬角" target="_blank" class="btn-pill outline">
+                            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                            地圖
+                        </a>
+                        <button class="btn-pill outline" onclick="openModal('cape')">
+                            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                            介紹
+                        </button>
                     </div>
                 </div>
             </div>
@@ -516,8 +708,18 @@
                     <h3 class="item-title">🏨 福容大飯店 CHECK IN</h3>
                     <p class="item-desc">自由活動時間，享受海洋溫泉與沙灘。</p>
                     <div class="action-area">
-                        <a href="https://www.google.com/maps/search/?api=1&query=福容大飯店福隆" target="_blank" class="btn-pill primary">導航</a>
-                        <button class="btn-pill outline" onclick="openModal('hotel')">介紹</button>
+                        <a href="https://www.google.com/maps/search/?api=1&query=福容大飯店福隆" target="_blank" class="btn-pill primary">
+                            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                            導航
+                        </a>
+                        <button class="btn-pill outline" onclick="openModal('hotel')">
+                            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                            介紹
+                        </button>
+                        <button class="btn-pill outline" onclick="openModal('hotel_facility')">
+                            <svg viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
+                            設施
+                        </button>
                     </div>
                 </div>
             </div>
@@ -545,18 +747,31 @@
                     <h3 class="item-title">🍜 基隆廟口夜市</h3>
                     <p class="item-desc">午餐自由覓食，品嚐在地小吃。</p>
                     <div class="action-area">
-                        <a href="https://www.google.com/maps/search/?api=1&query=基隆廟口夜市" target="_blank" class="btn-pill primary">導航</a>
-                        <button class="btn-pill outline" onclick="openModal('nightmarket')">介紹</button>
+                        <a href="https://www.google.com/maps/search/?api=1&query=基隆廟口夜市" target="_blank" class="btn-pill primary">
+                            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                            導航
+                        </a>
+                        <button class="btn-pill outline" onclick="openModal('nightmarket')">
+                            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                            介紹
+                        </button>
+                        <button class="btn-pill outline" onclick="openModal('nightmarket_food')">
+                            <svg viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
+                            美食地圖
+                        </button>
                     </div>
                 </div>
             </div>
             <div class="list-item">
                 <div class="item-time">16:00</div>
                 <div class="item-content">
-                    <h3 class="item-title">🚌 返抵宇傑系統</h3>
+                    <h3 class="item-title">🚌 返抵宇傑</h3>
                     <p class="item-desc">平安返家，活動圓滿結束。</p>
                     <div class="action-area">
-                        <a href="https://www.google.com/maps/search/?api=1&query=竹北市新工六路9號" target="_blank" class="btn-pill outline">回公司</a>
+                        <a href="https://www.google.com/maps/search/?api=1&query=竹北市新工六路9號" target="_blank" class="btn-pill outline">
+                            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                            回公司
+                        </a>
                     </div>
                 </div>
             </div>
@@ -587,7 +802,7 @@
                 title: "深澳鐵道自行車",
                 content: `
                     <span class="insight-tag">MUST TRY</span>
-                    <div class="modal-content-text"><p>利用舊深澳線鐵道改建，全台唯一海景鐵道自行車。穿越光影隧道超夢幻！</p></div>
+                    <div class="modal-content-text"><p>全台唯一海岸鐵道自行車，單趟 1.3 公里。沿途欣賞無敵海景與基隆嶼，穿越以海洋為主題的『光雕隧道』，色彩繽紛的燈光投影超夢幻！還有可愛的豆腐君、象鼻君公仔陪你騎。</p></div>
                     <div class="insight-tip">進隧道時會變成星空模式，手機記得拿穩拍照！</div>
                 `
             },
@@ -595,7 +810,7 @@
                 title: "友信海鮮餐廳",
                 content: `
                     <span class="insight-tag">FOODIE</span>
-                    <div class="modal-content-text"><p>自家漁船捕撈「現流」海鮮，價格透明，在地口碑極佳。</p></div>
+                    <div class="modal-content-text"><p>在地老字號，價格透明公道。必點招牌『墨魚香腸』，每一口都吃得到爽脆墨魚塊！還有鮮甜的『小卷米粉』與『剝皮魚』，是品嚐深澳現流海鮮的最佳選擇。</p></div>
                     <div class="insight-tip">必點「小卷米粉」與店家自製「墨魚香腸」，口感超彈牙。</div>
                 `
             },
@@ -603,7 +818,7 @@
                 title: "深澳岬角",
                 content: `
                     <span class="insight-tag">NATURE</span>
-                    <div class="modal-content-text"><p>雖然象鼻已斷，但周邊蕈狀岩地質與海岸線依然壯觀。</p></div>
+                    <div class="modal-content-text"><p>北海岸的奇岩怪石博物館。最著名的是『酋長岩』，側面酷似印地安人酋長臉龐。雖然象鼻岩的鼻頭已斷，但壯觀的蕈狀岩海岸地形依然值得一探，現在更被戲稱為『水豚君岩』喔！</p></div>
                     <div class="insight-tip">尋找「酋長岩」，側面看超級像印地安人酋長！</div>
                 `
             },
@@ -611,7 +826,7 @@
                 title: "福容大飯店",
                 content: `
                     <span class="insight-tag">RELAX</span>
-                    <div class="modal-content-text"><p>擁有全台唯一「氯化物碳酸氫鹽泉」海洋溫泉，以及黃金沙灘。</p></div>
+                    <div class="modal-content-text"><p>北台灣最美沙灘溫泉渡假村。擁有全台稀有的『氯化物碳酸氫鹽泉』，呈現淡琥珀色，又稱『海洋溫泉』。飯店直通福隆黃金沙灘，房內就能眺望海景或山景，極致放鬆。</p></div>
                     <div class="insight-tip">溫泉帶有鹽分，泡完皮膚滑滑的，建議不要馬上沖掉。</div>
                 `
             },
@@ -619,12 +834,176 @@
                 title: "基隆廟口夜市",
                 content: `
                     <span class="insight-tag">EAT</span>
-                    <div class="modal-content-text"><p>聚集全台知名小吃，營養三明治、泡泡冰、一口香腸。</p></div>
+                    <div class="modal-content-text"><p>台灣最著名的夜市之一，聚集了數百攤美食。推薦必吃：營養三明治（炸麵包夾滷蛋火腿）、陳記泡泡冰（綿密口感）、天一香肉羹順（滷肉飯王者）、一口吃香腸、吳記螃蟹羹。</p></div>
                     <div class="insight-tip">先抽營養三明治號碼牌，再去吃別的，效率最高！</div>
+                `
+            },
+            hotel_facility: {
+                title: "福容大飯店設施",
+                content: `
+                    <span class="insight-tag">FACILITY</span>
+                    <div class="modal-content-text">
+                        <p>豐富設施滿足全齡需求！</p>
+                        <ul>
+                            <li><strong>海洋溫泉</strong>：大眾溫泉池、舒壓冷熱池、烤箱室。</li>
+                            <li><strong>休閒中心</strong>：VR體驗館、Switch遊戲機、健身房、桌球/撞球區。</li>
+                            <li><strong>戶外泳池</strong>：無邊際泳池讓你拍出網美照 (依季節開放)。</li>
+                            <li><strong>兒童遊戲室</strong>：專為小朋友設計的歡樂天地。</li>
+                        </ul>
+                    </div>
+                    <div class="insight-tip">建議攜帶泳衣泳帽，才能盡情享受溫泉與泳池設施。</div>
+                `
+            },
+            nightmarket_food: {
+                title: "基隆廟口美食地圖",
+                content: `
+                    <span class="insight-tag">FOOD MAP</span>
+                    <div class="modal-content-text">
+                        <p>跟著老饕吃！精選必吃攤位：</p>
+                        <ul>
+                            <li><strong>天一香肉羹順</strong> (31號)：被譽為基隆最強滷肉飯。</li>
+                            <li><strong>營養三明治</strong> (58號)：經典排隊名店，美乃滋是靈魂。</li>
+                            <li><strong>世盛一口吃香腸</strong> (43-1號)：一口一個剛剛好，配蒜頭超對味。</li>
+                            <li><strong>陳記/沈家泡泡冰</strong> (37/41號)：純手工打製，花生與鳳梨口味必點。</li>
+                            <li><strong>吳記螃蟹羹</strong> (5號)：鮮甜羹湯配油飯，絕配！</li>
+                        </ul>
+                    </div>
+                    <div class="insight-tip">建議避開用餐尖峰時段，或分組行動排隊！</div>
                 `
             }
         };
 
+        // --- Schedule Data for Status Bar ---
+        const scheduleData = [
+            // Day 1: 2026/01/31
+            { start: '2026-01-31T07:50', end: '2026-01-31T08:00', title: '🚩 宇傑集合 (竹北市)' },
+            { start: '2026-01-31T08:00', end: '2026-01-31T10:00', title: '🚌 快樂出遊中 (車程)' },
+            { start: '2026-01-31T10:00', end: '2026-01-31T10:30', title: '🎟️ 深澳自行車 報到取票' },
+            { start: '2026-01-31T10:30', end: '2026-01-31T11:30', title: '🚴‍♂️ 騎乘鐵道自行車' },
+            { start: '2026-01-31T12:00', end: '2026-01-31T13:30', title: '🍱 午餐：友信海鮮' },
+            { start: '2026-01-31T13:30', end: '2026-01-31T15:00', title: '🐘 深澳岬角 & 酋長岩' },
+            { start: '2026-01-31T15:00', end: '2026-01-31T16:00', title: '🏨 福容大飯店 Check-in' },
+            { start: '2026-01-31T16:00', end: '2026-01-31T18:00', title: '♨️ 自由時間 (溫泉/沙灘)' },
+            { start: '2026-01-31T18:30', end: '2026-01-31T21:00', title: '🍽️ 宇傑 尾牙晚宴' },
+            
+            // Day 2: 2026/02/01
+            { start: '2026-02-01T07:00', end: '2026-02-01T10:00', title: '🍳 享用飯店早餐' },
+            { start: '2026-02-01T11:00', end: '2026-02-01T11:30', title: '👋 飯店退房 Check-out' },
+            { start: '2026-02-01T12:00', end: '2026-02-01T14:00', title: '🍜 基隆廟口夜市覓食' },
+            { start: '2026-02-01T14:00', end: '2026-02-01T16:00', title: '🚌 返程 (回竹北)' },
+            { start: '2026-02-01T16:00', end: '2026-02-01T16:10', title: '🏠 抵達溫暖的家' }
+        ];
+
+        // 純白 SVG 圖示庫
+        const svgs = {
+            bell: '<svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>',
+            run: '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>',
+            warn: '<svg viewBox="0 0 24 24"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>',
+            calendar: '<svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg>',
+            clock: '<svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>',
+            party: '<svg viewBox="0 0 24 24"><path d="M8.11 7.17c-1.11-.96-1.43-2.64-.59-4.14.78-1.4 2.45-1.87 3.99-1.32C12.92 2.19 13.9 3.59 13.6 5.27c.41-.33.86-.6 1.34-.78 2.22-.84 4.74.19 5.68 2.37.96 2.21-.33 4.88-2.68 5.67L6.87 18.25c-.24.57-1.1.28-1.54-.42l-2.09-3.23c-1.12-1.74-.8-4.08.79-5.46.25-.22.51-.41.79-.58.12-.08.23-.17.34-.25.13-.1.27-.18.4-.27.18-.11.37-.21.55-.29zM22 16c0 3.31-2.69 6-6 6s-6-2.69-6-6 2.69-6 6-6 6 2.69 6 6z"/></svg>'
+        };
+
+        // 全域變數
+        let weatherForecastStr = "氣象資料更新中...";
+        
+        // 根據時間產生貼心小提醒
+        function getResponsiveTip() {
+            const hour = new Date().getHours();
+            
+            if (hour >= 23 || hour < 6) {
+                return "😴 夜深了，該休息充電囉，明天繼續玩！";
+            } else if (hour >= 6 && hour < 9) {
+                return "☀️ 早安！別忘了享用飯店早餐補充活力。";
+            } else if ((hour >= 11 && hour < 14) || (hour >= 18 && hour < 20)) {
+                return "🍽️ 祝您用餐愉快，享受美食時光！";
+            } else if (hour >= 14 && hour < 17) {
+                return "📸 景色很美，記得多拍幾張照片留念！";
+            } else if (hour >= 17 && hour < 19) {
+                return "🌇 傍晚時分，注意日落變化，手機電量還夠嗎？";
+            } else {
+                return "🔔 貼心提醒：快樂出遊，安全第一！";
+            }
+        }
+
+        function checkStatus() {
+            // --- 測試用：取消下面註解可模擬時間 (格式: 'YYYY-MM-DDTHH:mm:ss') ---
+            // const simulationTime = '2026-01-31T10:15:00'; 
+            // const now = new Date(simulationTime);
+            
+            const now = new Date(); // 正式上線用
+            
+            let currentEvent = null;
+            let nextEvent = null;
+            let statusText = "";
+            let iconSvg = svgs.bell;
+
+            // 尋找當前或下一個事件
+            for (let i = 0; i < scheduleData.length; i++) {
+                const event = scheduleData[i];
+                const start = new Date(event.start);
+                const end = new Date(event.end);
+
+                if (now >= start && now <= end) {
+                    currentEvent = event;
+                    break;
+                }
+                if (now < start) {
+                    nextEvent = event;
+                    break;
+                }
+            }
+
+            if (currentEvent) {
+                iconSvg = svgs.run;
+                statusText = `現正進行：${currentEvent.title}`;
+            } else if (nextEvent) {
+                const start = new Date(nextEvent.start);
+                const diffMs = start - now;
+                const diffMins = Math.floor(diffMs / 60000);
+                const diffHours = Math.floor(diffMins / 60);
+                const diffDays = Math.floor(diffHours / 24);
+
+                if (diffMins <= 30) {
+                    iconSvg = svgs.warn;
+                    statusText = `即將開始：${nextEvent.title} (剩餘 ${diffMins} 分鐘)`;
+                } else if (diffDays > 0) {
+                    iconSvg = svgs.calendar;
+                    statusText = `距離尾牙還有 ${diffDays} 天！請保持期待。`;
+                } else {
+                    const timeStr = start.toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit', hour12: false });
+                    iconSvg = svgs.clock;
+                    statusText = `下一站：${nextEvent.title} (${timeStr} 開始)`;
+                }
+            } else {
+                iconSvg = svgs.party;
+                statusText = "活動圓滿結束，感謝大家的參與！回家路上小心。";
+            }
+
+            // 組合跑馬燈 Section: 狀態 + 天氣 + 貼心提醒
+            const responsiveTip = getResponsiveTip();
+            const fullText = `
+                ${statusText}
+                <span class="section-spacer"></span>
+                ${weatherForecastStr}
+                <span class="section-spacer"></span>
+                ${responsiveTip}
+            `;
+
+            // 更新跑馬燈內容
+            const marqueeText = document.getElementById('statusText');
+            const iconEl = document.getElementById('statusIcon');
+            
+            if (marqueeText.innerHTML !== fullText) {
+                marqueeText.innerHTML = fullText;
+                iconEl.innerHTML = iconSvg; 
+                marqueeText.classList.remove('static'); 
+            }
+        }
+
+        // 每 30 秒更新一次狀態
+        setInterval(checkStatus, 30000);
+        
         function switchTab(day) {
             document.querySelectorAll('.timeline-group').forEach(el => el.classList.remove('active'));
             document.getElementById('day' + day).classList.add('active');
@@ -635,20 +1014,42 @@
 
             const bg = document.getElementById('tabBg');
             const light = document.getElementById('diffuseLight');
+            
+            const btnImport = document.getElementById('btnImport');
+            const statusBar = document.getElementById('statusBar');
+            const warningText = document.getElementById('warningText');
+
             light.className = 'diffuse-light';
+            statusBar.classList.remove('theme-day1', 'theme-day2'); 
+            
+            document.body.setAttribute('data-theme', day);
 
             if (day === 0) { // 公告
                 bg.style.transform = 'translateX(0)';
                 bg.style.backgroundColor = 'var(--primary-dark)';
                 light.classList.add('mode-intro');
+                
+                btnImport.classList.remove('hidden');
+                statusBar.classList.remove('active');
+                warningText.classList.remove('hidden');
+                
             } else if (day === 1) { // Day 1
                 bg.style.transform = 'translateX(100%)';
                 bg.style.backgroundColor = 'var(--primary-blue)';
                 light.classList.add('mode-day1');
+                
+                btnImport.classList.add('hidden');
+                statusBar.classList.add('active', 'theme-day1');
+                warningText.classList.add('hidden');
+                
             } else { // Day 2
                 bg.style.transform = 'translateX(200%)';
                 bg.style.backgroundColor = 'var(--primary-orange)';
                 light.classList.add('mode-day2');
+                
+                btnImport.classList.add('hidden');
+                statusBar.classList.add('active', 'theme-day2');
+                warningText.classList.add('hidden');
             }
         }
 
@@ -670,76 +1071,8 @@
         }
 
         function downloadICS() {
-            // ICS 內容保持不變
-            const events = `BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//Gemini//YUJAY Weiya App//ZH
-CALSCALE:GREGORIAN
-METHOD:PUBLISH
-BEGIN:VEVENT
-SUMMARY:🚩 宇傑系統集合 (07:50 準時發車)
-DTSTART;TZID=Asia/Taipei:20260131T075000
-DTEND;TZID=Asia/Taipei:20260131T080000
-DESCRIPTION:早安！請提前集合，車子準時出發。\n📍 集合地點：竹北市新工六路9號
-LOCATION:竹北市新工六路9號
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:🚴‍♂️ 深澳鐵道自行車 (10:30 梯次)
-DTSTART;TZID=Asia/Taipei:20260131T100000
-DTEND;TZID=Asia/Taipei:20260131T113000
-DESCRIPTION:深澳站 (10:30) -> 八斗子站 (11:01)。\n請提早報到取票。
-LOCATION:深澳鐵道自行車深澳站
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:🍱 午餐-友信海鮮餐廳
-DTSTART;TZID=Asia/Taipei:20260131T120000
-DTEND;TZID=Asia/Taipei:20260131T133000
-DESCRIPTION:享用海鮮大餐。
-LOCATION:友信海鮮餐廳
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:🐘 深澳岬角 象鼻岩 & 酋長岩
-DTSTART;TZID=Asia/Taipei:20260131T133000
-DTEND;TZID=Asia/Taipei:20260131T150000
-DESCRIPTION:13:30 象鼻岩 -> 14:00 番仔澳酋長岩公園。
-LOCATION:深澳岬角
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:🏨 福容大飯店 福隆 CHECK IN
-DTSTART;TZID=Asia/Taipei:20260131T150000
-DTEND;TZID=Asia/Taipei:20260131T180000
-DESCRIPTION:Check-in 後自由活動，享受海洋溫泉。
-LOCATION:福容大飯店 福隆
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:🍽️ 尾牙晚宴 (PM 18:30)
-DTSTART;TZID=Asia/Taipei:20260131T183000
-DTEND;TZID=Asia/Taipei:20260131T210000
-DESCRIPTION:準時開席，請勿遲到。
-LOCATION:福容大飯店 福隆
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:👋 飯店 CHECK OUT
-DTSTART;TZID=Asia/Taipei:20260201T110000
-DTEND;TZID=Asia/Taipei:20260201T113000
-DESCRIPTION:11:00 退房。
-LOCATION:福容大飯店 福隆
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:🍜 基隆廟口夜市
-DTSTART;TZID=Asia/Taipei:20260201T120000
-DTEND;TZID=Asia/Taipei:20260201T140000
-DESCRIPTION:午餐自由覓食。
-LOCATION:基隆廟口夜市
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:🚌 返抵宇傑系統
-DTSTART;TZID=Asia/Taipei:20260201T160000
-DTEND;TZID=Asia/Taipei:20260201T161000
-DESCRIPTION:平安回家。
-LOCATION:竹北市新工六路9號
-END:VEVENT
-END:VCALENDAR`;
+            // ICS 內容保持不變...
+            const events = `BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Gemini//YUJAY Weiya App//ZH\nCALSCALE:GREGORIAN\nMETHOD:PUBLISH\nBEGIN:VEVENT\nSUMMARY:🚩 宇傑集合 (07:50 準時發車)\nDTSTART;TZID=Asia/Taipei:20260131T075000\nDTEND;TZID=Asia/Taipei:20260131T080000\nDESCRIPTION:早安！請提前集合，車子準時出發。\n📍 集合地點：竹北市新工六路9號\nLOCATION:竹北市新工六路9號\nEND:VEVENT\nBEGIN:VEVENT\nSUMMARY:🚴‍♂️ 深澳鐵道自行車 (10:30 梯次)\nDTSTART;TZID=Asia/Taipei:20260131T100000\nDTEND;TZID=Asia/Taipei:20260131T113000\nDESCRIPTION:深澳站 (10:30) -> 八斗子站 (11:01)。\n請提早報到取票。\nLOCATION:深澳鐵道自行車深澳站\nEND:VEVENT\nBEGIN:VEVENT\nSUMMARY:🍱 午餐-友信海鮮餐廳\nDTSTART;TZID=Asia/Taipei:20260131T120000\nDTEND;TZID=Asia/Taipei:20260131T133000\nDESCRIPTION:享用海鮮大餐。\nLOCATION:友信海鮮餐廳\nEND:VEVENT\nBEGIN:VEVENT\nSUMMARY:🐘 深澳岬角 象鼻岩 & 酋長岩\nDTSTART;TZID=Asia/Taipei:20260131T133000\nDTEND;TZID=Asia/Taipei:20260131T150000\nDESCRIPTION:13:30 象鼻岩 -> 14:00 番仔澳酋長岩公園。\nLOCATION:深澳岬角\nEND:VEVENT\nBEGIN:VEVENT\nSUMMARY:🏨 福容大飯店 福隆 CHECK IN\nDTSTART;TZID=Asia/Taipei:20260131T150000\nDTEND;TZID=Asia/Taipei:20260131T180000\nDESCRIPTION:Check-in 後自由活動，享受海洋溫泉。\nLOCATION:福容大飯店 福隆\nEND:VEVENT\nBEGIN:VEVENT\nSUMMARY:🍽️ 尾牙晚宴 (PM 18:30)\nDTSTART;TZID=Asia/Taipei:20260131T183000\nDTEND;TZID=Asia/Taipei:20260131T210000\nDESCRIPTION:準時開席，請勿遲到。\nLOCATION:福容大飯店 福隆\nEND:VEVENT\nBEGIN:VEVENT\nSUMMARY:👋 飯店 CHECK OUT\nDTSTART;TZID=Asia/Taipei:20260201T110000\nDTEND;TZID=Asia/Taipei:20260201T113000\nDESCRIPTION:11:00 退房。\nLOCATION:福容大飯店 福隆\nEND:VEVENT\nBEGIN:VEVENT\nSUMMARY:🍜 基隆廟口夜市\nDTSTART;TZID=Asia/Taipei:20260201T120000\nDTEND;TZID=Asia/Taipei:20260201T140000\nDESCRIPTION:午餐自由覓食。\nLOCATION:基隆廟口夜市\nEND:VEVENT\nBEGIN:VEVENT\nSUMMARY:🚌 返抵宇傑\nDTSTART;TZID=Asia/Taipei:20260201T160000\nDTEND;TZID=Asia/Taipei:20260201T161000\nDESCRIPTION:平安回家。\nLOCATION:竹北市新工六路9號\nEND:VEVENT\nEND:VCALENDAR`;
 
             const blob = new Blob([events], { type: 'text/calendar;charset=utf-8' });
             const url = window.URL.createObjectURL(blob);
@@ -756,24 +1089,24 @@ END:VCALENDAR`;
             const display = document.getElementById('weather-display');
             const lat = 25.11;
             const lon = 121.84;
-            const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=Asia%2FTaipei`;
+            const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code&hourly=temperature_2m,weather_code,precipitation_probability&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=Asia%2FTaipei`;
 
             try {
                 const response = await fetch(url);
                 const data = await response.json();
                 
+                // 1. 處理現況與 Daily (用於公告頁)
                 const temp = Math.round(data.current.temperature_2m);
                 const code = data.current.weather_code;
                 const { text, icon } = getWeatherStatus(code);
                 
-                // Get Outfit Advice
                 let advice = "";
                 if (code >= 51 || code === 80 || code === 81 || code === 82 || code === 95) {
                     advice = "<strong>☔ 雨備提醒：</strong>降雨機率高，請務必攜帶雨具，或穿著防水鞋。";
                 } else if (temp < 18) {
-                    advice = "<strong>🧥 穿搭建議：</strong>氣溫偏低，建議洋蔥式穿搭，並攜帶防風外套。";
+                    advice = "<strong>🧥 今日穿搭建議：</strong>氣溫偏低，建議洋蔥式穿搭，並攜帶防風外套。";
                 } else if (code <= 3) {
-                    advice = "<strong>🕶️ 穿搭建議：</strong>天氣不錯，適合戶外活動，記得防曬補水喔！";
+                    advice = "<strong>🕶️ 今日穿搭建議：</strong>天氣不錯，適合戶外活動，記得防曬補水喔！";
                 } else {
                     advice = "<strong>🌤️ 出行提醒：</strong>天氣變化多端，建議隨身攜帶薄外套備用。";
                 }
@@ -810,8 +1143,50 @@ END:VCALENDAR`;
                     ${forecastHTML}
                     <div class="weather-advice">${advice}</div>
                 `;
+
+                // 2. 處理跑馬燈用的天氣預報
+                const nowHour = new Date().getHours();
+                let futureTemps = [];
+                let maxPrecip = 0;
+                let futureConditionCode = 0;
+                
+                // 取最近3小時做平均
+                if (nowHour < data.hourly.temperature_2m.length) {
+                    for (let i = nowHour; i < nowHour + 3 && i < data.hourly.temperature_2m.length; i++) {
+                        futureTemps.push(data.hourly.temperature_2m[i]);
+                        if (data.hourly.precipitation_probability[i] > maxPrecip) {
+                            maxPrecip = data.hourly.precipitation_probability[i];
+                        }
+                        if (i === nowHour) futureConditionCode = data.hourly.weather_code[i];
+                    }
+                }
+
+                if (futureTemps.length > 0) {
+                    const avgFutureTemp = Math.round(futureTemps.reduce((a, b) => a + b, 0) / futureTemps.length);
+                    const futureStatus = getWeatherStatus(futureConditionCode);
+                    
+                    // 根據時段決定標題
+                    let timeLabel = "";
+                    if (nowHour >= 5 && nowHour < 11) timeLabel = "☀️ 上午天氣";
+                    else if (nowHour >= 11 && nowHour < 13) timeLabel = "🍱 中午天氣";
+                    else if (nowHour >= 13 && nowHour < 18) timeLabel = "☁️ 下午天氣";
+                    else if (nowHour >= 18 && nowHour < 23) timeLabel = "🌙 晚間天氣";
+                    else timeLabel = "🌌 凌晨天氣";
+
+                    let shortForecast = `${timeLabel}：${avgFutureTemp}°C (${futureStatus.text})`;
+                    if (maxPrecip > 30) {
+                        shortForecast += ` ☔ 降雨機率 ${maxPrecip}%`;
+                    }
+                    weatherForecastStr = shortForecast;
+                } else {
+                    weatherForecastStr = `目前氣溫 ${temp}°C`;
+                }
+                
+                checkStatus();
+
             } catch (error) {
                 display.innerHTML = '<div class="weather-loading" style="color:red">OFFLINE_ //</div>';
+                weatherForecastStr = "氣象資料更新中...";
             }
         }
 
@@ -826,7 +1201,53 @@ END:VCALENDAR`;
         }
 
         fetchWeather();
+
+        // --- 🥚 Easter Egg: Random Travelers ---
+        function startEasterEggs() {
+            // 隨機角色列表 (Emoji)
+            const walkers = ['🚴', '🚌', '🦑', '🐡', '🎅'];
+            
+            function spawnWalker() {
+                const walker = document.createElement('div');
+                // 隨機選一個角色
+                // 🎅 聖誕老人機率較低 (SSR)
+                let char = walkers[Math.floor(Math.random() * (walkers.length - 1))];
+                if (Math.random() > 0.9) char = '🎅'; // 10% 機率出現聖誕老人
+
+                walker.innerText = char;
+                walker.classList.add('easter-egg-walker');
+                
+                // 決定走路位置 (底部隨機高度，避免太整齊)
+                // bottom: 10px ~ 100px
+                const randomBottom = 10 + Math.random() * 90;
+                walker.style.bottom = randomBottom + 'px';
+
+                // 決定走路方向 (左到右 或 右到左)
+                if (Math.random() > 0.5) {
+                    // 預設 (左到右)
+                } else {
+                    walker.classList.add('reverse');
+                }
+
+                document.body.appendChild(walker);
+
+                // 動畫結束後移除元素 (約 15~20 秒，視 CSS 動畫時間而定)
+                setTimeout(() => {
+                    walker.remove();
+                }, 20000); 
+
+                // 下一次出現的時間 (隨機 15 ~ 45 秒後)
+                const nextSpawnTime = 15000 + Math.random() * 30000;
+                setTimeout(spawnWalker, nextSpawnTime);
+            }
+
+            // 第一次觸發 (延遲 5 秒後開始)
+            setTimeout(spawnWalker, 5000);
+        }
+
+        // 啟動彩蛋邏輯
+        startEasterEggs();
+
     </script>
 </body>
 </html>
-```
