@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>福容大飯店福隆 - 設施資訊助手 (純文字版)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #f8fafc;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* 自定義滾動條 */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 5px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e0;
+            border-radius: 3px;
+        }
+
+        /* 卡片懸浮效果 */
+        .hover-card {
+            transition: all 0.2s ease;
+        }
+        .hover-card:active {
+            transform: scale(0.98);
+        }
+
+        /* 分類按鈕激活狀態 */
+        .category-btn.active {
+            background-color: #0ea5e9; /* sky-500 */
+            color: white;
+            box-shadow: 0 2px 4px rgba(14, 165, 233, 0.3);
+            border-color: #0ea5e9;
+        }
+
+        /* 狀態呼吸燈 */
+        .status-dot {
+            height: 8px;
+            width: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .status-open {
+            background-color: #10b981; /* emerald-500 */
+            box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+            animation: pulse-green 2s infinite;
+        }
+        .status-closed {
+            background-color: #ef4444; /* red-500 */
+            box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+        }
+        .status-maintenance {
+            background-color: #f59e0b; /* amber-500 */
+            box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
+        }
+
+        @keyframes pulse-green {
+            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 h-screen flex flex-col overflow-hidden">
+
+    <!-- 頂部導航 -->
+    <header class="bg-white border-b border-slate-200 z-10 flex-none">
+        <div class="max-w-md mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+                <div class="w-9 h-9 bg-gradient-to-br from-sky-500 to-sky-600 rounded-lg flex items-center justify-center text-white text-lg shadow-sm">
+                    <i class="fa-solid fa-hotel"></i>
+                </div>
+                <div>
+                    <h1 class="text-base font-bold text-slate-800 leading-tight">福容大飯店福隆</h1>
+                    <div class="text-[10px] text-slate-500" id="current-time-display">載入中...</div>
+                </div>
+            </div>
+            <button onclick="showSearchModal()" class="w-9 h-9 rounded-full bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-500 hover:bg-slate-100 transition-colors">
+                <i class="fa-solid fa-search text-sm"></i>
+            </button>
+        </div>
+        
+        <!-- 分類導航 -->
+        <div class="max-w-md mx-auto px-4 pb-3 overflow-x-auto whitespace-nowrap custom-scrollbar flex gap-2" id="category-nav">
+            <!-- 由 JS 生成 -->
+        </div>
+    </header>
+
+    <!-- 主要內容區 -->
+    <main class="flex-1 overflow-y-auto custom-scrollbar relative bg-[#f8fafc]" id="main-content">
+        <div class="max-w-md mx-auto px-4 py-4 space-y-3" id="content-area">
+            <!-- 內容由 JS 動態插入 -->
+        </div>
+        <div class="h-10"></div>
+    </main>
+
+    <!-- 詳情模態框 (無圖版) -->
+    <div id="detail-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center px-4 bg-slate-900/50 backdrop-blur-[2px] opacity-0 transition-opacity duration-200" onclick="closeDetailModal(event)">
+        <div class="bg-white w-full max-w-sm rounded-2xl shadow-xl overflow-hidden transform scale-95 transition-transform duration-200 flex flex-col max-h-[85vh]" id="modal-content" onclick="event.stopPropagation()">
+            
+            <!-- 標題區 -->
+            <div class="p-5 pb-0">
+                <div class="flex justify-between items-start mb-1">
+                    <div id="modal-status-badge" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold tracking-wide bg-slate-100 text-slate-600">
+                        <!-- JS 填充狀態 -->
+                    </div>
+                    <button onclick="closeDetailModal()" class="w-8 h-8 -mr-2 -mt-2 rounded-full flex items-center justify-center text-slate-400 hover:bg-slate-100 transition">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                    </button>
+                </div>
+                <h3 id="modal-title" class="text-xl font-bold text-slate-800 mb-2"></h3>
+                <div class="flex items-center gap-2 text-sm text-slate-500">
+                    <i class="fa-solid fa-location-dot text-sky-500"></i>
+                    <span id="modal-floor"></span>
+                </div>
+            </div>
+            
+            <hr class="mx-5 my-4 border-slate-100">
+
+            <!-- 內容區 -->
+            <div class="p-5 pt-0 overflow-y-auto custom-scrollbar space-y-5">
+                <!-- 介紹 -->
+                <div>
+                    <p id="modal-desc" class="text-slate-600 leading-relaxed text-[15px]"></p>
+                </div>
+                
+                <!-- 時間 -->
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200/60">
+                    <div class="flex items-start gap-3">
+                        <div class="mt-1 text-sky-500"><i class="fa-regular fa-clock"></i></div>
+                        <div>
+                            <h4 class="text-sm font-bold text-slate-800 mb-1">開放時間</h4>
+                            <p id="modal-time" class="text-sm text-slate-600 whitespace-pre-line leading-relaxed"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 價格 -->
+                <div id="modal-price-container" class="bg-orange-50 p-4 rounded-xl border border-orange-100 hidden">
+                    <div class="flex items-start gap-3">
+                        <div class="mt-1 text-orange-500"><i class="fa-solid fa-coins"></i></div>
+                        <div>
+                            <h4 class="text-sm font-bold text-slate-800 mb-1">收費資訊</h4>
+                            <p id="modal-price" class="text-sm text-slate-600 whitespace-pre-line leading-relaxed"></p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 底部提醒 -->
+                <p class="text-xs text-center text-slate-400">實際狀況依現場公告為主</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 搜尋模態框 -->
+    <div id="search-modal" class="fixed inset-0 z-50 hidden bg-white">
+        <div class="max-w-md mx-auto h-full flex flex-col">
+            <div class="p-4 border-b flex items-center gap-3">
+                <button onclick="closeSearchModal()" class="text-slate-500 p-2"><i class="fa-solid fa-arrow-left"></i></button>
+                <div class="flex-1 relative">
+                    <input type="text" id="search-input" placeholder="搜尋設施..." class="w-full bg-slate-100 py-2.5 pl-10 pr-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-500 text-sm" oninput="handleSearch()">
+                    <i class="fa-solid fa-search absolute left-3.5 top-3 text-slate-400 text-sm"></i>
+                </div>
+            </div>
+            <div class="p-4 overflow-y-auto flex-1 bg-[#f8fafc]" id="search-results">
+                <p class="text-center text-slate-400 mt-10 text-sm">輸入關鍵字開始搜尋</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // 1. 資料庫 (含營業邏輯設定)
+        // ==========================================
+        // 邏輯說明：
+        // ranges: 每日固定開放時段 [開始時間(整數), 結束時間(整數)]
+        // weekRanges: 特殊週末時段 (週五六)
+        // closeTueDay: 是否週二白天保養 (18:00前不開放)
+        // logicType: 特殊邏輯標記 ('hotspring', 'meals', 'normal')
+
+        const HOTEL_DATA = {
+            wellness: {
+                title: "玩水泡湯",
+                icon: "fa-solid fa-water",
+                items: [
+                    {
+                        name: "福隆海洋溫泉 (大眾池)",
+                        floor: "1F 休閒中心",
+                        desc: "台灣本島唯一「氯化物氫鹽泉」，獲日本溫泉協會認證。泉水呈現淡琥珀色，具保濕美顏效果。",
+                        time: "週日-週四: 07:00-12:00 | 14:00-18:00 | 19:00-22:30\n週五-週六: 07:00-12:00 | 14:00-18:00 | 19:00-23:00\n※週二 07:00-18:00 保養不開放",
+                        price: "房客免費 | 外客平日$600 假日$800",
+                        schedule: {
+                            type: 'hotspring',
+                            ranges: [[700, 1200], [1400, 1800], [1900, 2230]],
+                            weekRanges: [[700, 1200], [1400, 1800], [1900, 2300]]
+                        }
+                    },
+                    {
+                        name: "戶外無邊際泳池",
+                        floor: "1F 戶外區",
+                        desc: "與太平洋連成一線的絕美無邊際泳池，分為標準池與兒童戲水池。",
+                        time: "每日 07:00 - 22:00",
+                        schedule: { type: 'normal', ranges: [[700, 2200]] }
+                    },
+                    {
+                        name: "多職能戲水區 (室內)",
+                        floor: "1F 休閒中心",
+                        desc: "室內恆溫水療區，包含衝擊泉、按摩池、兒童溜滑梯戲水池。",
+                        time: "每日 07:00 - 22:00",
+                        schedule: { type: 'normal', ranges: [[700, 2200]] }
+                    }
+                ]
+            },
+            dining: {
+                title: "美饌饗宴",
+                icon: "fa-solid fa-utensils",
+                items: [
+                    {
+                        name: "田園西餐廳",
+                        floor: "Lobby 層",
+                        desc: "提供多國料理自助餐，早餐豐盛，晚餐時段常有海鮮特別企劃。",
+                        time: "早餐 07:00-10:00\n午餐 11:30-14:00\n晚餐 17:30-21:00",
+                        schedule: { 
+                            type: 'normal', 
+                            ranges: [[700, 1000], [1130, 1400], [1730, 2100]] 
+                        }
+                    },
+                    {
+                        name: "福粵樓",
+                        floor: "Lobby 層",
+                        desc: "經典港式飲茶與中式合菜。推薦櫻桃鴨(需預訂)、酸菜白肉鍋。",
+                        time: "午餐 11:30-14:00\n晚餐 17:30-21:00",
+                        schedule: { 
+                            type: 'normal', 
+                            ranges: [[1130, 1400], [1730, 2100]] 
+                        }
+                    },
+                    {
+                        name: "大廳酒吧",
+                        floor: "Lobby 層",
+                        desc: "提供精緻下午茶、咖啡、調酒與輕食。",
+                        time: "每日 10:00 - 23:00",
+                        schedule: { type: 'normal', ranges: [[1000, 2300]] }
+                    }
+                ]
+            },
+            fun: {
+                title: "休閒娛樂",
+                icon: "fa-solid fa-gamepad",
+                items: [
+                    {
+                        name: "兒童遊戲室",
+                        floor: "1F 休閒中心",
+                        desc: "專為學齡前兒童設計，有球池、溜滑梯、閱讀區。",
+                        time: "每日 07:00 - 22:00",
+                        schedule: { type: 'normal', ranges: [[700, 2200]] }
+                    },
+                    {
+                        name: "健身中心",
+                        floor: "1F 休閒中心",
+                        desc: "配備跑步機、飛輪、啞鈴組。面對泳池景觀。",
+                        time: "每日 07:00 - 22:00",
+                        schedule: { type: 'normal', ranges: [[700, 2200]] }
+                    },
+                    {
+                        name: "星光 KTV",
+                        floor: "1F",
+                        desc: "私人包廂歡唱空間，適合聚會。(需預約)",
+                        time: "14:00 - 23:00",
+                        price: "依包廂大小計費",
+                        schedule: { type: 'normal', ranges: [[1400, 2300]] }
+                    },
+                    {
+                        name: "VR 體驗區",
+                        floor: "1F 休閒中心",
+                        desc: "最新 VR 遊戲機台，體驗虛擬實境快感。",
+                        time: "09:00 - 21:00",
+                        schedule: { type: 'normal', ranges: [[900, 2100]] }
+                    }
+                ]
+            },
+            outdoor: {
+                title: "戶外活動",
+                icon: "fa-solid fa-umbrella-beach",
+                items: [
+                    {
+                        name: "福隆海水浴場",
+                        floor: "飯店直通",
+                        desc: "黃金沙灘，房客憑房卡免費進出。",
+                        time: "08:00 - 17:00 (視天氣開放)",
+                        schedule: { type: 'normal', ranges: [[800, 1700]] }
+                    },
+                    {
+                        name: "SUP / 獨木舟",
+                        floor: "雙溪河畔",
+                        desc: "雙溪河體驗水上活動，由專業教練帶領。",
+                        time: "需預約 (依季節調整)",
+                        price: "房客享優惠價",
+                        schedule: { type: 'manual', text: '需預約' } // 特殊處理
+                    },
+                     {
+                        name: "自行車租借",
+                        floor: "1F 戶外廣場",
+                        desc: "提供各類車款，推薦騎乘舊草嶺隧道環狀線。",
+                        time: "08:00 - 17:00",
+                        schedule: { type: 'normal', ranges: [[800, 1700]] }
+                    }
+                ]
+            }
+        };
+
+        // ==========================================
+        // 2. 核心邏輯：狀態判斷系統
+        // ==========================================
+        
+        function calculateStatus(schedule) {
+            if (!schedule) return { isOpen: false, text: "未定", color: "gray" };
+            if (schedule.type === 'manual') return { isOpen: false, text: schedule.text, color: "orange" };
+
+            const now = new Date();
+            const day = now.getDay(); // 0(Sun) - 6(Sat)
+            const hour = now.getHours();
+            const minute = now.getMinutes();
+            const currentTimeVal = hour * 100 + minute; // e.g., 14:30 -> 1430
+
+            // 1. 特殊邏輯：溫泉週二保養
+            if (schedule.type === 'hotspring' && day === 2) {
+                // 週二 07:00 - 18:00 保養
+                if (currentTimeVal >= 700 && currentTimeVal < 1800) {
+                    return { isOpen: false, text: "週二保養中", color: "orange" };
+                }
+            }
+
+            // 2. 決定使用哪組時間表 (週末 vs 平日)
+            let ranges = schedule.ranges;
+            const isWeekend = (day === 5 || day === 6); // Fri, Sat
+            if (schedule.weekRanges && isWeekend) {
+                ranges = schedule.weekRanges;
+            }
+
+            // 3. 檢查是否在任何一個開放區間內
+            let isOpen = false;
+            let nextOpenTime = null;
+
+            for (let range of ranges) {
+                const [start, end] = range;
+                if (currentTimeVal >= start && currentTimeVal < end) {
+                    isOpen = true;
+                    // 計算距離打烊還剩多久 (可選功能)
+                    break;
+                }
+            }
+
+            if (isOpen) {
+                return { isOpen: true, text: "營業中", color: "green" };
+            } else {
+                return { isOpen: false, text: "休息中", color: "red" };
+            }
+        }
+
+        function updateTimeDisplay() {
+            const now = new Date();
+            const days = ['週日', '週一', '週二', '週三', '週四', '週五', '週六'];
+            const timeStr = `${now.getMonth()+1}/${now.getDate()} (${days[now.getDay()]}) ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+            document.getElementById('current-time-display').textContent = timeStr;
+        }
+
+        // ==========================================
+        // 3. 介面渲染邏輯
+        // ==========================================
+        let currentCategory = 'wellness';
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCategories();
+            renderContent(currentCategory);
+            updateTimeDisplay();
+            setInterval(() => {
+                updateTimeDisplay();
+                // 每分鐘重新渲染內容以更新狀態 (可優化為只更新DOM，但為求簡單直接重繪)
+                renderContent(currentCategory, false); 
+            }, 60000);
+        });
+
+        function renderCategories() {
+            const nav = document.getElementById('category-nav');
+            nav.innerHTML = Object.keys(HOTEL_DATA).map(key => {
+                const cat = HOTEL_DATA[key];
+                const activeClass = key === currentCategory ? 'active' : 'bg-white text-slate-600 border border-slate-200';
+                return `
+                    <button onclick="switchCategory('${key}')" 
+                        class="category-btn flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all ${activeClass} whitespace-nowrap">
+                        <i class="${cat.icon}"></i>
+                        ${cat.title}
+                    </button>
+                `;
+            }).join('');
+        }
+
+        function switchCategory(key) {
+            currentCategory = key;
+            renderCategories();
+            renderContent(key);
+        }
+
+        function renderContent(categoryKey, animate = true) {
+            const container = document.getElementById('content-area');
+            const data = HOTEL_DATA[categoryKey];
+            
+            const contentHTML = `
+                <div class="mb-2 px-1">
+                    <h2 class="text-lg font-bold text-slate-700 flex items-center gap-2">
+                        <span class="w-1 h-5 bg-sky-500 rounded-full"></span>
+                        ${data.title}
+                    </h2>
+                </div>
+            ` + data.items.map((item, index) => createCardHTML(item, index, animate)).join('');
+
+            if (animate) {
+                container.style.opacity = '0';
+                container.innerHTML = contentHTML;
+                // 簡單淡入
+                setTimeout(() => {
+                    container.style.transition = 'opacity 0.2s ease';
+                    container.style.opacity = '1';
+                }, 50);
+            } else {
+                container.innerHTML = contentHTML;
+            }
+        }
+
+        function createCardHTML(item, index, animate) {
+            const status = calculateStatus(item.schedule);
+            
+            // 狀態樣式設定
+            let statusClass = "bg-slate-100 text-slate-500";
+            let dotClass = "bg-slate-400";
+            
+            if (status.color === 'green') {
+                statusClass = "bg-emerald-50 text-emerald-700 border border-emerald-100";
+                dotClass = "status-open";
+            } else if (status.color === 'red') {
+                statusClass = "bg-slate-100 text-slate-500 border border-slate-200";
+                dotClass = "status-closed";
+            } else if (status.color === 'orange') {
+                statusClass = "bg-amber-50 text-amber-700 border border-amber-100";
+                dotClass = "status-maintenance";
+            }
+
+            const animationStyle = animate ? `style="animation: fadeIn 0.4s ease backwards ${index * 0.05}s"` : '';
+
+            return `
+                <div class="hover-card bg-white rounded-xl p-4 shadow-sm border border-slate-200 cursor-pointer relative overflow-hidden" 
+                     onclick='openDetail(${JSON.stringify(item)})'
+                     ${animationStyle}>
+                     
+                    <!-- 左側主內容 -->
+                    <div class="flex justify-between items-start mb-2">
+                        <div>
+                            <h3 class="font-bold text-slate-800 text-[17px] leading-tight mb-1">${item.name}</h3>
+                            <div class="flex items-center gap-2 text-xs text-slate-500 font-medium">
+                                <span class="bg-slate-100 px-1.5 py-0.5 rounded text-slate-500"><i class="fa-solid fa-map-pin mr-1"></i>${item.floor}</span>
+                            </div>
+                        </div>
+                        
+                        <!-- 右上角狀態燈 (手機版重點) -->
+                        <div class="flex-shrink-0 ml-2">
+                            <span class="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold ${statusClass}">
+                                <span class="status-dot ${dotClass} w-2 h-2"></span>
+                                ${status.text}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- 描述文字 -->
+                    <p class="text-slate-600 text-sm line-clamp-2 leading-relaxed opacity-90 pr-2">
+                        ${item.desc}
+                    </p>
+                    
+                    <div class="mt-3 flex justify-between items-center border-t border-slate-50 pt-2">
+                        <span class="text-xs text-slate-400">點擊查看詳情</span>
+                        <i class="fa-solid fa-chevron-right text-xs text-slate-300"></i>
+                    </div>
+                </div>
+            `;
+        }
+
+        function openDetail(item) {
+            const modal = document.getElementById('detail-modal');
+            const content = document.getElementById('modal-content');
+            
+            // 填充文字資料
+            document.getElementById('modal-title').innerText = item.name;
+            document.getElementById('modal-floor').innerText = item.floor;
+            document.getElementById('modal-desc').innerHTML = item.desc.replace(/\n/g, '<br>'); // 支援換行
+            document.getElementById('modal-time').innerText = item.time;
+            
+            // 計算並顯示即時狀態
+            const status = calculateStatus(item.schedule);
+            const badge = document.getElementById('modal-status-badge');
+            
+            // 設定詳情頁的狀態標籤
+            let badgeClass = "bg-slate-100 text-slate-500 border border-slate-200";
+            let dotColor = "bg-slate-400";
+            
+            if (status.color === 'green') {
+                badgeClass = "bg-emerald-50 text-emerald-700 border border-emerald-100";
+                dotColor = "bg-emerald-500";
+            } else if (status.color === 'orange') {
+                badgeClass = "bg-amber-50 text-amber-700 border border-amber-100";
+                dotColor = "bg-amber-500";
+            } else {
+                badgeClass = "bg-red-50 text-red-700 border border-red-100";
+                dotColor = "bg-red-500";
+            }
+            
+            badge.className = `inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold tracking-wide border ${badgeClass}`;
+            badge.innerHTML = `<span class="w-2 h-2 rounded-full ${dotColor}"></span> ${status.text} (現在)`;
+
+            // 價格
+            const priceEl = document.getElementById('modal-price');
+            const priceContainer = document.getElementById('modal-price-container');
+            if (item.price) {
+                priceEl.innerText = item.price;
+                priceContainer.classList.remove('hidden');
+            } else {
+                priceContainer.classList.add('hidden');
+            }
+
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                content.classList.remove('scale-95');
+                content.classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeDetailModal(e) {
+            const modal = document.getElementById('detail-modal');
+            const content = document.getElementById('modal-content');
+            
+            modal.classList.add('opacity-0');
+            content.classList.remove('scale-100');
+            content.classList.add('scale-95');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 200);
+        }
+
+        // ==========================================
+        // 4. 搜尋功能
+        // ==========================================
+        function showSearchModal() {
+            document.getElementById('search-modal').classList.remove('hidden');
+            document.getElementById('search-input').focus();
+        }
+
+        function closeSearchModal() {
+            document.getElementById('search-modal').classList.add('hidden');
+            document.getElementById('search-input').value = '';
+            document.getElementById('search-results').innerHTML = '<p class="text-center text-slate-400 mt-10 text-sm">輸入關鍵字開始搜尋</p>';
+        }
+
+        function handleSearch() {
+            const query = document.getElementById('search-input').value.toLowerCase().trim();
+            const resultContainer = document.getElementById('search-results');
+            
+            if (!query) {
+                resultContainer.innerHTML = '<p class="text-center text-slate-400 mt-10 text-sm">輸入關鍵字開始搜尋</p>';
+                return;
+            }
+
+            let results = [];
+            Object.values(HOTEL_DATA).forEach(cat => {
+                cat.items.forEach(item => {
+                    if (item.name.toLowerCase().includes(query) || 
+                        item.desc.toLowerCase().includes(query)) {
+                        results.push(item);
+                    }
+                });
+            });
+
+            if (results.length === 0) {
+                resultContainer.innerHTML = '<div class="text-center mt-10"><i class="fa-regular fa-face-frown text-3xl text-slate-300 mb-3"></i><p class="text-slate-500 text-sm">找不到相關設施</p></div>';
+            } else {
+                resultContainer.innerHTML = `
+                    <div class="space-y-3">
+                        <p class="text-xs text-slate-400 px-1">找到 ${results.length} 個結果</p>
+                        ${results.map((item, idx) => createCardHTML(item, idx, false)).join('')}
+                    </div>
+                `;
+            }
+        }
+    </script>
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</body>
+</html>

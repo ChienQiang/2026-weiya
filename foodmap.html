@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>基隆廟口夜市美食地圖</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600;900&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        :root {
+            /* 預設：文青淡雅風 */
+            --primary-color: #b74141; 
+            --primary-light: #e6c8c8;
+            --bg-color: #f7f9fa;
+            --card-bg: #ffffff;
+            --text-main: #4a4a4a;
+            --text-sub: #888;
+            --success-color: #558b2f;
+            --error-color: #c62828;
+            --selected-orange: #ff9800; 
+            --toilet-color: #5c6bc0;
+            --random-color: #7e57c2;
+            --header-bg: rgba(255, 255, 255, 0.75);
+            --icon-color: #b74141; /* 統一圖示顏色 */
+        }
+
+        /* --- 彩蛋模式變數 --- */
+
+        /* 1. 雨都模式 (灰藍冷色調) */
+        body.rainy-mode {
+            --primary-color: #546e7a;
+            --bg-color: #cfd8dc;
+            --card-bg: #eceff1;
+            --text-main: #37474f;
+            --header-bg: rgba(207, 216, 220, 0.85);
+            --icon-color: #546e7a;
+        }
+
+        /* 2. 農曆新年模式 (紅金喜慶) */
+        body.lunar-mode {
+            --primary-color: #c62828; 
+            --bg-color: #fff8e1;
+            --card-bg: #ffffff;
+            --text-main: #b71c1c;
+            --selected-orange: #ffd700;
+            --header-bg: rgba(255, 248, 225, 0.9);
+            --icon-color: #c62828;
+            background-image: radial-gradient(#ffcdd2 2px, transparent 2px) !important;
+        }
+
+        /* 3. 賽博龐克模式 (黑底螢光) */
+        body.cyber-mode {
+            --primary-color: #00e5ff; 
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --text-main: #e0e0e0;
+            --text-sub: #b0bec5;
+            --header-bg: rgba(30, 30, 30, 0.9);
+            --selected-orange: #f50057;
+            --icon-color: #00e5ff;
+        }
+
+        body {
+            font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            background-image: radial-gradient(#e0e0e0 1px, transparent 1px);
+            background-size: 20px 20px;
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.6s ease;
+        }
+
+        header {
+            background: var(--header-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            color: var(--primary-color);
+            padding: 15px;
+            text-align: center;
+            z-index: 20;
+            flex-shrink: 0;
+            position: relative;
+            transition: all 0.6s ease;
+        }
+        
+        header h1 { 
+            margin: 0; 
+            font-family: 'Noto Serif TC', serif;
+            font-size: 1.6rem; 
+            letter-spacing: 2px;
+            font-weight: 900;
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+            display: inline-block;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-bottom: 2px dotted rgba(0,0,0,0.15);
+            padding-bottom: 2px;
+        }
+
+        header h1:hover {
+            transform: scale(1.05) translateY(-2px);
+            text-shadow: 0 5px 15px rgba(183, 65, 65, 0.25);
+            border-bottom-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        header h1:active { 
+            transform: scale(0.95); 
+            border-bottom-style: solid;
+        }
+
+        .container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            flex-direction: column;
+        }
+
+        .sidebar {
+            background: var(--bg-color);
+            display: flex;
+            flex-direction: column;
+            z-index: 10;
+            transition: background 0.6s;
+        }
+
+        .controls-wrapper {
+            background: var(--header-bg);
+            backdrop-filter: blur(5px);
+            box-shadow: 0 1px 10px rgba(0,0,0,0.03);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .status-toggle-bar {
+            padding: 12px 18px;
+            border-bottom: 1px solid rgba(0,0,0,0.03);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .toggle-label {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Noto Serif TC', serif;
+        }
+
+        .switch { position: relative; display: inline-block; width: 46px; height: 24px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ddd; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+        input:checked + .slider { background-color: var(--success-color); }
+        input:checked + .slider:before { transform: translateX(22px); }
+
+        .filter-section {
+            padding: 15px; display: flex; gap: 10px; overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch;
+        }
+        
+        .filter-btn {
+            border: 1px solid rgba(0,0,0,0.1);
+            background: var(--card-bg);
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text-sub);
+            display: flex; align-items: center; gap: 5px; flex-shrink: 0;
+            font-family: 'Noto Serif TC', serif;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .filter-btn:hover { transform: translateY(-1px); opacity: 0.9; }
+
+        .filter-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+            font-weight: 600;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+        }
+
+        .filter-btn[data-type="toilet"].active {
+            background-color: var(--toilet-color);
+            border-color: var(--toilet-color);
+        }
+
+        .filter-btn[data-type="random"] {
+            border-color: var(--random-color);
+            color: var(--random-color);
+            background-color: rgba(126, 87, 194, 0.1);
+        }
+        .filter-btn[data-type="random"].active {
+            background-color: var(--random-color);
+            color: white;
+        }
+
+        .list-container { flex: 1; overflow-y: auto; padding: 15px; }
+
+        @keyframes stamp-in {
+            0% { opacity: 0; transform: scale(3); }
+            50% { opacity: 1; transform: scale(0.8); }
+            70% { transform: scale(1.1); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .stamp-mark {
+            position: absolute; top: 10px; right: 10px;
+            border: 2px solid #e65100; color: #e65100;
+            background: rgba(255, 224, 178, 0.9);
+            padding: 5px 10px; font-size: 0.8rem; font-weight: bold;
+            border-radius: 4px; transform: rotate(-10deg); z-index: 5;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            animation: stamp-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            font-family: 'Noto Serif TC', serif; display: flex; align-items: center; gap: 4px;
+        }
+
+        .shop-card.random-pick {
+            border: 2px solid #ffcc80;
+            box-shadow: 0 0 15px rgba(255, 167, 38, 0.3);
+            background: linear-gradient(to bottom right, #fff, #fffbf2);
+        }
+
+        .shop-card {
+            background: var(--card-bg);
+            padding: 18px;
+            margin-bottom: 15px;
+            border-radius: 12px;
+            border: 1px solid transparent;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .shop-card.animate-in { animation: slideInUp 0.5s ease-out forwards; }
+        
+        .shop-card:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.08); }
+
+        .shop-card::before {
+            content: '';
+            position: absolute; left: 0; top: 15px; bottom: 15px; width: 4px;
+            background: #eee; border-radius: 0 4px 4px 0; transition: background 0.3s;
+        }
+
+        .shop-card.active::before { background: var(--selected-orange); }
+        .shop-card.active { background-color: rgba(255, 251, 242, 1); border-color: #ffe0b2; }
+        
+        .shop-card.toilet-card.active::before { background: var(--toilet-color); }
+        .shop-card.toilet-card.active { background-color: rgba(243, 246, 253, 1); border-color: #c5cae9; }
+
+        body.cyber-mode .shop-card { box-shadow: 0 0 5px rgba(0, 229, 255, 0.2); }
+        body.cyber-mode .shop-card.active {
+            background-color: #263238; border-color: #00e5ff; box-shadow: 0 0 15px rgba(0, 229, 255, 0.4);
+        }
+
+        .shop-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 8px; padding-left: 10px;
+        }
+
+        .shop-name { 
+            font-family: 'Noto Serif TC', serif;
+            font-size: 1.15rem; font-weight: 900; margin: 0; color: var(--text-main); 
+        }
+
+        .status-badge {
+            font-size: 0.75rem; padding: 4px 8px; border-radius: 6px; font-weight: 600; letter-spacing: 0.5px;
+        }
+        .status-open { background-color: #e8f5e9; color: var(--success-color); }
+        .status-closed { background-color: #ffebee; color: var(--error-color); }
+        .status-info { background-color: #e3f2fd; color: #0277bd; }
+
+        .shop-info {
+            font-size: 0.9rem; color: var(--text-sub); margin: 4px 0;
+            display: flex; align-items: flex-start; gap: 8px; padding-left: 10px;
+        }
+
+        /* 統一圖示顏色與 SVG */
+        .info-icon {
+            width: 16px; height: 16px; flex-shrink: 0;
+            fill: var(--icon-color); /* 跟隨變數換色 */
+            margin-top: 2px;
+            transition: fill 0.6s ease;
+        }
+
+        .shop-direction { color: var(--icon-color); font-weight: 500; }
+        body.cyber-mode .shop-direction { color: #ff4081; }
+
+        .foodie-tip {
+            margin-top: 12px; padding: 10px 12px; 
+            background-color: rgba(255, 253, 231, 0.5); 
+            border-radius: 8px; font-size: 0.85rem; color: #665c26; line-height: 1.5; margin-left: 10px;
+        }
+        body.cyber-mode .foodie-tip { background-color: rgba(255, 255, 0, 0.1); color: #ffea00; }
+
+        .card-actions { margin-top: 15px; padding-left: 10px; }
+
+        .action-btn {
+            width: 100%; padding: 10px; border: 1px solid rgba(0,0,0,0.1);
+            background: var(--card-bg); border-radius: 8px; font-size: 0.9rem;
+            font-weight: 500; cursor: pointer; display: flex; align-items: center;
+            justify-content: center; gap: 8px; color: var(--text-sub); transition: all 0.2s;
+        }
+        .action-btn:hover { background: rgba(0,0,0,0.05); }
+        
+        .action-btn svg { width: 16px; height: 16px; fill: var(--text-sub); }
+
+        #map {
+            width: 100%; height: 45vh; flex-shrink: 0; background-color: #eef2f3;
+        }
+
+        @media (min-width: 768px) {
+            .container { flex-direction: row; }
+            .sidebar { width: 440px; border-right: 1px solid rgba(0,0,0,0.05); }
+            #map { height: auto; flex: 1; order: 2; }
+            .sidebar { order: 1; }
+        }
+
+        /* --- 地圖樣式 --- */
+        .custom-selected-icon { background: none; border: none; }
+        .selected-circle {
+            width: 22px; height: 22px;
+            background-color: var(--selected-orange);
+            border: 3px solid white; border-radius: 50%;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+            animation: pulse 1.5s infinite;
+        }
+        .toilet-circle {
+            background-color: var(--toilet-color);
+            animation: pulse-blue 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 152, 0, 0.6); }
+            70% { box-shadow: 0 0 0 12px rgba(255, 152, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 152, 0, 0); }
+        }
+        @keyframes pulse-blue {
+            0% { box-shadow: 0 0 0 0 rgba(92, 107, 192, 0.6); }
+            70% { box-shadow: 0 0 0 12px rgba(92, 107, 192, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(92, 107, 192, 0); }
+        }
+
+        .landmark-label { background: none; border: none; }
+        .landmark-text {
+            background-color: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(2px);
+            border: 1px solid rgba(255,255,255,0.5);
+            color: #444; padding: 4px 10px; border-radius: 16px;
+            font-size: 13px; font-weight: 600; white-space: nowrap;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08); transform: translateX(-50%);
+            display: inline-block; font-family: 'Noto Sans TC', sans-serif;
+        }
+        .landmark-main .landmark-text { color: #b74141; border-color: #e6c8c8; }
+        .landmark-sub .landmark-text { color: #6a1b9a; border-color: #e1bee7; }
+        body.cyber-mode .landmark-text { background-color: rgba(0,0,0,0.8); color: #00e5ff; border-color: #00e5ff; }
+
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%; background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px); z-index: 9999; justify-content: center; align-items: center;
+        }
+        .modal-content {
+            background: white; width: 90%; max-width: 900px; height: 85vh;
+            border-radius: 16px; display: flex; flex-direction: column;
+            overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+        }
+        .modal-header {
+            padding: 15px 20px; background: #fff; border-bottom: 1px solid #eee;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .modal-title { font-family: 'Noto Serif TC', serif; font-weight: 900; font-size: 1.2rem; }
+        .modal-close {
+            background: none; border: none; font-size: 28px;
+            cursor: pointer; color: #bbb; line-height: 1; transition: color 0.2s;
+        }
+        .modal-close:hover { color: #333; }
+        .map-frame { flex: 1; width: 100%; border: none; background: #f7f9fa; }
+
+        .custom-locate-btn {
+            background: white; width: 36px; height: 36px; border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15); display: flex; align-items: center;
+            justify-content: center; cursor: pointer; transition: background 0.2s;
+        }
+        .custom-locate-btn:hover { background: #f5f5f5; }
+        .custom-locate-btn svg { width: 20px; height: 20px; fill: #555; }
+        
+        .loading-dice {
+            font-size: 3rem; animation: spin 0.5s linear infinite; text-align: center; margin: 20px 0; display: block;
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+    </style>
+</head>
+<body>
+
+<header>
+    <h1 id="headerTitle" title="點擊切換風格">基隆廟口夜市攻略圖</h1>
+</header>
+
+<div class="container">
+    <div class="sidebar">
+        <!-- 控制區 -->
+        <div class="controls-wrapper">
+            <div class="status-toggle-bar">
+                <div class="toggle-label">
+                    🟢 只顯示營業中
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="openNowToggle" onchange="toggleOpenNow()">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <!-- 分類篩選 -->
+            <div class="filter-section" id="categoryFilters">
+                <button class="filter-btn active" onclick="filterByCategory('all')">全部</button>
+                <button class="filter-btn" data-type="random" onclick="startRandomSelection()">🎲 幫我選!</button>
+                <button class="filter-btn" onclick="filterByCategory('必比登')">🏆 必比登/老店</button>
+                <button class="filter-btn" onclick="filterByCategory('人氣')">🔥 排隊人氣</button>
+                <button class="filter-btn" onclick="filterByCategory('滷肉飯')">🍚 滷肉飯爭霸</button>
+                <button class="filter-btn" onclick="filterByCategory('麵食')">🍜 麵食主義</button>
+                <button class="filter-btn" onclick="filterByCategory('日料')">🍣 日料/生魚片</button>
+                <button class="filter-btn" onclick="filterByCategory('飽足')">🍲 飽足主食</button>
+                <button class="filter-btn" onclick="filterByCategory('銅板')">🍢 銅板小吃</button>
+                <button class="filter-btn" onclick="filterByCategory('多人')">👨‍👩‍👧‍👦 適合多人</button>
+                <button class="filter-btn" onclick="filterByCategory('仁愛市場')">🥢 仁愛市場</button>
+                <button class="filter-btn" onclick="filterByCategory('冷氣')">❄️ 有冷氣</button>
+                <button class="filter-btn" onclick="filterByCategory('咖啡')">☕ 咖啡/早午餐</button>
+                <button class="filter-btn" onclick="filterByCategory('解膩')">🍹 甜點飲料</button>
+                <button class="filter-btn" onclick="filterByCategory('伴手禮')">🎁 伴手禮</button>
+                <button class="filter-btn" data-type="toilet" onclick="filterByCategory('公廁')">🚻 公廁/服務</button>
+            </div>
+        </div>
+
+        <!-- 列表區 -->
+        <div id="listContainer" class="list-container">
+            <div style="text-align:center; padding:30px; color:#999;">
+                <p>資料讀取中...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 地圖區 -->
+    <div id="map"></div>
+</div>
+
+<!-- Google Maps Modal -->
+<div id="mapModal" class="modal-overlay" onclick="closeModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <div class="modal-header">
+            <div class="modal-title" id="modalTitle">店家資訊</div>
+            <button class="modal-close" onclick="closeModal()">×</button>
+        </div>
+        <iframe id="googleMapFrame" class="map-frame" src=""></iframe>
+    </div>
+</div>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+    // --- 全域變數 ---
+    let map;
+    let markers = {}; 
+    let userMarker = null;
+    let currentCategory = 'all';
+    let onlyOpen = false; 
+    let selectedShopName = null;
+    let selectedMarkerLayer = null;
+    let randomShops = []; 
+
+    // 彩蛋變數 (使用 timer 重置計數)
+    let titleClickCount = 0;
+    let clickTimer = null;
+    let currentTheme = 'default'; 
+
+    const KEELUNG_CENTER = [25.12825, 121.74313]; 
+    
+    // --- 資料庫 ---
+    const SHOP_DATA = [
+        // ... (保持原有資料)
+        { Name: "奠濟宮公廁", Tags: ["公廁"], Directions: "廟內右後方角落", Add: "仁三路27-2號", Py: "25.12825", Px: "121.74320", Opentime: "24H", Tip: "位於廟內右側後方，人多時需排隊。" },
+        { Name: "東岸商場公廁", Tags: ["公廁", "冷氣"], Directions: "東岸商場內", Add: "仁二路236號", Py: "25.1293", Px: "121.7442", Opentime: "11:00-22:00", Tip: "商場內廁所較乾淨明亮，有冷氣。" },
+        { Name: "鈺刺身丼", Tags: ["日料", "仁愛市場", "人氣", "冷氣"], Directions: "仁愛市場 2樓 D棟37號", Add: "仁愛市場2樓", Py: "25.1276", Px: "121.7423", Opentime: "10:00-15:00", Tip: "CP值超高，綜合刺身丼必點，想吃要趁早排隊。" },
+        { Name: "櫻壽司", Tags: ["日料", "仁愛市場"], Directions: "仁愛市場 2樓 A36", Add: "仁愛市場2樓", Py: "25.1277", Px: "121.7424", Opentime: "10:00-14:30", Tip: "握壽司很有水準，魚料新鮮，在地人推薦。" },
+        { Name: "朱添鮮魚號", Tags: ["日料", "深夜", "人氣"], Directions: "仁四路口，近市場", Add: "仁四路45號", Py: "25.1275", Px: "121.7430", Opentime: "18:00-04:00", Tip: "凌晨吃生魚片就是這家，半夜排隊人潮滿滿。" },
+        { Name: "丸角自轉生活咖啡", Tags: ["咖啡", "網美", "冷氣"], Directions: "孝二路/忠一路口附近", Add: "孝二路28號", Py: "25.1295", Px: "121.7408", Opentime: "12:00-22:00", Tip: "基隆老派咖啡，甜不辣三明治必點。" },
+        { Name: "Eddie's Cafe Et Tiramisu", Tags: ["咖啡", "甜點", "隱藏"], Directions: "仁四路老公寓內", Add: "仁四路26號", Py: "25.1275", Px: "121.7428", Opentime: "13:00-19:00", Tip: "隱藏在老公寓的咖啡店，提拉米蘇是招牌。" },
+        { Name: "邢記鼎邊趖", Tags: ["必比登", "飽足", "辣", "麵食"], Directions: "廟埕左側 (背對廟)", Add: "仁三路25-1號", Py: "25.1281", Px: "121.7433", Opentime: "11:00-24:00", Tip: "湯頭鮮甜，加特製辣椒粉更對味！" },
+        { Name: "天一香肉羹順", Tags: ["必比登", "飽足", "人氣", "冷氣", "滷肉飯"], Directions: "廟埕右側，第31攤", Add: "仁三路31號", Py: "25.1281", Px: "121.7434", Opentime: "10:00-00:30", Tip: "基隆最強滷肉飯，肉羹湯可免費續，內用有冷氣。" },
+        { Name: "羊肉魯飯", Tags: ["飽足", "銅板", "滷肉飯"], Directions: "仁三路第27-1攤", Add: "仁三路27-1號", Py: "25.1281", Px: "121.7433", Opentime: "11:00-22:00", Tip: "沒有腥味的羊肉燥，拌飯非常下飯。" },
+        { Name: "魯排骨飯", Tags: ["飽足", "滷肉飯"], Directions: "仁三路第21攤", Add: "仁三路21號", Py: "25.1282", Px: "121.7431", Opentime: "10:30-00:00", Tip: "先炸後滷的排骨，非常入味軟嫩。" },
+        { Name: "吳記螃蟹羹/油飯", Tags: ["必比登", "飽足", "辣"], Directions: "仁三路前段，第5攤", Add: "仁三路5號", Py: "25.1284", Px: "121.7426", Opentime: "11:00-01:00", Tip: "油飯一定要淋上店家招牌甜辣醬。" },
+        { Name: "圳記紅燒鰻羹", Tags: ["飽足", "辣", "深夜"], Directions: "愛四路中段，近仁三路口", Add: "愛四路32號", Py: "25.1286", Px: "121.7439", Opentime: "16:00-23:00", Tip: "湯頭帶點微辣的紅糟味，非常開胃。" },
+        { Name: "義美石頭火鍋", Tags: ["飽足", "人氣", "冷氣", "網美", "多人"], Directions: "信二路停車場旁", Add: "信二路303號", Py: "25.1295", Px: "121.7460", Opentime: "11:00-23:30", Tip: "夏天吃鍋首選，自助式拿菜，爆炒湯頭超香。" },
+        { Name: "紀家豬腳原汁專家", Tags: ["必比登", "飽足", "深夜", "多人"], Directions: "愛四路後段，2樓", Add: "愛四路29號", Py: "25.1286", Px: "121.7439", Opentime: "16:00-01:00", Tip: "白湯豬腳，膠質滿滿，適合多人分食。" },
+        { Name: "營養三明治", Tags: ["人氣", "銅板"], Directions: "仁三路中段，第58攤", Add: "仁三路58號", Py: "25.1279", Px: "121.7438", Opentime: "11:30-24:00", Tip: "先抽號碼牌！美乃滋是靈魂，炸麵包體超酥。" },
+        { Name: "阿華炒麵", Tags: ["人氣", "飽足", "深夜", "麵食"], Directions: "愛四路/仁二路口", Add: "愛四路1-3號", Py: "25.1287", Px: "121.7441", Opentime: "10:00-06:00", Tip: "咖哩炒麵濃郁，宵夜場排隊名店。" },
+        { Name: "陳記泡泡冰", Tags: ["人氣", "解膩", "網美"], Directions: "仁三路中段，第41攤", Add: "仁三路41號", Py: "25.1280", Px: "121.7435", Opentime: "11:00-23:00", Tip: "現場手打，花生口味濃郁，拍照好看。" },
+        { Name: "三兄弟豆花", Tags: ["解膩", "甜點", "冷氣"], Directions: "愛四路前段", Add: "愛四路26號", Py: "25.1286", Px: "121.7439", Opentime: "11:00-24:00", Tip: "有冷氣座位區，豆花口感像布丁。" },
+        { Name: "阿惜仔古早味米粉湯", Tags: ["仁愛市場", "飽足", "銅板", "麵食"], Directions: "仁愛市場 2樓 A54", Add: "仁愛市場2樓", Py: "25.1277", Px: "121.7423", Opentime: "06:00-14:30", Tip: "米粉吸滿精華，配黑白切是早餐首選。" },
+        { Name: "多好咖啡", Tags: ["仁愛市場", "咖啡", "網美"], Directions: "仁愛市場 2樓 B1", Add: "仁愛市場2樓", Py: "25.1276", Px: "121.7422", Opentime: "10:00-18:00", Tip: "市場裡的文青角落，氣氛非常好。" },
+        { Name: "連珍糕餅店", Tags: ["伴手禮", "甜點"], Directions: "愛二路，近仁三路口", Add: "愛二路42號", Py: "25.1289", Px: "121.7420", Opentime: "08:00-21:00", Tip: "芋泥球必買！最強伴手禮。" },
+        { Name: "李鵠餅店", Tags: ["伴手禮", "老店"], Directions: "仁三路尾端，近愛三路", Add: "仁三路90號", Py: "25.1278", Px: "121.7445", Opentime: "09:00-21:30", Tip: "鳳梨酥是經典老味道。" }
+    ];
+
+    // --- 圖示 (Unified) ---
+    const createIcon = (colorUrl) => new L.Icon({
+        iconUrl: colorUrl,
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+        iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
+    });
+    const iconBlue = createIcon('https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png');
+    const iconGreen = createIcon('https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png');
+    const iconToilet = createIcon('https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png');
+    
+    const iconUmbrella = L.divIcon({
+        className: 'custom-selected-icon',
+        html: '<div style="font-size:24px; text-shadow: 0 2px 2px rgba(0,0,0,0.3);">☔</div>',
+        iconSize: [30, 30], iconAnchor: [15, 15], popupAnchor: [0, -10]
+    });
+    
+    const iconLantern = L.divIcon({
+        className: 'custom-selected-icon',
+        html: '<div style="font-size:24px; text-shadow: 0 2px 5px rgba(255,0,0,0.5);">🏮</div>',
+        iconSize: [30, 30], iconAnchor: [15, 15], popupAnchor: [0, -10]
+    });
+
+    const iconSelected = (color = '#ff9800') => L.divIcon({
+        className: 'custom-selected-icon',
+        html: `<div class="${color === '#0288d1' ? 'selected-circle toilet-circle' : 'selected-circle'}"></div>`,
+        iconSize: [26, 26], iconAnchor: [13, 13], popupAnchor: [0, -10]
+    });
+
+    // --- 初始化 ---
+    window.onload = function() {
+        initMap();
+        renderAll(); 
+        locateUser();
+        setupEasterEgg();
+    };
+
+    function initMap() {
+        map = L.map('map', { center: KEELUNG_CENTER, zoom: 18, scrollWheelZoom: true });
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; OpenStreetMap &copy; CARTO',
+            subdomains: 'abcd',
+            maxZoom: 20
+        }).addTo(map);
+
+        addLandmarkText(25.1284, 121.7422, "🍔 麥當勞 (入口)", "main");
+        addLandmarkText(25.1282, 121.7432, "⛩️ 奠濟宮", "sub");
+        addLandmarkText(25.1293, 121.7442, "🅿️ 東岸停車場", "main");
+        addLandmarkText(25.1292, 121.7455, "🌊 田寮河", "sub");
+        addLandmarkText(25.1285, 121.7460, "🏫 信義國小", "sub");
+        addLandmarkText(25.1270, 121.7445, "🏥 部立基隆醫院", "main");
+        addLandmarkText(25.1265, 121.7435, "🏫 仁愛國小", "sub");
+        addLandmarkText(25.1289, 121.7439, "🏁 夜市尾", "main");
+
+        addLocateControl();
+        map.on('click', resetSelection);
+    }
+
+    function addLandmarkText(lat, lng, text, type) {
+        const myIcon = L.divIcon({
+            className: 'landmark-label ' + (type === 'main' ? 'landmark-main' : 'landmark-sub'),
+            html: `<span class="landmark-text">${text}</span>`,
+            iconSize: [120, 20],
+            iconAnchor: [60, 10]
+        });
+        L.marker([lat, lng], {icon: myIcon, interactive: false}).addTo(map);
+    }
+
+    // --- 彩蛋邏輯 (修正循環) ---
+    function setupEasterEgg() {
+        const title = document.getElementById('headerTitle');
+        title.addEventListener('click', () => {
+            titleClickCount++;
+            
+            if (clickTimer) clearTimeout(clickTimer);
+            clickTimer = setTimeout(() => {
+                titleClickCount = 0;
+            }, 2000);
+
+            if (titleClickCount === 3) {
+                switchTheme('lunar');
+                alert("🧨 恭喜發財！進入【農曆新年模式】！");
+            } else if (titleClickCount === 5) {
+                switchTheme('rainy');
+                alert("🌧️ 進入【基隆雨都模式】！");
+            } else if (titleClickCount === 7) {
+                switchTheme('cyber');
+                alert("🌃 進入【賽博龐克模式】！");
+            } else if (titleClickCount === 9) {
+                switchTheme('default');
+                alert("🔄 已還原至預設風格！");
+                titleClickCount = 0;
+            }
+        });
+    }
+
+    function switchTheme(theme) {
+        document.body.classList.remove('rainy-mode', 'lunar-mode', 'cyber-mode');
+        currentTheme = theme;
+        if (theme === 'rainy') document.body.classList.add('rainy-mode');
+        if (theme === 'lunar') document.body.classList.add('lunar-mode');
+        if (theme === 'cyber') document.body.classList.add('cyber-mode');
+        renderAll();
+    }
+
+    // --- 隨機抽選 ---
+    function startRandomSelection() {
+        currentCategory = 'random';
+        document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelector(`.filter-btn[data-type="random"]`).classList.add('active');
+
+        const list = document.getElementById('listContainer');
+        list.innerHTML = '<div class="loading-dice">🎲</div><p style="text-align:center">大廚正在為您挑選...</p>';
+
+        setTimeout(() => {
+            generateRandomSelection();
+            renderAll(true);
+        }, 800);
+    }
+
+    function generateRandomSelection() {
+        let candidates = SHOP_DATA.filter(item => !item.Tags.includes("公廁"));
+        if (onlyOpen) {
+            candidates = candidates.filter(item => checkStatus(item.Opentime).isOpen === true);
+        }
+        const shuffled = candidates.sort(() => 0.5 - Math.random());
+        randomShops = shuffled.slice(0, 3);
+    }
+
+    // --- 渲染 ---
+    function filterByCategory(category) {
+        currentCategory = category;
+        document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+        const targetBtn = document.querySelector(`.filter-btn[onclick="filterByCategory('${category}')"]`) || 
+                          document.querySelector(`.filter-btn[data-type="${category}"]`);
+        if(targetBtn) targetBtn.classList.add('active');
+        if (category !== 'random') {
+            randomShops = [];
+            renderAll();
+        }
+    }
+
+    function toggleOpenNow() {
+        const checkbox = document.getElementById('openNowToggle');
+        onlyOpen = checkbox.checked;
+        if (currentCategory === 'random') generateRandomSelection();
+        renderAll();
+    }
+
+    function getFilteredData() {
+        if (currentCategory === 'random') return randomShops;
+        let data = SHOP_DATA;
+        if (currentCategory !== 'all') {
+            data = data.filter(item => item.Tags && item.Tags.includes(currentCategory));
+        }
+        if (onlyOpen) {
+            data = data.filter(item => checkStatus(item.Opentime).isOpen === true);
+        }
+        return data;
+    }
+
+    function renderAll(isRandomResult = false) {
+        resetSelection();
+        const data = getFilteredData();
+        const list = document.getElementById('listContainer');
+        list.innerHTML = '';
+        
+        Object.values(markers).forEach(m => map.removeLayer(m));
+        markers = {};
+        
+        if (data.length === 0) {
+            list.innerHTML = '<div style="text-align:center;padding:20px;">找不到符合條件的店家<br>或是現在沒有營業喔！</div>';
+            return;
+        }
+
+        if (currentCategory === 'random') {
+            const randomHeader = document.createElement('div');
+            randomHeader.innerHTML = '<h3 style="text-align:center; color:var(--random-color); margin-top:0;">🎲 主廚精選組合</h3>';
+            list.appendChild(randomHeader);
+        }
+
+        data.forEach((shop, index) => {
+            const lat = parseFloat(shop.Py);
+            const lng = parseFloat(shop.Px);
+            const isToilet = shop.Tags.includes("公廁");
+            
+            if (!isNaN(lat) && !isNaN(lng)) {
+                let markerIcon = isToilet ? iconToilet : iconBlue;
+                if (!isToilet) {
+                    if (currentTheme === 'rainy') markerIcon = iconUmbrella;
+                    if (currentTheme === 'lunar') markerIcon = iconLantern;
+                }
+                const marker = L.marker([lat, lng], {icon: markerIcon}).addTo(map);
+                marker.bindPopup(`<b>${shop.Name}</b><br><span style="color:${isToilet ? '#5c6bc0' : '#d84315'};">🚶 ${shop.Directions}</span><br>${shop.Tip.substring(0, 15)}...`);
+                marker.on('click', () => selectShop(shop.Name, lat, lng, isToilet));
+                markers[shop.Name] = marker;
+            }
+
+            const status = checkStatus(shop.Opentime);
+            let statusBadge = isToilet 
+                ? '<span class="status-badge status-info">🚻 公廁</span>'
+                : (status.isOpen === true ? '<span class="status-badge status-open">🟢 營業中</span>' : '<span class="status-badge status-closed">🔴 休息中</span>');
+
+            const card = document.createElement('div');
+            card.className = `shop-card ${isToilet ? 'toilet-card' : ''}`;
+            
+            if (isRandomResult) {
+                card.classList.add('random-pick', 'animate-in');
+                card.style.animationDelay = `${index * 0.15}s`;
+                const stamp = document.createElement('div');
+                stamp.className = 'stamp-mark';
+                stamp.innerHTML = '⭐ 今日優選';
+                card.appendChild(stamp);
+            } else {
+                 card.classList.add('animate-in');
+            }
+
+            card.id = `card-${shop.Name}`;
+            card.onclick = (e) => {
+                if(e.target.closest('.action-btn')) return;
+                selectShop(shop.Name, lat, lng, isToilet);
+            };
+
+            // SVG Icons: Walker & Clock
+            const walkIcon = `<svg class="info-icon" viewBox="0 0 24 24"><path d="M13.5 5.5c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zM9.8 8.9L7 23h2.1l1.8-8 2.1 2v6h2v-7.5l-2.1-2 .6-3C14.8 12 16.8 13 19 13v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.6-1-1-1.7-1-.3 0-.5.1-.8.2L8 8v2h1.8l0-1.1z"/></svg>`;
+            const clockIcon = `<svg class="info-icon" viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>`;
+            // Google G Icon
+            const googleIcon = `<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-1.07 3.97-2.1 5.39z"/></svg>`;
+
+            card.innerHTML += `
+                <div class="shop-header">
+                    <h3 class="shop-name">${shop.Name}</h3>
+                    ${statusBadge}
+                </div>
+                <div class="shop-info shop-direction">${walkIcon} ${shop.Directions}</div>
+                <div class="shop-info">${clockIcon} ${status.text}</div>
+                ${shop.Tip ? `<div class="foodie-tip">💡 ${shop.Tip}</div>` : ''}
+                <div class="card-actions">
+                    <button class="action-btn" onclick="openGoogleMap('${shop.Name}')">
+                        ${googleIcon} Google 資訊 / 評論
+                    </button>
+                </div>
+            `;
+            list.appendChild(card);
+        });
+    }
+
+    // --- Helper 函式 ---
+    function checkStatus(opentime) {
+        if (!opentime || opentime === "24H") return { isOpen: true, text: opentime || "24小時" };
+        const now = new Date();
+        const currentMins = now.getHours() * 60 + now.getMinutes();
+        const times = opentime.match(/(\d{1,2}):(\d{2})/g);
+        if (!times || times.length < 2) return { isOpen: null, text: opentime };
+        const parse = (t) => { const [h, m] = t.split(':').map(Number); return h * 60 + m; };
+        const start = parse(times[0]);
+        let end = parse(times[1]);
+        if (end < start) end += 24 * 60; 
+        let nowCheck = currentMins;
+        if (nowCheck < start && nowCheck < 12 * 60) nowCheck += 24 * 60; 
+        const isOpen = nowCheck >= start && nowCheck < end;
+        return { isOpen, text: opentime };
+    }
+
+    function selectShop(name, lat, lng, isToilet = false) {
+        if (selectedShopName && markers[selectedShopName]) {
+            markers[selectedShopName].setOpacity(1); 
+            const oldCard = document.getElementById(`card-${selectedShopName}`);
+            if(oldCard) oldCard.classList.remove('active');
+        }
+        if (selectedMarkerLayer) { map.removeLayer(selectedMarkerLayer); selectedMarkerLayer = null; }
+        selectedShopName = name;
+        const card = document.getElementById(`card-${name}`);
+        const originalMarker = markers[name];
+        if (card) { card.classList.add('active'); card.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+        if (!isNaN(lat) && !isNaN(lng)) {
+            if(originalMarker) originalMarker.setOpacity(0);
+            const color = isToilet ? '#0288d1' : '#ff9800';
+            selectedMarkerLayer = L.marker([lat, lng], { icon: iconSelected(color), zIndexOffset: 1000 }).addTo(map);
+            map.setView([lat, lng], 18); 
+        }
+    }
+
+    function resetSelection() {
+        if (selectedShopName && markers[selectedShopName]) {
+            markers[selectedShopName].setOpacity(1); 
+            const oldCard = document.getElementById(`card-${selectedShopName}`);
+            if (oldCard) oldCard.classList.remove('active');
+        }
+        if (selectedMarkerLayer) { map.removeLayer(selectedMarkerLayer); selectedMarkerLayer = null; }
+        selectedShopName = null;
+    }
+
+    function addLocateControl() {
+        const locControl = L.Control.extend({
+            options: { position: 'topleft' },
+            onAdd: function(map) {
+                const btn = L.DomUtil.create('div', 'leaflet-bar custom-locate-btn');
+                btn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm8.94 3c-.46-4.17-3.77-7.48-7.94-7.94V1h-2v2.06C6.83 3.52 3.52 6.83 3.06 11H1v2h2.06c.46 4.17 3.77 7.48 7.94 7.94V23h2v-2.06c4.17-.46 7.48-3.77 7.94-7.94H23v-2h-2.06zM12 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/></svg>`;
+                btn.title = "顯示我的位置";
+                btn.onclick = function(e) { e.stopPropagation(); locateUser(); };
+                return btn;
+            }
+        });
+        map.addControl(new locControl());
+    }
+
+    function locateUser() {
+        if (!navigator.geolocation) { alert("您的裝置不支援定位功能"); return; }
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const lat = position.coords.latitude; const lng = position.coords.longitude;
+                if (userMarker) map.removeLayer(userMarker);
+                userMarker = L.marker([lat, lng], {icon: iconGreen}).addTo(map).bindPopup("<b>您目前的位置</b>").openPopup();
+                map.setView([lat, lng], 18);
+            },
+            () => console.warn("無法取得位置")
+        );
+    }
+
+    function openGoogleMap(name) {
+        const modal = document.getElementById('mapModal');
+        const iframe = document.getElementById('googleMapFrame');
+        const title = document.getElementById('modalTitle');
+        const query = encodeURIComponent(`${name} 基隆`);
+        const mapUrl = `https://maps.google.com/maps?q=${query}&hl=zh-TW&z=18&output=embed`;
+        iframe.src = mapUrl; title.innerText = `${name} - Google 資訊`; modal.style.display = 'flex';
+    }
+
+    function closeModal(e) {
+        if (e && e.target !== document.getElementById('mapModal') && e.target.className !== 'modal-close') return;
+        const modal = document.getElementById('mapModal');
+        const iframe = document.getElementById('googleMapFrame');
+        modal.style.display = 'none'; iframe.src = ''; 
+    }
+</script>
+
+</body>
+</html>
