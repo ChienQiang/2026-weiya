@@ -118,34 +118,55 @@
                 display: none;
             }
             
-            /* 2. 地圖佔比加大 */
+            /* 2. 地圖佔比縮小，讓列表變大 (35vh 地圖 / 剩下給列表) */
             #map {
-                height: 55vh !important; /* 原本 40vh，加大到 55vh */
+                height: 35vh !important; 
             }
             
             /* 列表區塊在下方，佔剩餘空間 */
             .sidebar {
-                height: 45vh;
+                height: auto;
+                flex: 1; /* 自動填滿剩餘高度 */
             }
 
             /* 手機版圖卡更緊湊 */
             .shop-card {
-                padding: 12px !important;
-                margin-bottom: 10px !important;
+                padding: 10px 12px !important; /* 縮小內距 */
+                margin-bottom: 8px !important;
+                border-radius: 8px !important;
             }
             
             .shop-name {
-                font-size: 1.05rem !important;
+                font-size: 1rem !important; /* 標題縮小 */
+                margin-bottom: 2px !important;
+            }
+
+            .shop-header {
+                margin-bottom: 2px !important;
             }
             
             .shop-info {
-                font-size: 0.85rem !important;
+                font-size: 0.8rem !important;
+                margin: 1px 0 !important;
             }
             
             .foodie-tip {
-                padding: 6px 10px !important;
-                font-size: 0.8rem !important;
-                margin-top: 8px !important;
+                padding: 4px 8px !important;
+                font-size: 0.75rem !important;
+                margin-top: 6px !important;
+            }
+
+            /* 右側按鈕區更緊湊 */
+            .card-actions-side {
+                padding-left: 8px !important;
+            }
+            .action-btn-side {
+                width: 44px !important;
+                font-size: 0.7rem !important;
+            }
+            .action-btn-side svg {
+                width: 20px !important;
+                height: 20px !important;
             }
         }
 
@@ -172,7 +193,7 @@
         /* 手機版：地圖在上方，列表在下方 */
         #map {
             width: 100%;
-            height: 40vh; /* 預設高度 (會被上面的 media query 覆蓋) */
+            height: 35vh; /* 手機版預設高度 */
             flex-shrink: 0;
             background-color: #eef2f3;
             order: 1; /* 地圖排第一 */
@@ -238,6 +259,8 @@
             align-items: center;
             gap: 8px;
             font-family: 'Noto Serif TC', serif;
+            cursor: pointer; /* 讓使用者知道這可以點 */
+            user-select: none;
         }
 
         .switch { position: relative; display: inline-block; width: 46px; height: 24px; }
@@ -545,7 +568,8 @@
         <!-- 控制區 -->
         <div class="controls-wrapper">
             <div class="status-toggle-bar">
-                <div class="toggle-label">
+                <!-- 彩蛋觸發點：點擊這行字 -->
+                <div class="toggle-label" id="easterEggTrigger">
                     🟢 只顯示營業中
                 </div>
                 <label class="switch">
@@ -716,11 +740,11 @@
 
     // --- 彩蛋邏輯 (修正循環) ---
     function setupEasterEgg() {
-        const title = document.getElementById('headerTitle');
-        // 手機版標題可能隱藏，需做檢查
-        if(!title) return;
-        
-        title.addEventListener('click', () => {
+        // 修正：針對手機版，若標題被隱藏，改監聽 "只顯示營業中" 的文字
+        const headerTitle = document.getElementById('headerTitle');
+        const toggleLabel = document.getElementById('easterEggTrigger');
+
+        const triggerEasterEgg = () => {
             titleClickCount++;
             
             if (clickTimer) clearTimeout(clickTimer);
@@ -742,7 +766,10 @@
                 alert("🔄 已還原至預設風格！");
                 titleClickCount = 0;
             }
-        });
+        };
+
+        if (headerTitle) headerTitle.addEventListener('click', triggerEasterEgg);
+        if (toggleLabel) toggleLabel.addEventListener('click', triggerEasterEgg);
     }
 
     function switchTheme(theme) {
