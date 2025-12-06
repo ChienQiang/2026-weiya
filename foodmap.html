@@ -111,6 +111,44 @@
             header { padding: 15px; }
         }
 
+        /* --- 針對手機版的調整 --- */
+        @media (max-width: 767px) {
+            /* 1. 隱藏標題，節省版面 */
+            header {
+                display: none;
+            }
+            
+            /* 2. 地圖佔比加大 */
+            #map {
+                height: 55vh !important; /* 原本 40vh，加大到 55vh */
+            }
+            
+            /* 列表區塊在下方，佔剩餘空間 */
+            .sidebar {
+                height: 45vh;
+            }
+
+            /* 手機版圖卡更緊湊 */
+            .shop-card {
+                padding: 12px !important;
+                margin-bottom: 10px !important;
+            }
+            
+            .shop-name {
+                font-size: 1.05rem !important;
+            }
+            
+            .shop-info {
+                font-size: 0.85rem !important;
+            }
+            
+            .foodie-tip {
+                padding: 6px 10px !important;
+                font-size: 0.8rem !important;
+                margin-top: 8px !important;
+            }
+        }
+
         header h1:hover {
             transform: scale(1.05) translateY(-2px);
             text-shadow: 0 5px 15px rgba(183, 65, 65, 0.25);
@@ -134,7 +172,7 @@
         /* 手機版：地圖在上方，列表在下方 */
         #map {
             width: 100%;
-            height: 40vh; /* 手機版地圖高度 */
+            height: 40vh; /* 預設高度 (會被上面的 media query 覆蓋) */
             flex-shrink: 0;
             background-color: #eef2f3;
             order: 1; /* 地圖排第一 */
@@ -164,9 +202,13 @@
                 height: auto;
             }
             #map { 
-                height: auto; /* 高度自動填滿 */
+                height: auto !important; /* 高度自動填滿 */
                 flex: 1; 
                 order: 2; /* 地圖在右 */
+            }
+            /* 桌面版顯示 Header */
+            header {
+                display: block;
             }
         }
 
@@ -267,7 +309,7 @@
         }
 
         .stamp-mark {
-            position: absolute; top: 10px; right: 10px;
+            position: absolute; top: 10px; right: 40px; /* 調整位置，避免蓋到按鈕 */
             border: 2px solid #e65100; color: #e65100;
             background: rgba(255, 224, 178, 0.9);
             padding: 5px 10px; font-size: 0.8rem; font-weight: bold;
@@ -283,9 +325,10 @@
             background: linear-gradient(to bottom right, #fff, #fffbf2);
         }
 
+        /* 3. 店家圖卡 Compact 樣式 (Flex 左右佈局) */
         .shop-card {
             background: var(--card-bg);
-            padding: 18px;
+            padding: 16px;
             margin-bottom: 15px;
             border-radius: 12px;
             border: 1px solid transparent;
@@ -294,6 +337,9 @@
             transition: all 0.2s;
             position: relative;
             overflow: hidden;
+            display: flex; /* 改為 Flexbox */
+            align-items: center; /* 垂直置中 */
+            justify-content: space-between;
         }
         
         @keyframes slideInUp {
@@ -321,9 +367,19 @@
             background-color: #263238; border-color: #00e5ff; box-shadow: 0 0 15px rgba(0, 229, 255, 0.4);
         }
 
+        /* 左側內容區 */
+        .card-body {
+            flex: 1;
+            min-width: 0; /* 讓文字可以截斷 */
+            padding-right: 12px;
+        }
+
         .shop-header {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 8px; padding-left: 10px;
+            display: flex; 
+            align-items: center;
+            margin-bottom: 4px; 
+            gap: 8px;
+            flex-wrap: wrap;
         }
 
         .shop-name { 
@@ -332,22 +388,23 @@
         }
 
         .status-badge {
-            font-size: 0.75rem; padding: 4px 8px; border-radius: 6px; font-weight: 600; letter-spacing: 0.5px;
+            font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; font-weight: 600; letter-spacing: 0.5px;
+            white-space: nowrap;
         }
         .status-open { background-color: #e8f5e9; color: var(--success-color); }
         .status-closed { background-color: #ffebee; color: var(--error-color); }
         .status-info { background-color: #e3f2fd; color: #0277bd; }
 
         .shop-info {
-            font-size: 0.9rem; color: var(--text-sub); margin: 4px 0;
-            display: flex; align-items: flex-start; gap: 8px; padding-left: 10px;
+            font-size: 0.85rem; color: var(--text-sub); margin: 2px 0;
+            display: flex; align-items: flex-start; gap: 6px;
         }
 
         /* 統一圖示顏色與 SVG */
         .info-icon {
-            width: 16px; height: 16px; flex-shrink: 0;
+            width: 14px; height: 14px; flex-shrink: 0;
             fill: var(--icon-color); /* 跟隨變數換色 */
-            margin-top: 2px;
+            margin-top: 3px;
             transition: fill 0.6s ease;
         }
 
@@ -355,23 +412,42 @@
         body.cyber-mode .shop-direction { color: #ff4081; }
 
         .foodie-tip {
-            margin-top: 12px; padding: 10px 12px; 
+            margin-top: 8px; padding: 6px 10px; 
             background-color: rgba(255, 253, 231, 0.5); 
-            border-radius: 8px; font-size: 0.85rem; color: #665c26; line-height: 1.5; margin-left: 10px;
+            border-radius: 6px; font-size: 0.8rem; color: #665c26; line-height: 1.4;
         }
         body.cyber-mode .foodie-tip { background-color: rgba(255, 255, 0, 0.1); color: #ffea00; }
 
-        .card-actions { margin-top: 15px; padding-left: 10px; }
-
-        .action-btn {
-            width: 100%; padding: 10px; border: 1px solid rgba(0,0,0,0.1);
-            background: var(--card-bg); border-radius: 8px; font-size: 0.9rem;
-            font-weight: 500; cursor: pointer; display: flex; align-items: center;
-            justify-content: center; gap: 8px; color: var(--text-sub); transition: all 0.2s;
+        /* 右側按鈕區 (直向排列) */
+        .card-actions-side {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-left: 10px;
+            border-left: 1px solid rgba(0,0,0,0.05);
         }
-        .action-btn:hover { background: rgba(0,0,0,0.05); }
+
+        .action-btn-side {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-sub);
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 5px;
+            width: 50px;
+        }
+        .action-btn-side:active { transform: scale(0.95); opacity: 0.7; }
         
-        .action-btn svg { width: 16px; height: 16px; fill: var(--text-sub); }
+        .action-btn-side svg { 
+            width: 24px; height: 24px; 
+            fill: #4285F4; /* Google Blue */
+            margin-bottom: 2px;
+        }
 
         /* --- 地圖樣式 --- */
         .custom-selected-icon { background: none; border: none; }
@@ -641,6 +717,9 @@
     // --- 彩蛋邏輯 (修正循環) ---
     function setupEasterEgg() {
         const title = document.getElementById('headerTitle');
+        // 手機版標題可能隱藏，需做檢查
+        if(!title) return;
+        
         title.addEventListener('click', () => {
             titleClickCount++;
             
@@ -789,7 +868,7 @@
 
             card.id = `card-${shop.Name}`;
             card.onclick = (e) => {
-                if(e.target.closest('.action-btn')) return;
+                if(e.target.closest('.action-btn-side')) return;
                 selectShop(shop.Name, lat, lng, isToilet);
             };
 
@@ -800,16 +879,19 @@
             const googleIcon = `<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-1.07 3.97-2.1 5.39z"/></svg>`;
 
             card.innerHTML += `
-                <div class="shop-header">
-                    <h3 class="shop-name">${shop.Name}</h3>
-                    ${statusBadge}
+                <div class="card-body">
+                    <div class="shop-header">
+                        <h3 class="shop-name">${shop.Name}</h3>
+                        ${statusBadge}
+                    </div>
+                    <div class="shop-info shop-direction">${walkIcon} ${shop.Directions}</div>
+                    <div class="shop-info">${clockIcon} ${status.text}</div>
+                    ${shop.Tip ? `<div class="foodie-tip">💡 ${shop.Tip}</div>` : ''}
                 </div>
-                <div class="shop-info shop-direction">${walkIcon} ${shop.Directions}</div>
-                <div class="shop-info">${clockIcon} ${status.text}</div>
-                ${shop.Tip ? `<div class="foodie-tip">💡 ${shop.Tip}</div>` : ''}
-                <div class="card-actions">
-                    <button class="action-btn" onclick="openGoogleMap('${shop.Name}')">
-                        ${googleIcon} Google 資訊 / 評論
+                <div class="card-actions-side">
+                    <button class="action-btn-side" onclick="openGoogleMap('${shop.Name}')">
+                        ${googleIcon}
+                        <span>GO</span>
                     </button>
                 </div>
             `;
