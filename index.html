@@ -141,7 +141,7 @@
         body[data-theme="2"] .brand-section { --brand-color: var(--primary-orange); }
         body[data-theme="2"] .brand-section p { color: rgba(224, 122, 95, 0.9); }
 
-        /* Logo 遮罩樣式 (修正路徑) */
+        /* Logo 遮罩樣式 (修正路徑為 2.png) */
         .brand-logo-mask {
             display: block;
             width: 200px;
@@ -1033,32 +1033,58 @@
             const data = insights[id];
             const card = document.querySelector('.modal-card');
             const body = document.getElementById('modalBody');
+            const header = document.querySelector('.modal-header');
             
             if (data) {
                 document.getElementById('modalTitle').innerText = data.title;
                 
                 if (data.url) {
-                    // 如果是外部連結 (iframe)
-                    body.innerHTML = `<iframe src="${data.url}" style="width:100%; height:65vh; border:none; display:block;"></iframe>`;
-                    body.style.padding = "0"; // 移除內距以滿版顯示
-                    body.style.overflow = "hidden";
+                    // 外部連結 (Iframe) -> 手機版全螢幕模式
+                    body.innerHTML = `<iframe src="${data.url}" style="width:100%; height:100%; border:none; display:block;"></iframe>`;
                     
-                    // 調整 Modal 樣式以適應地圖/設施表
-                    card.style.maxWidth = "900px";
-                    card.style.width = "95%";
-                    card.style.padding = "20px";
-                    document.querySelector('.modal-header').style.marginBottom = "10px";
+                    // 1. 重設 Body 樣式以填滿空間
+                    body.style.padding = "0"; 
+                    body.style.overflow = "hidden";
+                    body.style.flex = "1"; // 讓 body 佔滿剩餘高度
+                    body.style.height = "auto";
+
+                    // 2. 調整 Card 樣式為全螢幕
+                    card.style.maxWidth = "100%";
+                    card.style.width = "100%";
+                    card.style.height = "100%"; // 強制全高
+                    card.style.maxHeight = "100%"; // 覆蓋 CSS 的 85vh
+                    card.style.padding = "0"; // 移除內距
+                    card.style.borderRadius = "0"; // 移除圓角
+                    card.style.display = "flex"; // 改為 Flex 佈局
+                    card.style.flexDirection = "column"; // 垂直排列 (Header + Body)
+                    
+                    // 3. 調整 Header 樣式
+                    header.style.marginBottom = "0";
+                    header.style.padding = "15px 20px"; // 給 Header 一點空間
+                    header.style.flexShrink = "0"; // 防止 Header 被壓縮
+                    header.style.borderBottom = "1px solid rgba(255,255,255,0.1)"; // 分隔線
+
                 } else {
-                    // 一般文字內容
+                    // 一般文字內容 -> 還原為彈出卡片樣式
                     body.innerHTML = data.content;
                     
                     // 還原樣式
                     body.style.padding = ""; 
                     body.style.overflow = "";
+                    body.style.flex = "";
+                    body.style.height = "";
+
                     card.style.maxWidth = "500px";
                     card.style.width = "85%";
+                    card.style.height = ""; // Auto
+                    card.style.maxHeight = "85vh";
                     card.style.padding = "40px";
-                    document.querySelector('.modal-header').style.marginBottom = "30px";
+                    card.style.borderRadius = ""; // Restore CSS
+                    card.style.display = "block"; // Restore block
+                    
+                    header.style.marginBottom = "30px";
+                    header.style.padding = ""; 
+                    header.style.borderBottom = "";
                 }
                 
                 document.getElementById('infoModal').classList.add('active');
@@ -1074,8 +1100,74 @@
         }
 
         function downloadICS() {
-            // ICS 內容保持不變...
-            const events = `BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Gemini//YUJAY Weiya App//ZH\nCALSCALE:GREGORIAN\nMETHOD:PUBLISH\nBEGIN:VEVENT\nSUMMARY:🚩 宇傑集合 (07:50 準時發車)\nDTSTART;TZID=Asia/Taipei:20260131T075000\nDTEND;TZID=Asia/Taipei:20260131T080000\nDESCRIPTION:早安！請提前集合，車子準時出發。\n📍 集合地點：竹北市新工六路9號\nLOCATION:竹北市新工六路9號\nEND:VEVENT\nBEGIN:VEVENT\nSUMMARY:🚴‍♂️ 深澳鐵道自行車 (10:30 梯次)\nDTSTART;TZID=Asia/Taipei:20260131T100000\nDTEND;TZID=Asia/Taipei:20260131T113000\nDESCRIPTION:深澳站 (10:30) -> 八斗子站 (11:01)。\n請提早報到取票。\nLOCATION:深澳鐵道自行車深澳站\nEND:VEVENT\nBEGIN:VEVENT\nSUMMARY:🍱 午餐-友信海鮮餐廳\nDTSTART;TZID=Asia/Taipei:20260131T120000\nDTEND;TZID=Asia/Taipei:20260131T133000\nDESCRIPTION:享用海鮮大餐。\nLOCATION:友信海鮮餐廳\nEND:VEVENT\nBEGIN:VEVENT\nSUMMARY:🐘 深澳岬角 象鼻岩 & 酋長岩\nDTSTART;TZID=Asia/Taipei:20260131T133000\nDTEND;TZID=Asia/Taipei:20260131T150000\nDESCRIPTION:13:30 象鼻岩 -> 14:00 番仔澳酋長岩公園。\nLOCATION:深澳岬角\nEND:VEVENT\nBEGIN:VEVENT\nSUMMARY:🏨 福容大飯店 福隆 CHECK IN\nDTSTART;TZID=Asia/Taipei:20260131T150000\nDTEND;TZID=Asia/Taipei:20260131T180000\nDESCRIPTION:Check-in 後自由活動，享受海洋溫泉。\nLOCATION:福容大飯店 福隆\nEND:VEVENT\nBEGIN:VEVENT\nSUMMARY:🍽️ 尾牙晚宴 (PM 18:30)\nDTSTART;TZID=Asia/Taipei:20260131T183000\nDTEND;TZID=Asia/Taipei:20260131T210000\nDESCRIPTION:準時開席，請勿遲到。\nLOCATION:福容大飯店 福隆\nEND:VEVENT\nBEGIN:VEVENT\nSUMMARY:👋 飯店 CHECK OUT\nDTSTART;TZID=Asia/Taipei:20260201T110000\nDTEND;TZID=Asia/Taipei:20260201T113000\nDESCRIPTION:11:00 退房。\nLOCATION:福容大飯店 福隆\nEND:VEVENT\nBEGIN:VEVENT\nSUMMARY:🍜 基隆廟口夜市\nDTSTART;TZID=Asia/Taipei:20260201T120000\nDTEND;TZID=Asia/Taipei:20260201T140000\nDESCRIPTION:午餐自由覓食。\nLOCATION:基隆廟口夜市\nEND:VEVENT\nBEGIN:VEVENT\nSUMMARY:🚌 返抵宇傑\nDTSTART;TZID=Asia/Taipei:20260201T160000\nDTEND;TZID=Asia/Taipei:20260201T161000\nDESCRIPTION:平安回家。\nLOCATION:竹北市新工六路9號\nEND:VEVENT\nEND:VCALENDAR`;
+            // ICS 內容保持不變
+            const events = `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Gemini//YUJAY Weiya App//ZH
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+SUMMARY:🚩 宇傑集合 (07:50 準時發車)
+DTSTART;TZID=Asia/Taipei:20260131T075000
+DTEND;TZID=Asia/Taipei:20260131T080000
+DESCRIPTION:早安！請提前集合，車子準時出發。\n📍 集合地點：竹北市新工六路9號
+LOCATION:竹北市新工六路9號
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:🚴‍♂️ 深澳鐵道自行車 (10:30 梯次)
+DTSTART;TZID=Asia/Taipei:20260131T100000
+DTEND;TZID=Asia/Taipei:20260131T113000
+DESCRIPTION:深澳站 (10:30) -> 八斗子站 (11:01)。\n請提早報到取票。
+LOCATION:深澳鐵道自行車深澳站
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:🍱 午餐-友信海鮮餐廳
+DTSTART;TZID=Asia/Taipei:20260131T120000
+DTEND;TZID=Asia/Taipei:20260131T133000
+DESCRIPTION:享用海鮮大餐。
+LOCATION:友信海鮮餐廳
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:🐘 深澳岬角 象鼻岩 & 酋長岩
+DTSTART;TZID=Asia/Taipei:20260131T133000
+DTEND;TZID=Asia/Taipei:20260131T150000
+DESCRIPTION:13:30 象鼻岩 -> 14:00 番仔澳酋長岩公園。
+LOCATION:深澳岬角
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:🏨 福容大飯店 福隆 CHECK IN
+DTSTART;TZID=Asia/Taipei:20260131T150000
+DTEND;TZID=Asia/Taipei:20260131T180000
+DESCRIPTION:Check-in 後自由活動，享受海洋溫泉。
+LOCATION:福容大飯店 福隆
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:🍽️ 尾牙晚宴 (PM 18:30)
+DTSTART;TZID=Asia/Taipei:20260131T183000
+DTEND;TZID=Asia/Taipei:20260131T210000
+DESCRIPTION:準時開席，請勿遲到。
+LOCATION:福容大飯店 福隆
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:👋 飯店 CHECK OUT
+DTSTART;TZID=Asia/Taipei:20260201T110000
+DTEND;TZID=Asia/Taipei:20260201T113000\nDESCRIPTION:11:00 退房。\nLOCATION:福容大飯店 福隆
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:🍜 基隆廟口夜市
+DTSTART;TZID=Asia/Taipei:20260201T120000
+DTEND;TZID=Asia/Taipei:20260201T140000
+DESCRIPTION:午餐自由覓食。
+LOCATION:基隆廟口夜市
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:🚌 返抵宇傑
+DTSTART;TZID=Asia/Taipei:20260201T160000
+DTEND;TZID=Asia/Taipei:20260201T161000
+DESCRIPTION:平安回家。
+LOCATION:竹北市新工六路9號
+END:VEVENT
+END:VCALENDAR`;
 
             const blob = new Blob([events], { type: 'text/calendar;charset=utf-8' });
             const url = window.URL.createObjectURL(blob);
