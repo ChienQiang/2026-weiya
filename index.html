@@ -141,15 +141,15 @@
         body[data-theme="2"] .brand-section { --brand-color: var(--primary-orange); }
         body[data-theme="2"] .brand-section p { color: rgba(224, 122, 95, 0.9); }
 
-        /* Logo 遮罩樣式 */
+        /* Logo 遮罩樣式 (修正路徑) */
         .brand-logo-mask {
             display: block;
             width: 200px;
             height: 100px;
             margin: 0 auto 10px;
             background-color: var(--brand-color);
-            -webkit-mask-image: url('./logo_mask.png');
-            mask-image: url('./logo_mask.png');
+            -webkit-mask-image: url('./2.png');
+            mask-image: url('./2.png');
             -webkit-mask-size: contain;
             mask-size: contain;
             -webkit-mask-repeat: no-repeat;
@@ -838,38 +838,14 @@
                     <div class="insight-tip">先抽營養三明治號碼牌，再去吃別的，效率最高！</div>
                 `
             },
+            // 改為直接讀取外部檔案
             hotel_facility: {
                 title: "福容大飯店設施",
-                content: `
-                    <span class="insight-tag">FACILITY</span>
-                    <div class="modal-content-text">
-                        <p>豐富設施滿足全齡需求！</p>
-                        <ul>
-                            <li><strong>海洋溫泉</strong>：大眾溫泉池、舒壓冷熱池、烤箱室。</li>
-                            <li><strong>休閒中心</strong>：VR體驗館、Switch遊戲機、健身房、桌球/撞球區。</li>
-                            <li><strong>戶外泳池</strong>：無邊際泳池讓你拍出網美照 (依季節開放)。</li>
-                            <li><strong>兒童遊戲室</strong>：專為小朋友設計的歡樂天地。</li>
-                        </ul>
-                    </div>
-                    <div class="insight-tip">建議攜帶泳衣泳帽，才能盡情享受溫泉與泳池設施。</div>
-                `
+                url: "fulong.html" 
             },
             nightmarket_food: {
                 title: "基隆廟口美食地圖",
-                content: `
-                    <span class="insight-tag">FOOD MAP</span>
-                    <div class="modal-content-text">
-                        <p>跟著老饕吃！精選必吃攤位：</p>
-                        <ul>
-                            <li><strong>天一香肉羹順</strong> (31號)：被譽為基隆最強滷肉飯。</li>
-                            <li><strong>營養三明治</strong> (58號)：經典排隊名店，美乃滋是靈魂。</li>
-                            <li><strong>世盛一口吃香腸</strong> (43-1號)：一口一個剛剛好，配蒜頭超對味。</li>
-                            <li><strong>陳記/沈家泡泡冰</strong> (37/41號)：純手工打製，花生與鳳梨口味必點。</li>
-                            <li><strong>吳記螃蟹羹</strong> (5號)：鮮甜羹湯配油飯，絕配！</li>
-                        </ul>
-                    </div>
-                    <div class="insight-tip">建議避開用餐尖峰時段，或分組行動排隊！</div>
-                `
+                url: "foodmap.html"
             }
         };
 
@@ -1055,9 +1031,36 @@
 
         function openModal(id) {
             const data = insights[id];
+            const card = document.querySelector('.modal-card');
+            const body = document.getElementById('modalBody');
+            
             if (data) {
                 document.getElementById('modalTitle').innerText = data.title;
-                document.getElementById('modalBody').innerHTML = data.content;
+                
+                if (data.url) {
+                    // 如果是外部連結 (iframe)
+                    body.innerHTML = `<iframe src="${data.url}" style="width:100%; height:65vh; border:none; display:block;"></iframe>`;
+                    body.style.padding = "0"; // 移除內距以滿版顯示
+                    body.style.overflow = "hidden";
+                    
+                    // 調整 Modal 樣式以適應地圖/設施表
+                    card.style.maxWidth = "900px";
+                    card.style.width = "95%";
+                    card.style.padding = "20px";
+                    document.querySelector('.modal-header').style.marginBottom = "10px";
+                } else {
+                    // 一般文字內容
+                    body.innerHTML = data.content;
+                    
+                    // 還原樣式
+                    body.style.padding = ""; 
+                    body.style.overflow = "";
+                    card.style.maxWidth = "500px";
+                    card.style.width = "85%";
+                    card.style.padding = "40px";
+                    document.querySelector('.modal-header').style.marginBottom = "30px";
+                }
+                
                 document.getElementById('infoModal').classList.add('active');
                 document.body.style.overflow = 'hidden';
             }
